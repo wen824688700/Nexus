@@ -1,0 +1,8 @@
+# 这个文件确保 music 目录被 git 追踪
+# 
+# 将你的音乐文件（.mp3, .wav, .ogg）放在这个目录下
+# 
+# 示例：
+# - lofi-1.mp3
+# - ambient-1.mp3
+# - chillhop-1.mp3

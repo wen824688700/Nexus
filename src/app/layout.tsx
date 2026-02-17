@@ -1,0 +1,72 @@
+import type { Metadata } from "next";
+import { JetBrains_Mono, Noto_Sans_SC, ZCOOL_QingKe_HuangYou, Orbitron } from "next/font/google";
+import "./globals.css";
+import { GridBackground, FloatingParticles } from "@/components/cyber";
+import { FloatingMusicPlayer, MusicLightEffect } from "@/components/music";
+import { Navbar, Footer, PageTransition } from "@/components/layout";
+import { QuotaProvider } from "@/contexts/QuotaContext";
+
+const notoSansSC = Noto_Sans_SC({
+  variable: "--font-sans-var",
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+});
+const jetbrainsMono = JetBrains_Mono({ variable: "--font-mono-var", subsets: ["latin"] });
+const zcool = ZCOOL_QingKe_HuangYou({
+  variable: "--font-display-var",
+  subsets: ["latin"],
+  weight: "400",
+});
+const orbitron = Orbitron({
+  variable: "--font-orbitron-var",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+});
+
+export const metadata: Metadata = {
+  title: "APEX AI | Labs",
+  description: "Personal homepage (Bento Grid + Modal + Agents)",
+  icons: {
+    icon: "/logo.png",
+  },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="zh-CN">
+      <body
+        className={`${notoSansSC.variable} ${jetbrainsMono.variable} ${zcool.variable} ${orbitron.variable} antialiased`}
+      >
+        <QuotaProvider>
+          {/* Cyberpunk Background Effects */}
+          <GridBackground className="fixed inset-0 z-0" />
+          <FloatingParticles className="fixed inset-0 z-0" count={30} />
+          
+          {/* Navigation */}
+          <Navbar />
+          
+          {/* Main Content with Page Transition */}
+          <div className="relative z-10">
+            <PageTransition>
+              {children}
+            </PageTransition>
+          </div>
+          
+          {/* Footer */}
+          <Footer />
+          
+          {/* Music Player and Effects */}
+          <MusicLightEffect />
+          <FloatingMusicPlayer />
+          
+          {/* Noise Texture */}
+          <div className="noise" />
+        </QuotaProvider>
+      </body>
+    </html>
+  );
+}
