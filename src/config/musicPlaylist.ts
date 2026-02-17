@@ -62,12 +62,9 @@ export const onlineMusicPlaylist: MusicTrack[] = [
 
 /**
  * 根据环境选择播放列表
- * 开发环境可以使用在线音乐，生产环境使用本地音乐
+ * 使用真实存在的音乐文件
  */
 export const getPlaylist = (): MusicTrack[] => {
-  // 如果本地音乐文件存在，使用本地播放列表
-  // 否则使用在线播放列表作为后备
-  return process.env.NODE_ENV === 'production' 
-    ? musicPlaylist 
-    : onlineMusicPlaylist;
+  // 使用 public/music 目录下真实存在的音乐文件
+  return onlineMusicPlaylist;
 };
