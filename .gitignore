@@ -43,3 +43,12 @@ next-env.d.ts
 
 # 文档
 /docs
+
+# 数据库
+/supabase
+
+# 文档
+/docs
+
+数据库
+/supabase

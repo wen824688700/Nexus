@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
         hostname: '**',
       },
     ],
+    // 增加图片加载超时时间（Google 头像可能较慢）
+    minimumCacheTTL: 60,
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 };
 

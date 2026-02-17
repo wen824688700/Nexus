@@ -49,6 +49,17 @@ const envSchema = z.object({
   DEEPSEEK_API_KEY: z.string().min(1).optional(),
   DEEPSEEK_API_BASE_URL: z.string().url().optional(),
 
+  // Supabase (Authentication)
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+
+  // Site Configuration
+  NEXT_PUBLIC_SITE_URL: z.string().url(),
+
+  // Resend (Email Service)
+  RESEND_API_KEY: z.string().min(1),
+
   // Optional guardrails
   RATE_LIMIT_PER_MINUTE: z.coerce.number().int().positive().optional(),
 });

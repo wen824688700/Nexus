@@ -4,7 +4,11 @@ import Link from "next/link";
 import { GlitchText } from "@/components/cyber";
 import { useAppStore } from "@/store/appStore";
 
-export function Navbar() {
+interface NavbarProps {
+  authUI?: React.ReactNode
+}
+
+export function Navbar({ authUI }: NavbarProps) {
   const isAgentModalOpen = useAppStore((state) => state.isAgentModalOpen);
   const isAgentModalFullscreen = useAppStore((state) => state.isAgentModalFullscreen);
   const isKnowledgeFullscreen = useAppStore((state) => state.isKnowledgeFullscreen);
@@ -41,6 +45,9 @@ export function Navbar() {
           <NavLink href="/vault" color="purple">
             量子密匣
           </NavLink>
+          
+          {/* Authentication UI */}
+          {authUI}
         </div>
       </div>
     </nav>
