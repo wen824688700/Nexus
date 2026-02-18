@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import React, { useState, useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface TypewriterTextProps {
   text: string;
@@ -18,18 +18,20 @@ export const TypewriterText: React.FC<TypewriterTextProps> = ({
   speed = 50,
   delay = 0,
   showCursor = true,
-  onComplete
+  onComplete,
 }) => {
-  const [displayText, setDisplayText] = useState('');
+  const [displayText, setDisplayText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [showCursorState, setShowCursorState] = useState(true);
   const indexRef = useRef(0);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // Reset when text changes
-    setDisplayText('');
+    // Reset state when text changes
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setDisplayText("");
     indexRef.current = 0;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsTyping(false);
 
     // Start typing after delay
@@ -73,25 +75,28 @@ export const TypewriterText: React.FC<TypewriterTextProps> = ({
   // Cursor blink effect
   useEffect(() => {
     if (!showCursor || isTyping) {
-      setShowCursorState(true);
+      if (!showCursorState) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setShowCursorState(true);
+      }
       return;
     }
 
     const interval = setInterval(() => {
-      setShowCursorState(prev => !prev);
+      setShowCursorState((prev) => !prev);
     }, 530);
 
     return () => clearInterval(interval);
-  }, [showCursor, isTyping]);
+  }, [showCursor, isTyping, showCursorState]);
 
   return (
-    <span className={cn('inline-block', className)}>
+    <span className={cn("inline-block", className)}>
       {displayText}
       {showCursor && (
         <span
           className={cn(
-            'inline-block w-[2px] h-[1em] bg-cyber-cyan ml-0.5 align-middle',
-            !showCursorState && 'opacity-0'
+            "bg-cyber-cyan ml-0.5 inline-block h-[1em] w-[2px] align-middle",
+            !showCursorState && "opacity-0",
           )}
         />
       )}

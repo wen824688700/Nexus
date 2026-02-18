@@ -2,7 +2,16 @@ export type Agent = {
   title: string;
   botId: string;
   icon: string;
-  kind: "portrait" | "chat" | "analysis" | "workflow" | "promptOptimizer" | "imageEditor" | "audioAnalyzer" | "springFestivalMeme" | "seedanceStoryboard";
+  kind:
+    | "portrait"
+    | "chat"
+    | "analysis"
+    | "workflow"
+    | "promptOptimizer"
+    | "imageEditor"
+    | "audioAnalyzer"
+    | "springFestivalMeme"
+    | "seedanceStoryboard";
   status?: "online" | "offline";
 };
 

@@ -26,17 +26,27 @@ export function ProgressiveMarkdownPreview({
 
   // 初始化：显示前面部分内容
   useEffect(() => {
-    if (content) {
-      if (forceFullContent) {
-        // 强制显示完整内容
-        setVisibleContent(content);
-        setHasMore(false);
-      } else {
-        // 渐进式加载
-        const initialContent = content.slice(0, CHUNK_SIZE);
-        setVisibleContent(initialContent);
-        setHasMore(content.length > CHUNK_SIZE);
-      }
+    if (!content) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setVisibleContent("");
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setHasMore(false);
+      return;
+    }
+
+    if (forceFullContent) {
+      // 强制显示完整内容
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setVisibleContent(content);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setHasMore(false);
+    } else {
+      // 渐进式加载
+      const initialContent = content.slice(0, CHUNK_SIZE);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setVisibleContent(initialContent);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setHasMore(content.length > CHUNK_SIZE);
     }
   }, [content, forceFullContent]);
 
@@ -56,7 +66,7 @@ export function ProgressiveMarkdownPreview({
       },
       {
         rootMargin: "200px", // 提前 200px 开始加载
-      }
+      },
     );
 
     observer.observe(observerRef.current);
@@ -66,8 +76,8 @@ export function ProgressiveMarkdownPreview({
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-full py-20">
-        <Loader2 className="w-12 h-12 text-cyber-cyan animate-spin mb-4" />
+      <div className="flex h-full flex-col items-center justify-center py-20">
+        <Loader2 className="text-cyber-cyan mb-4 h-12 w-12 animate-spin" />
         <p className="text-white/60">加载文章内容中...</p>
       </div>
     );
@@ -75,7 +85,7 @@ export function ProgressiveMarkdownPreview({
 
   if (!content) {
     return (
-      <div className="flex flex-col items-center justify-center h-full py-20">
+      <div className="flex h-full flex-col items-center justify-center py-20">
         <p className="text-white/40">暂无内容</p>
       </div>
     );
@@ -83,23 +93,19 @@ export function ProgressiveMarkdownPreview({
 
   return (
     <div>
-      <MarkdownPreview 
-        content={visibleContent} 
-        fullContent={fullContent}
-        images={images} 
-      />
-      
+      <MarkdownPreview content={visibleContent} fullContent={fullContent} images={images} />
+
       {/* 加载更多触发器 */}
       {hasMore && !forceFullContent && (
         <div ref={observerRef} className="flex items-center justify-center py-8">
-          <Loader2 className="w-6 h-6 text-cyber-cyan animate-spin" />
-          <span className="ml-2 text-white/60 text-sm">加载更多内容...</span>
+          <Loader2 className="text-cyber-cyan h-6 w-6 animate-spin" />
+          <span className="ml-2 text-sm text-white/60">加载更多内容...</span>
         </div>
       )}
-      
+
       {/* 已加载完成提示 */}
       {!hasMore && content && (
-        <div className="flex items-center justify-center py-8 text-white/40 text-sm">
+        <div className="flex items-center justify-center py-8 text-sm text-white/40">
           已加载全部内容
         </div>
       )}

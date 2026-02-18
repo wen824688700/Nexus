@@ -1,9 +1,11 @@
 # 3Cs Model Framework
 
 ## 网址
+
 https://juuzt.ai/knowledge-base/prompt-frameworks/the-3cs-model-framework/
 
 ## 应用场景
+
 - 市场战略规划
 - 竞争分析
 - 商业模式设计
@@ -12,20 +14,23 @@ https://juuzt.ai/knowledge-base/prompt-frameworks/the-3cs-model-framework/
 - 品牌定位
 
 ## 概述
+
 3Cs模型框架是由大前研一（Kenichi Ohmae）提出的战略分析工具，通过分析公司（Company）、客户（Customer）和竞争对手（Competitor）三个关键因素来制定有效的商业战略。该框架帮助企业理解其在市场中的位置，发现竞争优势和增长机会。
 
 ## 框架构成
 
-| 组成部分 | 英文 | 说明 |
-|---------|------|------|
-| 公司 | Company | 分析自身的优势、劣势和能力 |
-| 客户 | Customer | 了解目标客户的需求和行为 |
-| 竞争对手 | Competitor | 评估竞争格局和对手策略 |
+| 组成部分 | 英文       | 说明                       |
+| -------- | ---------- | -------------------------- |
+| 公司     | Company    | 分析自身的优势、劣势和能力 |
+| 客户     | Customer   | 了解目标客户的需求和行为   |
+| 竞争对手 | Competitor | 评估竞争格局和对手策略     |
 
 ## 详细说明
 
 ### Company（公司）
+
 分析企业自身的内部因素：
+
 - 核心竞争力
 - 资源和能力
 - 财务状况
@@ -34,7 +39,9 @@ https://juuzt.ai/knowledge-base/prompt-frameworks/the-3cs-model-framework/
 - 创新能力
 
 ### Customer（客户）
+
 深入了解目标市场和客户：
+
 - 客户细分
 - 需求和痛点
 - 购买行为
@@ -43,7 +50,9 @@ https://juuzt.ai/knowledge-base/prompt-frameworks/the-3cs-model-framework/
 - 满意度和忠诚度
 
 ### Competitor（竞争对手）
+
 评估竞争环境：
+
 - 直接和间接竞争者
 - 竞争者策略
 - 市场份额
@@ -52,12 +61,14 @@ https://juuzt.ai/knowledge-base/prompt-frameworks/the-3cs-model-framework/
 - 替代品威胁
 
 ## 优点
+
 - **聚焦关键**: 将注意力集中在最重要的三个因素
 - **平衡视角**: 同时考虑内部和外部因素
 - **战略导向**: 直接支持战略决策
 - **易于沟通**: 简洁的框架便于团队讨论
 
 ## 缺点
+
 - **可能过于简化**: 忽略其他重要因素如供应商、监管等
 - **静态分析**: 可能不足以捕捉动态变化
 - **需要数据支持**: 有效分析需要大量市场数据
@@ -65,6 +76,7 @@ https://juuzt.ai/knowledge-base/prompt-frameworks/the-3cs-model-framework/
 ## 最佳实践
 
 ### 示例1：电商平台战略分析
+
 ```
 Company（公司）:
 - 强大的物流网络覆盖全国
@@ -90,6 +102,7 @@ Competitor（竞争对手）:
 ```
 
 ### 示例2：餐饮连锁品牌分析
+
 ```
 Company（公司）:
 - 200家直营门店
@@ -114,6 +127,7 @@ Competitor（竞争对手）:
 ```
 
 ### 示例3：SaaS产品市场进入
+
 ```
 Company（公司）:
 - 技术团队经验丰富

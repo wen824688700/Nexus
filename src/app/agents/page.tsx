@@ -9,7 +9,7 @@ const AgentsPage = dynamic(
   {
     loading: () => <PageLoader isLoading={true} />,
     ssr: false, // 禁用服务端渲染，提升首次加载速度
-  }
+  },
 );
 
 export default function Agents() {

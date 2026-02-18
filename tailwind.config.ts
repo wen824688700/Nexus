@@ -12,15 +12,15 @@ const config: Config = {
       colors: {
         // 赛博朋克颜色
         cyber: {
-          dark: '#0a0a0f',
-          cyan: '#00f3ff',
-          magenta: '#ff00ff',
-          purple: '#7000ff',
+          dark: "#0a0a0f",
+          cyan: "#00f3ff",
+          magenta: "#ff00ff",
+          purple: "#7000ff",
         },
         neon: {
-          cyan: '#00f3ff',
-          magenta: '#ff00ff',
-          purple: '#7000ff',
+          cyan: "#00f3ff",
+          magenta: "#ff00ff",
+          purple: "#7000ff",
         },
         // 保留原有颜色以兼容现有组件
         border: "hsl(var(--border))",
@@ -58,10 +58,10 @@ const config: Config = {
         },
       },
       fontFamily: {
-        orbitron: ['var(--font-orbitron-var)', 'sans-serif'],
-        inter: ['var(--font-sans-var)', 'sans-serif'],
-        mono: ['var(--font-mono-var)', 'monospace'],
-        display: ['var(--font-display-var)', 'sans-serif'],
+        orbitron: ["var(--font-orbitron-var)", "sans-serif"],
+        inter: ["var(--font-sans-var)", "sans-serif"],
+        mono: ["var(--font-mono-var)", "monospace"],
+        display: ["var(--font-display-var)", "sans-serif"],
       },
       borderRadius: {
         xl: "calc(var(--radius) + 4px)",
@@ -72,10 +72,10 @@ const config: Config = {
       },
       boxShadow: {
         xs: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
-        'neon-cyan': '0 0 20px rgba(0, 243, 255, 0.5), 0 0 40px rgba(0, 243, 255, 0.3)',
-        'neon-magenta': '0 0 20px rgba(255, 0, 255, 0.5), 0 0 40px rgba(255, 0, 255, 0.3)',
-        'neon-purple': '0 0 20px rgba(112, 0, 255, 0.5), 0 0 40px rgba(112, 0, 255, 0.3)',
-        'glow-cyan': '0 0 10px rgba(0, 243, 255, 0.8), 0 0 20px rgba(0, 243, 255, 0.4)',
+        "neon-cyan": "0 0 20px rgba(0, 243, 255, 0.5), 0 0 40px rgba(0, 243, 255, 0.3)",
+        "neon-magenta": "0 0 20px rgba(255, 0, 255, 0.5), 0 0 40px rgba(255, 0, 255, 0.3)",
+        "neon-purple": "0 0 20px rgba(112, 0, 255, 0.5), 0 0 40px rgba(112, 0, 255, 0.3)",
+        "glow-cyan": "0 0 10px rgba(0, 243, 255, 0.8), 0 0 20px rgba(0, 243, 255, 0.4)",
       },
       keyframes: {
         "accordion-down": {
@@ -94,7 +94,7 @@ const config: Config = {
           "0%, 100%": { opacity: "0.4", boxShadow: "0 0 20px rgba(0, 243, 255, 0.3)" },
           "50%": { opacity: "1", boxShadow: "0 0 40px rgba(0, 243, 255, 0.8)" },
         },
-        "float": {
+        float: {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-15px)" },
         },
@@ -106,14 +106,14 @@ const config: Config = {
           "0%": { transform: "translateY(-100%)" },
           "100%": { transform: "translateY(100%)" },
         },
-        "glitch": {
+        glitch: {
           "0%, 100%": { transform: "translate(0)" },
           "20%": { transform: "translate(-2px, 2px)" },
           "40%": { transform: "translate(-2px, -2px)" },
           "60%": { transform: "translate(2px, 2px)" },
           "80%": { transform: "translate(2px, -2px)" },
         },
-        "shimmer": {
+        shimmer: {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
@@ -125,11 +125,11 @@ const config: Config = {
           "0%, 100%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
         },
-        "typewriter": {
+        typewriter: {
           "0%": { width: "0" },
           "100%": { width: "100%" },
         },
-        "blink": {
+        blink: {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0" },
         },
@@ -175,15 +175,15 @@ const config: Config = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "caret-blink": "caret-blink 1.25s ease-out infinite",
         "glow-pulse": "glow-pulse 3s ease-in-out infinite",
-        "float": "float 6s ease-in-out infinite",
+        float: "float 6s ease-in-out infinite",
         "grid-rotate": "grid-rotate 60s linear infinite",
         "scan-line": "scan-line 4s linear infinite",
-        "glitch": "glitch 0.3s ease-in-out",
-        "shimmer": "shimmer 3s linear infinite",
+        glitch: "glitch 0.3s ease-in-out",
+        shimmer: "shimmer 3s linear infinite",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
         "border-flow": "border-flow 4s ease infinite",
-        "typewriter": "typewriter 2s steps(40) forwards",
-        "blink": "blink 0.7s infinite",
+        typewriter: "typewriter 2s steps(40) forwards",
+        blink: "blink 0.7s infinite",
         "news-scroll": "news-scroll 20s linear infinite",
         "led-flow": "led-flow 3s linear infinite",
         "led-flow-reverse": "led-flow-reverse 3s linear infinite",
@@ -195,14 +195,15 @@ const config: Config = {
         "loading-bar": "loading-bar 1.5s ease-in-out infinite",
       },
       backgroundImage: {
-        'cyber-gradient': 'linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 50%, #0a0a0f 100%)',
-        'neon-gradient': 'linear-gradient(90deg, #00f3ff, #ff00ff, #7000ff, #00f3ff)',
-        'grid-pattern': 'linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px)',
+        "cyber-gradient": "linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 50%, #0a0a0f 100%)",
+        "neon-gradient": "linear-gradient(90deg, #00f3ff, #ff00ff, #7000ff, #00f3ff)",
+        "grid-pattern":
+          "linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px)",
       },
       transitionTimingFunction: {
-        'cyber': 'cubic-bezier(0.16, 1, 0.3, 1)',
-        'glitch': 'cubic-bezier(0.87, 0, 0.13, 1)',
-        'elastic': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+        cyber: "cubic-bezier(0.16, 1, 0.3, 1)",
+        glitch: "cubic-bezier(0.87, 0, 0.13, 1)",
+        elastic: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
       },
     },
   },

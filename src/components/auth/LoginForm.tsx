@@ -1,44 +1,41 @@
-'use client'
+"use client";
 
-import { useState, useTransition } from 'react'
-import { login, signInWithGoogle } from '@/app/auth/actions'
+import { useState, useTransition } from "react";
+import { login, signInWithGoogle } from "@/app/auth/actions";
 
 interface LoginFormProps {
-  onForgotPassword: () => void
-  onSignup: () => void
+  onForgotPassword: () => void;
+  onSignup: () => void;
 }
 
 /**
  * 登录表单组件
- * 
+ *
  * 支持用户名/邮箱 + 密码登录和 Google OAuth 登录
  * 验证需求：2.1, 2.2, 2.6, 4.1, 8.3, 15.1, 15.2
  */
-export default function LoginForm({ 
-  onForgotPassword, 
-  onSignup 
-}: LoginFormProps) {
-  const [error, setError] = useState<string | null>(null)
-  const [isPending, startTransition] = useTransition()
+export default function LoginForm({ onForgotPassword, onSignup }: LoginFormProps) {
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   async function handleSubmit(formData: FormData) {
-    setError(null)
+    setError(null);
     startTransition(async () => {
-      const result = await login(formData)
+      const result = await login(formData);
       if (result?.error) {
-        setError(result.error)
+        setError(result.error);
       }
-    })
+    });
   }
 
   async function handleGoogleSignIn() {
-    setError(null)
+    setError(null);
     startTransition(async () => {
-      const result = await signInWithGoogle()
+      const result = await signInWithGoogle();
       if (result?.error) {
-        setError(result.error)
+        setError(result.error);
       }
-    })
+    });
   }
 
   return (
@@ -52,7 +49,7 @@ export default function LoginForm({
 
       {/* 用户名或邮箱 */}
       <div>
-        <label htmlFor="identifier" className="block text-sm font-medium text-white/80 mb-1">
+        <label htmlFor="identifier" className="mb-1 block text-sm font-medium text-white/80">
           用户名或邮箱
         </label>
         <input
@@ -61,14 +58,14 @@ export default function LoginForm({
           type="text"
           required
           disabled={isPending}
-          className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           placeholder="输入用户名或邮箱"
         />
       </div>
 
       {/* 密码 */}
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-white/80 mb-1">
+        <label htmlFor="password" className="mb-1 block text-sm font-medium text-white/80">
           密码
         </label>
         <input
@@ -77,7 +74,7 @@ export default function LoginForm({
           type="password"
           required
           disabled={isPending}
-          className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           placeholder="输入密码"
         />
       </div>
@@ -88,7 +85,7 @@ export default function LoginForm({
           type="button"
           onClick={onForgotPassword}
           disabled={isPending}
-          className="text-sm text-white/60 hover:text-white transition-colors disabled:opacity-50"
+          className="text-sm text-white/60 transition-colors hover:text-white disabled:opacity-50"
         >
           忘记密码？
         </button>
@@ -98,9 +95,9 @@ export default function LoginForm({
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded bg-white px-4 py-2.5 font-medium text-black transition-all hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full rounded bg-white px-4 py-2.5 font-medium text-black transition-all hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {isPending ? '登录中...' : '登录'}
+        {isPending ? "登录中..." : "登录"}
       </button>
 
       {/* 分隔线 */}
@@ -118,9 +115,9 @@ export default function LoginForm({
         type="button"
         onClick={handleGoogleSignIn}
         disabled={isPending}
-        className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 font-medium text-white backdrop-blur-sm transition-all hover:bg-white/10 hover:border-white/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="flex w-full items-center justify-center gap-2 rounded border border-white/10 bg-white/5 px-4 py-2.5 font-medium text-white backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        <svg className="w-5 h-5" viewBox="0 0 24 24">
+        <svg className="h-5 w-5" viewBox="0 0 24 24">
           <path
             fill="currentColor"
             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -143,16 +140,16 @@ export default function LoginForm({
 
       {/* 注册链接 */}
       <p className="text-center text-sm text-white/60">
-        还没有账户？{' '}
+        还没有账户？{" "}
         <button
           type="button"
           onClick={onSignup}
           disabled={isPending}
-          className="text-white hover:underline transition-all disabled:opacity-50"
+          className="text-white transition-all hover:underline disabled:opacity-50"
         >
           立即注册
         </button>
       </p>
     </form>
-  )
+  );
 }

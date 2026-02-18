@@ -1,64 +1,62 @@
-'use client';
+"use client";
 
-import { Music2 } from 'lucide-react';
+import { Music2 } from "lucide-react";
 
 export default function MusicDemoPage() {
   return (
-    <div className="min-h-screen bg-cyber-dark relative overflow-hidden">
+    <div className="bg-cyber-dark relative min-h-screen overflow-hidden">
       {/* 背景网格 */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-20" />
-      
+      <div className="bg-grid-pattern absolute inset-0 opacity-20" />
+
       {/* 内容 */}
       <div className="relative z-10 container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto">
+        <div className="mx-auto max-w-4xl">
           {/* 标题 */}
-          <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold text-white mb-4">
+          <div className="mb-16 text-center">
+            <h1 className="mb-4 text-5xl font-bold text-white">
               AI 音乐播放器
               <span className="text-cyber-magenta">演示</span>
             </h1>
-            <p className="text-white/60 text-lg">
-              赛博朋克风格 · 音频可视化 · 完整功能
-            </p>
+            <p className="text-lg text-white/60">赛博朋克风格 · 音频可视化 · 完整功能</p>
           </div>
 
           {/* 功能卡片 */}
-          <div className="grid md:grid-cols-1 gap-6 mb-12">
+          <div className="mb-12 grid gap-6 md:grid-cols-1">
             {/* 浮动模式 */}
-            <div className="p-8 rounded-2xl border border-white/10 bg-cyber-dark/50 backdrop-blur-sm">
-              <div className="w-16 h-16 rounded-full bg-cyber-magenta/20 flex items-center justify-center mb-6">
-                <Music2 className="w-8 h-8 text-cyber-magenta" />
+            <div className="bg-cyber-dark/50 rounded-2xl border border-white/10 p-8 backdrop-blur-sm">
+              <div className="bg-cyber-magenta/20 mb-6 flex h-16 w-16 items-center justify-center rounded-full">
+                <Music2 className="text-cyber-magenta h-8 w-8" />
               </div>
-              <h3 className="text-white text-xl font-medium mb-3">浮动音乐播放器</h3>
-              <p className="text-white/60 mb-6">
+              <h3 className="mb-3 text-xl font-medium text-white">浮动音乐播放器</h3>
+              <p className="mb-6 text-white/60">
                 右下角小部件，单击展开控制面板。适合作为全局背景音乐播放器。
               </p>
               <div className="flex items-center gap-2 text-sm text-white/50">
-                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <div className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
                 <span>已激活（查看右下角）</span>
               </div>
             </div>
           </div>
 
           {/* 功能列表 */}
-          <div className="p-8 rounded-2xl border border-cyber-magenta/30 bg-cyber-dark/50 backdrop-blur-sm">
-            <h3 className="text-white text-xl font-medium mb-6 flex items-center gap-3">
-              <div className="w-1 h-6 bg-cyber-magenta rounded-full" />
+          <div className="border-cyber-magenta/30 bg-cyber-dark/50 rounded-2xl border p-8 backdrop-blur-sm">
+            <h3 className="mb-6 flex items-center gap-3 text-xl font-medium text-white">
+              <div className="bg-cyber-magenta h-6 w-1 rounded-full" />
               核心功能
             </h3>
-            
-            <div className="grid md:grid-cols-2 gap-4">
+
+            <div className="grid gap-4 md:grid-cols-2">
               {[
-                { title: '音频可视化', desc: '实时频率分析，动态波形展示' },
-                { title: '播放列表', desc: '支持多首音乐，顺序/随机播放' },
-                { title: '进度控制', desc: '拖拽跳转，精确控制播放位置' },
-                { title: '音量调节', desc: '独立音量控制，记忆用户偏好' },
-                { title: '赛博朋克UI', desc: '霓虹光效，扫描线动画' },
-                { title: '全局浮动', desc: '固定右下角，不影响页面操作' },
+                { title: "音频可视化", desc: "实时频率分析，动态波形展示" },
+                { title: "播放列表", desc: "支持多首音乐，顺序/随机播放" },
+                { title: "进度控制", desc: "拖拽跳转，精确控制播放位置" },
+                { title: "音量调节", desc: "独立音量控制，记忆用户偏好" },
+                { title: "赛博朋克UI", desc: "霓虹光效，扫描线动画" },
+                { title: "全局浮动", desc: "固定右下角，不影响页面操作" },
               ].map((feature, i) => (
-                <div key={i} className="p-4 rounded-lg bg-white/5 border border-white/10">
-                  <h4 className="text-white font-medium mb-1">{feature.title}</h4>
-                  <p className="text-white/50 text-sm">{feature.desc}</p>
+                <div key={i} className="rounded-lg border border-white/10 bg-white/5 p-4">
+                  <h4 className="mb-1 font-medium text-white">{feature.title}</h4>
+                  <p className="text-sm text-white/50">{feature.desc}</p>
                 </div>
               ))}
             </div>
@@ -66,19 +64,19 @@ export default function MusicDemoPage() {
 
           {/* 技术栈 */}
           <div className="mt-12 text-center">
-            <p className="text-white/40 text-sm mb-4">技术实现</p>
+            <p className="mb-4 text-sm text-white/40">技术实现</p>
             <div className="flex flex-wrap justify-center gap-3">
               {[
-                'Web Audio API',
-                'HTML5 Audio',
-                'React Hooks',
-                'Tailwind CSS',
-                'AnalyserNode',
-                'RequestAnimationFrame'
+                "Web Audio API",
+                "HTML5 Audio",
+                "React Hooks",
+                "Tailwind CSS",
+                "AnalyserNode",
+                "RequestAnimationFrame",
               ].map((tech, i) => (
                 <span
                   key={i}
-                  className="px-3 py-1 rounded-full bg-cyber-magenta/10 border border-cyber-magenta/30 text-cyber-magenta text-xs"
+                  className="bg-cyber-magenta/10 border-cyber-magenta/30 text-cyber-magenta rounded-full border px-3 py-1 text-xs"
                 >
                   {tech}
                 </span>

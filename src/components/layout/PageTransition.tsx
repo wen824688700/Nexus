@@ -11,8 +11,9 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (pathname !== displayPath) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsLoading(true);
-      
+
       // 模拟加载时间，给组件预加载的时间
       const timer = setTimeout(() => {
         setDisplayPath(pathname);

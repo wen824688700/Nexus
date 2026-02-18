@@ -1,22 +1,17 @@
 # Personal OS - 个人数字化身网站
 
-一个高保真的个人数字身份网站，融合 Bento Grid 布局、交互式 AI 智能体和复古风格项目展示系统。
-
-## 🎯 产品概述
-
-Personal OS 是一个创新的个人主页项目，打破传统简历和作品集的呈现方式，通过赛博朋克美学和 90 年代复古计算机风格，创造独特的数字身份体验。
+一个高保真的数字身份网站，融合 Bento Grid 布局、交互式 AI 智能体和复古风格项目展示系统。
 
 ### 核心特色
 
 - **🎨 Bento Grid 布局** - 4 列响应式网格，包含英雄区、实时网站预览、AI 新闻流和智能体卡片
-- **🖥️ Retro OS 模态框** - 90 年代风格的"机密档案"系统，用于浏览项目案例研究（替代传统简历）
 - **🤖 AI 智能体集成** - 8 个 Coze 驱动的智能体，提供统一的模态 UI 交互
-- **🎭 肖像工作室** - AI 驱动的肖像生成，带有自定义 UI 和参数控制
 - **📡 Live Pulse** - 通过 n8n 工作流从 Notion 数据库实时聚合 AI 新闻
 
 ## 🚀 技术栈
 
 ### 核心框架
+
 - **Next.js 16.1.1** (App Router) - React 服务端组件框架
 - **React 19.2.3** - UI 库
 - **TypeScript 5** - 类型安全
@@ -24,11 +19,13 @@ Personal OS 是一个创新的个人主页项目，打破传统简历和作品�
 - **Zod 4.3.5** - 运行时验证和类型推断
 
 ### 关键依赖
+
 - **react-markdown** + **remark-gfm** - Markdown 渲染，支持 GitHub 风格
 - **Notion SDK** (`@notionhq/client`) - CMS 集成
 - **Coze Web SDK** - AI 智能体集成
 
 ### 开发工具
+
 - **ESLint 9** - 代码质量检查
 - **Prettier 3.7.4** - 代码格式化
 - **TypeScript strict mode** - 严格类型检查
@@ -36,18 +33,21 @@ Personal OS 是一个创新的个人主页项目，打破传统简历和作品�
 ## 📦 快速开始
 
 ### 环境要求
+
 - Node.js 18.17 或更高版本
 - npm 或其他包管理器
 
 ### 安装步骤
 
 1. **克隆项目**
+
 ```bash
 git clone <repository-url>
 cd web
 ```
 
 2. **安装依赖**
+
 ```bash
 npm install
 ```
@@ -61,6 +61,7 @@ cp .env.example .env.local
 ```
 
 必需的环境变量：
+
 - `NOTION_TOKEN` - Notion API 集成令牌
 - `NOTION_ARTICLES_DB_ID` - Retro OS 文章数据库 ID
 - `COZE_BASE_URL` - Coze API 端点
@@ -69,17 +70,17 @@ cp .env.example .env.local
 
 各智能体的独立配置（参考 `.env.example` 中的完整列表）
 
-
-
 ## 🎨 设计理念
 
 ### 视觉风格
+
 - **极致深色模式** - 背景色 `#0a0a0a`，带有微妙的噪点纹理
 - **边框效果** - 使用 `white/10` 透明度配合背景模糊
 - **Magic UI 风格** - 关键卡片采用边框光束效果
 - **复古美学** - 90 年代计算机美学与现代深色设计的融合
 
 ### 交互设计
+
 - 流畅的动画过渡
 - 响应式布局适配各种屏幕
 - 直观的模态框交互
@@ -99,6 +100,7 @@ cp .env.example .env.local
 8. **公告播报** - 滚动新闻和公告展示
 
 每个智能体都有：
+
 - 独立的 API 路由 (`/api/agents/[agentKey]/run`)
 - 统一的模态 UI 界面
 - 流式响应支持
@@ -144,12 +146,12 @@ web/
 ## 🎯 内容管理
 
 ### Notion 作为 CMS
+
 所有动态内容（文章、新闻、简历数据）通过 Notion 数据库管理：
 
 - **文章数据库** - Retro OS 中的项目案例
 - **新闻数据库** - Live Pulse 的 AI 新闻流
 - **自动同步** - 通过 n8n 工作流自动更新
-
 
 ## 📚 相关文档
 
@@ -171,6 +173,5 @@ web/
 ## 📄 许可证
 
 本项目采用 MIT 许可证。
-
 
 **Built with ❤️ using Next.js, React, and AI**

@@ -83,7 +83,11 @@ function getNotionClient() {
 
 /**
  * 将 Notion 块转换为 Markdown
+ * @param block - Notion 块对象（动态结构）
+ * @param notion - Notion 客户端
+ * @param level - 缩进级别
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function blockToMarkdown(block: any, notion: Client, level = 0): Promise<string> {
   const indent = "  ".repeat(level);
   let markdown = "";
@@ -216,26 +220,28 @@ async function blockToMarkdown(block: any, notion: Client, level = 0): Promise<s
 /**
  * 将表格转换为 Markdown
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function tableToMarkdown(rows: any[], columnCount: number): Promise<string> {
   if (rows.length === 0) return "";
 
   let markdown = "\n";
-  
+
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i];
     if (row.type !== "table_row") continue;
 
     const cells = row.table_row?.cells || [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const cellTexts = cells.map((cell: any) => richTextToPlainText(cell));
-    
+
     markdown += "| " + cellTexts.join(" | ") + " |\n";
-    
+
     // 添加表头分隔线
     if (i === 0) {
       markdown += "| " + Array(columnCount).fill("---").join(" | ") + " |\n";
     }
   }
-  
+
   markdown += "\n";
   return markdown;
 }
@@ -243,6 +249,7 @@ async function tableToMarkdown(rows: any[], columnCount: number): Promise<string
 /**
  * 将富文本转换为 Markdown（保留格式）
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function richTextToMarkdown(richTexts: any[] | undefined): string {
   if (!richTexts || richTexts.length === 0) return "";
 
@@ -268,6 +275,7 @@ function richTextToMarkdown(richTexts: any[] | undefined): string {
 /**
  * 将富文本转换为纯文本
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function richTextToPlainText(richTexts: any[] | undefined): string {
   if (!richTexts || richTexts.length === 0) return "";
   return richTexts.map((text) => text.plain_text || "").join("");
@@ -276,6 +284,7 @@ function richTextToPlainText(richTexts: any[] | undefined): string {
 /**
  * 从块中提取文本（兜底方案）
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extractTextFromBlock(block: any): string {
   const blockData = block[block.type];
   if (blockData?.rich_text) {
@@ -308,9 +317,9 @@ export async function queryPulseDatabase(args: {
       sorts: [
         {
           property: "日期",
-          direction: "descending"
-        }
-      ]
+          direction: "descending",
+        },
+      ],
     }),
     next: { revalidate: 180 },
     timeoutMs: 12_000,
@@ -361,7 +370,6 @@ export async function queryPulseDatabase(args: {
   return rows;
 }
 
-
 /**
  * 查询知识库文章数据库（方案 1：数据库 + 页面内容）
  */
@@ -391,12 +399,15 @@ export async function queryArticlesDatabase(databaseId: string): Promise<NotionA
 
   if (!response.ok) {
     const text = await response.text().catch(() => "");
-    throw new Error(`Notion query failed: ${response.status} ${response.statusText} ${text}`.slice(0, 1200));
+    throw new Error(
+      `Notion query failed: ${response.status} ${response.statusText} ${text}`.slice(0, 1200),
+    );
   }
 
   const data = (await response.json()) as {
     results?: Array<{
       id?: string;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       properties?: Record<string, any>;
       created_time?: string;
       last_edited_time?: string;
@@ -413,20 +424,27 @@ export async function queryArticlesDatabase(databaseId: string): Promise<NotionA
         const props = page.properties ?? {};
 
         // 尝试多种可能的属性名称（中文/英文）
-        const titleProp = props["标题"] || props["Title"] || props["title"] || props["Name"] || props["name"];
+        const titleProp =
+          props["标题"] || props["Title"] || props["title"] || props["Name"] || props["name"];
         const tagsProp = props["标签"] || props["Tags"] || props["tags"];
-        const publishedProp = props["发布状态"] || props["Published"] || props["published"] || props["Status"] || props["status"];
+        const publishedProp =
+          props["发布状态"] ||
+          props["Published"] ||
+          props["published"] ||
+          props["Status"] ||
+          props["status"];
 
         // 提取标题
-        const title = titleProp?.title 
+        const title = titleProp?.title
           ? toPlainText(titleProp.title)
-          : titleProp?.rich_text 
+          : titleProp?.rich_text
             ? toPlainText(titleProp.rich_text)
             : "";
 
         // 提取标签
-        const tags = tagsProp?.multi_select 
-          ? (tagsProp.multi_select ?? []).map((t: any) => t.name ?? "").filter(Boolean)
+        const tags = tagsProp?.multi_select
+          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (tagsProp.multi_select ?? []).map((t: any) => t.name ?? "").filter(Boolean)
           : [];
 
         // 提取发布状态（支持 checkbox 和 status 类型）
@@ -436,11 +454,19 @@ export async function queryArticlesDatabase(databaseId: string): Promise<NotionA
         } else if (publishedProp?.status?.name) {
           // 如果是 status 类型，检查状态名称
           const statusName = publishedProp.status.name.toLowerCase();
-          isPublished = statusName === "published" || statusName === "已发布" || statusName === "done" || statusName === "完成";
+          isPublished =
+            statusName === "published" ||
+            statusName === "已发布" ||
+            statusName === "done" ||
+            statusName === "完成";
         } else if (publishedProp?.select?.name) {
           // 如果是 select 类型
           const selectName = publishedProp.select.name.toLowerCase();
-          isPublished = selectName === "published" || selectName === "已发布" || selectName === "yes" || selectName === "是";
+          isPublished =
+            selectName === "published" ||
+            selectName === "已发布" ||
+            selectName === "yes" ||
+            selectName === "是";
         }
 
         // 如果没有标题或未发布，跳过
@@ -472,7 +498,7 @@ export async function queryArticlesDatabase(databaseId: string): Promise<NotionA
       } catch (error) {
         console.error(`[Notion] Failed to process page ${page.id}:`, error);
       }
-    })
+    }),
   );
 
   // 按更新时间降序排序
@@ -541,12 +567,15 @@ export async function queryArticlesMetadata(databaseId: string): Promise<NotionA
 
   if (!response.ok) {
     const text = await response.text().catch(() => "");
-    throw new Error(`Notion query failed: ${response.status} ${response.statusText} ${text}`.slice(0, 1200));
+    throw new Error(
+      `Notion query failed: ${response.status} ${response.statusText} ${text}`.slice(0, 1200),
+    );
   }
 
   const data = (await response.json()) as {
     results?: Array<{
       id?: string;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       properties?: Record<string, any>;
       created_time?: string;
       last_edited_time?: string;
@@ -561,20 +590,27 @@ export async function queryArticlesMetadata(databaseId: string): Promise<NotionA
       const props = page.properties ?? {};
 
       // 尝试多种可能的属性名称
-      const titleProp = props["标题"] || props["Title"] || props["title"] || props["Name"] || props["name"];
+      const titleProp =
+        props["标题"] || props["Title"] || props["title"] || props["Name"] || props["name"];
       const tagsProp = props["标签"] || props["Tags"] || props["tags"];
-      const publishedProp = props["发布状态"] || props["Published"] || props["published"] || props["Status"] || props["status"];
+      const publishedProp =
+        props["发布状态"] ||
+        props["Published"] ||
+        props["published"] ||
+        props["Status"] ||
+        props["status"];
 
       // 提取标题
-      const title = titleProp?.title 
+      const title = titleProp?.title
         ? toPlainText(titleProp.title)
-        : titleProp?.rich_text 
+        : titleProp?.rich_text
           ? toPlainText(titleProp.rich_text)
           : "";
 
       // 提取标签
-      const tags = tagsProp?.multi_select 
-        ? (tagsProp.multi_select ?? []).map((t: any) => t.name ?? "").filter(Boolean)
+      const tags = tagsProp?.multi_select
+        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (tagsProp.multi_select ?? []).map((t: any) => t.name ?? "").filter(Boolean)
         : [];
 
       // 提取发布状态
@@ -583,10 +619,18 @@ export async function queryArticlesMetadata(databaseId: string): Promise<NotionA
         isPublished = publishedProp.checkbox;
       } else if (publishedProp?.status?.name) {
         const statusName = publishedProp.status.name.toLowerCase();
-        isPublished = statusName === "published" || statusName === "已发布" || statusName === "done" || statusName === "完成";
+        isPublished =
+          statusName === "published" ||
+          statusName === "已发布" ||
+          statusName === "done" ||
+          statusName === "完成";
       } else if (publishedProp?.select?.name) {
         const selectName = publishedProp.select.name.toLowerCase();
-        isPublished = selectName === "published" || selectName === "已发布" || selectName === "yes" || selectName === "是";
+        isPublished =
+          selectName === "published" ||
+          selectName === "已发布" ||
+          selectName === "yes" ||
+          selectName === "是";
       } else if (publishedProp === undefined) {
         isPublished = true; // 默认已发布
       }
@@ -622,7 +666,7 @@ export async function getArticleContent(pageId: string): Promise<string> {
   if (!token) {
     throw new Error("Missing NOTION_ARTICLES_TOKEN or NOTION_TOKEN");
   }
-  
+
   const notion = new Client({ auth: token });
   return await getPageContent(notion, pageId);
 }

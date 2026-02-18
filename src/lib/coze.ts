@@ -72,8 +72,8 @@ export async function cozeRunWorkflow(args: {
   return json.data ?? null;
 }
 
-export async function cozeUploadFile(args: { 
-  file: Blob; 
+export async function cozeUploadFile(args: {
+  file: Blob;
   filename: string;
   baseUrl?: string;
   token?: string;
@@ -81,9 +81,9 @@ export async function cozeUploadFile(args: {
   // 使用自定义配置或默认配置
   const baseUrl = args.baseUrl ?? env.COZE_API_BASE_URL ?? "https://api.coze.cn";
   const token = args.token ?? env.COZE_API_TOKEN;
-  
+
   if (!token) throw new Error("Missing Coze API token");
-  
+
   const fd = new FormData();
   fd.append("file", args.file, args.filename);
 

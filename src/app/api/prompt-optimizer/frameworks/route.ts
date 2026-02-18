@@ -16,9 +16,9 @@ async function loadFrameworksSummary(): Promise<string> {
     process.cwd(),
     "public",
     "prompt-optimizer",
-    "Frameworks_Summary.md"
+    "Frameworks_Summary.md",
   );
-  
+
   try {
     const content = await fs.readFile(summaryPath, "utf-8");
     return content;
@@ -31,53 +31,53 @@ async function loadFrameworksSummary(): Promise<string> {
 // 从 Frameworks_Summary.md 中提取框架的应用场景描述
 function parseFrameworkScenarios(summaryContent: string): Map<string, string> {
   const scenariosMap = new Map<string, string>();
-  
+
   try {
-    const lines = summaryContent.split('\n');
-    
+    const lines = summaryContent.split("\n");
+
     // 查找表格内容（跳过标题行和分隔行）
     let inTable = false;
     for (const line of lines) {
       const trimmedLine = line.trim();
-      
+
       // 检测表格开始
-      if (trimmedLine.startsWith('|') && trimmedLine.includes('框架名称')) {
+      if (trimmedLine.startsWith("|") && trimmedLine.includes("框架名称")) {
         inTable = true;
         continue;
       }
-      
+
       // 跳过分隔行
-      if (trimmedLine.startsWith('|:---') || trimmedLine.startsWith('|---')) {
+      if (trimmedLine.startsWith("|:---") || trimmedLine.startsWith("|---")) {
         continue;
       }
-      
+
       // 检测表格结束
-      if (inTable && trimmedLine.startsWith('---')) {
+      if (inTable && trimmedLine.startsWith("---")) {
         break;
       }
-      
+
       // 解析表格行
-      if (inTable && trimmedLine.startsWith('|')) {
-        const parts = trimmedLine.split('|').map(p => p.trim());
+      if (inTable && trimmedLine.startsWith("|")) {
+        const parts = trimmedLine.split("|").map((p) => p.trim());
         // parts 格式: ['', '序号', '框架名称', '应用场景', '']
         if (parts.length >= 4) {
           const frameworkName = parts[2];
           const scenarios = parts[3];
-          
-          if (frameworkName && scenarios && frameworkName !== '框架名称') {
+
+          if (frameworkName && scenarios && frameworkName !== "框架名称") {
             // 存储带 "Framework" 后缀的版本
             scenariosMap.set(frameworkName, scenarios);
-            
+
             // 同时存储不带 "Framework" 后缀的版本
-            if (frameworkName.endsWith(' Framework')) {
-              const baseName = frameworkName.replace(' Framework', '');
+            if (frameworkName.endsWith(" Framework")) {
+              const baseName = frameworkName.replace(" Framework", "");
               scenariosMap.set(baseName, scenarios);
             }
           }
         }
       }
     }
-    
+
     console.log(`解析了 ${scenariosMap.size} 个框架的应用场景描述`);
     return scenariosMap;
   } catch (error) {
@@ -89,24 +89,24 @@ function parseFrameworkScenarios(summaryContent: string): Map<string, string> {
 // 使用 DeepSeek API 分析用户需求并匹配框架
 async function matchFrameworksWithAI(
   userInput: string,
-  frameworksSummary: string
+  frameworksSummary: string,
 ): Promise<FrameworkCandidate[]> {
   const apiKey = process.env.DEEPSEEK_API_KEY;
   const apiBaseUrl = process.env.DEEPSEEK_API_BASE_URL || "https://api.deepseek.com";
-  
+
   console.log("=== 框架匹配开始 ===");
   console.log("API Key存在:", !!apiKey);
   console.log("API Base URL:", apiBaseUrl);
   console.log("用户输入:", userInput);
-  
+
   if (!apiKey) {
     console.error("❌ DEEPSEEK_API_KEY 未配置！");
     throw new Error("DEEPSEEK_API_KEY not configured");
   }
-  
+
   // 解析框架场景描述
   const scenariosMap = parseFrameworkScenarios(frameworksSummary);
-  
+
   // 按照SKILL.md的Step 2要求构建提示词
   const prompt = `你是一个专业的提示词工程专家。你需要严格按照 Prompt Optimizer Skill 的工作流程来匹配框架。
 
@@ -176,12 +176,12 @@ ${userInput}
 - 只返回JSON，不要有其他文字`;
 
   console.log("正在调用 DeepSeek API...");
-  
+
   const response = await fetch(`${apiBaseUrl}/v1/chat/completions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${apiKey}`,
+      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       model: "deepseek-chat",
@@ -195,73 +195,75 @@ ${userInput}
       max_tokens: 1000,
     }),
   });
-  
+
   console.log("DeepSeek API 响应状态:", response.status);
-  
+
   if (!response.ok) {
     const errorText = await response.text();
     console.error("DeepSeek API 错误响应:", errorText);
     throw new Error(`DeepSeek API error: ${response.status} - ${errorText}`);
   }
-  
+
   const data = await response.json();
   console.log("DeepSeek API 返回数据:", JSON.stringify(data, null, 2));
-  
+
   const content = data.choices[0]?.message?.content;
-  
+
   if (!content) {
     console.error("❌ DeepSeek 响应中没有内容");
     throw new Error("No content in DeepSeek response");
   }
-  
+
   console.log("DeepSeek 返回内容:", content);
-  
+
   // 提取 JSON（可能被包裹在 markdown 代码块中）
   let jsonStr = content;
   const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/);
   if (jsonMatch) {
     jsonStr = jsonMatch[1];
   }
-  
+
   const result = JSON.parse(jsonStr);
   console.log("解析后的结果:", result);
-  
+
   // 转换为 FrameworkCandidate 格式，使用 Frameworks_Summary.md 中的应用场景描述
-  const candidates: FrameworkCandidate[] = result.frameworks.map((fw: any) => {
-    // 尝试多种方式查找框架描述
-    let description = null;
-    
-    // 1. 直接匹配
-    description = scenariosMap.get(fw.name);
-    
-    // 2. 添加 " Framework" 后缀尝试
-    if (!description) {
-      description = scenariosMap.get(`${fw.name} Framework`);
-    }
-    
-    // 3. 移除 " Framework" 后缀尝试
-    if (!description && fw.name.endsWith(" Framework")) {
-      const baseName = fw.name.replace(" Framework", "");
-      description = scenariosMap.get(baseName);
-    }
-    
-    // 4. 使用 AI 返回的原因作为后备
-    if (!description) {
-      description = fw.reason || "AI 推荐的框架";
-      console.warn(`未找到框架 ${fw.name} 的应用场景描述，使用 AI 原因`);
-    }
-    
-    return {
-      id: fw.name,
-      name: fw.name,
-      description: description,
-      matchScore: Math.min(100, Math.max(0, fw.matchScore || 0)),
-    };
-  });
-  
+  const candidates: FrameworkCandidate[] = result.frameworks.map(
+    (fw: { name: string; matchScore?: number; reason?: string }) => {
+      // 尝试多种方式查找框架描述
+      let description = null;
+
+      // 1. 直接匹配
+      description = scenariosMap.get(fw.name);
+
+      // 2. 添加 " Framework" 后缀尝试
+      if (!description) {
+        description = scenariosMap.get(`${fw.name} Framework`);
+      }
+
+      // 3. 移除 " Framework" 后缀尝试
+      if (!description && fw.name.endsWith(" Framework")) {
+        const baseName = fw.name.replace(" Framework", "");
+        description = scenariosMap.get(baseName);
+      }
+
+      // 4. 使用 AI 返回的原因作为后备
+      if (!description) {
+        description = fw.reason || "AI 推荐的框架";
+        console.warn(`未找到框架 ${fw.name} 的应用场景描述，使用 AI 原因`);
+      }
+
+      return {
+        id: fw.name,
+        name: fw.name,
+        description: description,
+        matchScore: Math.min(100, Math.max(0, fw.matchScore || 0)),
+      };
+    },
+  );
+
   console.log("✅ 框架匹配完成，返回", candidates.length, "个框架");
   console.log("=== 框架匹配结束 ===");
-  
+
   return candidates.slice(0, 3);
 }
 
@@ -269,29 +271,26 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { input } = body;
-    
+
     console.log("\n========== 框架匹配 API 调用 ==========");
     console.log("收到请求，用户输入:", input);
-    
+
     if (!input || typeof input !== "string") {
       console.error("❌ 无效输入");
-      return NextResponse.json(
-        { error: "Invalid input" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
-    
+
     // 加载框架摘要
     console.log("正在加载框架摘要...");
     const summaryContent = await loadFrameworksSummary();
     console.log("框架摘要加载成功，长度:", summaryContent.length);
-    
+
     // 使用 AI 匹配框架
     const candidates = await matchFrameworksWithAI(input, summaryContent);
-    
+
     console.log("✅ API 调用成功，返回框架数量:", candidates.length);
     console.log("========================================\n");
-    
+
     return NextResponse.json({
       frameworks: candidates,
     });
@@ -299,7 +298,7 @@ export async function POST(request: NextRequest) {
     console.error("❌ 框架匹配 API 错误:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -4,9 +4,18 @@ export interface Agent {
   name: string;
   description: string;
   icon: string;
-  status: 'online' | 'busy' | 'offline';
-  category: 'content' | 'data' | 'code' | 'design' | 'research' | 'support';
-  kind?: 'portrait' | 'chat' | 'analysis' | 'workflow' | 'promptOptimizer' | 'imageEditor' | 'audioAnalyzer' | 'springFestivalMeme' | 'seedanceStoryboard';
+  status: "online" | "busy" | "offline";
+  category: "content" | "data" | "code" | "design" | "research" | "support";
+  kind?:
+    | "portrait"
+    | "chat"
+    | "analysis"
+    | "workflow"
+    | "promptOptimizer"
+    | "imageEditor"
+    | "audioAnalyzer"
+    | "springFestivalMeme"
+    | "seedanceStoryboard";
 }
 
 export interface CustomSkill {
@@ -20,7 +29,7 @@ export interface CustomSkill {
 
 export interface SkillParameter {
   name: string;
-  type: 'string' | 'number' | 'boolean' | 'file';
+  type: "string" | "number" | "boolean" | "file";
   required: boolean;
   description: string;
 }
@@ -51,7 +60,7 @@ export interface ArticleMetadata {
 export interface FileNode {
   id: string;
   name: string;
-  type: 'file' | 'folder';
+  type: "file" | "folder";
   children?: FileNode[];
   articleId?: string;
   parentId?: string | null;
@@ -68,12 +77,12 @@ export interface NewsItem {
 }
 
 // UI Types
-export type TabType = 'agents' | 'knowledge';
+export type TabType = "agents" | "knowledge";
 
 export interface Toast {
   id: string;
   message: string;
-  type: 'success' | 'error' | 'info';
+  type: "success" | "error" | "info";
 }
 
 // Music Player Types

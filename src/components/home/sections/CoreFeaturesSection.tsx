@@ -70,51 +70,51 @@ export function CoreFeaturesSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-20 px-4">
-      <div className="max-w-7xl mx-auto">
+    <section ref={sectionRef} className="px-4 py-20">
+      <div className="mx-auto max-w-7xl">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div className="mb-16 text-center">
           <GlitchText
             as="h2"
-            className="text-3xl md:text-5xl font-orbitron font-bold text-white mb-4"
+            className="font-orbitron mb-4 text-3xl font-bold text-white md:text-5xl"
           >
             为你准备的 AI 工具库
           </GlitchText>
-          <p className="text-white/60 text-lg">
-            五大核心功能，助力你的 AI 之旅
-          </p>
+          <p className="text-lg text-white/60">五大核心功能，助力你的 AI 之旅</p>
         </div>
 
         {/* Feature Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
           {features.map((feature, index) => (
             <div key={index} className="feature-card">
               <HolographicCard intensity="medium">
-                <div className="p-6 h-full flex flex-col">
+                <div className="flex h-full flex-col p-6">
                   {/* Tag */}
                   <div className="mb-4">
-                    <span className="text-xs font-mono text-cyber-cyan bg-cyber-cyan/10 px-3 py-1 rounded-full border border-cyber-cyan/30">
+                    <span className="text-cyber-cyan bg-cyber-cyan/10 border-cyber-cyan/30 rounded-full border px-3 py-1 font-mono text-xs">
                       {feature.tag}
                     </span>
                   </div>
 
                   {/* Icon */}
-                  <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${feature.gradient} opacity-20 flex items-center justify-center mb-4`}>
-                    <feature.icon className="w-6 h-6 text-white" />
+                  <div
+                    className={`h-12 w-12 rounded-lg bg-gradient-to-br ${feature.gradient} mb-4 flex items-center justify-center opacity-20`}
+                  >
+                    <feature.icon className="h-6 w-6 text-white" />
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-orbitron font-bold text-white mb-3">
+                  <h3 className="font-orbitron mb-3 text-xl font-bold text-white">
                     {feature.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-white/60 text-sm leading-relaxed flex-1">
+                  <p className="flex-1 text-sm leading-relaxed text-white/60">
                     {feature.description}
                   </p>
 
                   {/* Hover Effect Line */}
-                  <div className="mt-4 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-cyber-cyan to-transparent transition-all duration-500" />
+                  <div className="from-cyber-cyan mt-4 h-0.5 w-0 bg-gradient-to-r to-transparent transition-all duration-500 group-hover:w-full" />
                 </div>
               </HolographicCard>
             </div>

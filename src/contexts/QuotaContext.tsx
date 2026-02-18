@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { QuotaManager } from '@/lib/quotaManager';
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { QuotaManager } from "@/lib/quotaManager";
 
 interface QuotaContextValue {
   isUnlocked: boolean;
@@ -15,7 +15,7 @@ const QuotaContext = createContext<QuotaContextValue | null>(null);
 
 export function QuotaProvider({ children }: { children: ReactNode }) {
   const [isUnlocked, setIsUnlocked] = useState(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       return QuotaManager.isUnlocked();
     }
     return false;
@@ -57,7 +57,7 @@ export function QuotaProvider({ children }: { children: ReactNode }) {
 export function useQuota() {
   const context = useContext(QuotaContext);
   if (!context) {
-    throw new Error('useQuota must be used within QuotaProvider');
+    throw new Error("useQuota must be used within QuotaProvider");
   }
   return context;
 }

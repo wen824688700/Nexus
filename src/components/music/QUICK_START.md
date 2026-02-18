@@ -21,7 +21,7 @@ web/src/components/music/
 在 `web/src/app/layout.tsx` 添加：
 
 ```tsx
-import { FloatingMusicPlayer } from '@/components/music';
+import { FloatingMusicPlayer } from "@/components/music";
 
 export default function RootLayout({ children }) {
   return (
@@ -44,10 +44,10 @@ export default function RootLayout({ children }) {
 在任何页面组件中：
 
 ```tsx
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { FloatingMusicPlayer } from '@/components/music';
+import { useState } from "react";
+import { FloatingMusicPlayer } from "@/components/music";
 
 export default function Page() {
   const [show, setShow] = useState(false);
@@ -72,17 +72,20 @@ export default function Page() {
 ## 🎨 主要功能
 
 ### 基础播放
+
 - ▶️ 播放/暂停
 - ⏭️ 上一首/下一首
 - 🔊 音量控制
 - ⏱️ 进度条拖动
 
 ### 视觉效果
+
 - 🌊 **赛博波浪**：页面底部跟随音乐律动
 - 💿 **旋转光碟**：播放时自动旋转
 - ✨ **霓虹发光**：赛博朋克风格UI
 
 ### 设置面板（点击光碟图标）
+
 - 🎵 音乐风格选择（Lo-Fi、Ambient等）
 - 😌 情绪氛围滑块
 - 🎹 节奏BPM调节
@@ -92,26 +95,26 @@ export default function Page() {
 ## 🎯 关键组件说明
 
 ### FloatingMusicPlayer
+
 主播放器组件，支持两种模式：
 
 ```tsx
-<FloatingMusicPlayer 
-  mode="floating"  // 或 "modal"
+<FloatingMusicPlayer
+  mode="floating" // 或 "modal"
   onClose={() => {}} // 仅modal模式需要
 />
 ```
 
 ### CyberWaveVisualizer
+
 独立的波浪可视化组件：
 
 ```tsx
-<CyberWaveVisualizer 
-  isPlaying={true}
-  getFrequencyData={() => new Uint8Array()}
-/>
+<CyberWaveVisualizer isPlaying={true} getFrequencyData={() => new Uint8Array()} />
 ```
 
 ### useMusicPlayer Hook
+
 完整的播放器逻辑：
 
 ```tsx
@@ -123,29 +126,29 @@ const {
   playNext,
   playPrevious,
   setVolume,
-  getFrequencyData
+  getFrequencyData,
 } = useMusicPlayer();
 ```
 
 ## 🎵 自定义播放列表
 
 ```tsx
-import { useMusicPlayer, type MusicTrack } from '@/components/music';
+import { useMusicPlayer, type MusicTrack } from "@/components/music";
 
 const myTracks: MusicTrack[] = [
   {
-    id: '1',
-    title: '我的音乐',
-    artist: 'AI Composer',
-    genre: 'Lo-Fi',
-    url: '/audio/track1.mp3',
-    duration: 180
-  }
+    id: "1",
+    title: "我的音乐",
+    artist: "AI Composer",
+    genre: "Lo-Fi",
+    url: "/audio/track1.mp3",
+    duration: 180,
+  },
 ];
 
 function MyPlayer() {
   const { setPlaylist, playTrack } = useMusicPlayer();
-  
+
   useEffect(() => {
     setPlaylist(myTracks);
     playTrack(myTracks[0], 0);

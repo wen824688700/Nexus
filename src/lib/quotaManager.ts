@@ -14,9 +14,9 @@ interface VaultSession {
 }
 
 export class QuotaManager {
-  private static STORAGE_KEY = 'vault_session';
+  private static STORAGE_KEY = "vault_session";
   private static DAILY_LIMIT = 10;
-  private static DEV_CODE = 'DEV_UNLIMITED';
+  private static DEV_CODE = "DEV_UNLIMITED";
 
   static generateUserId(): string {
     return crypto.randomUUID();
@@ -54,7 +54,7 @@ export class QuotaManager {
   }
 
   private static getToday(): string {
-    return new Date().toISOString().split('T')[0];
+    return new Date().toISOString().split("T")[0];
   }
 
   static checkQuota(agentKey: string): {

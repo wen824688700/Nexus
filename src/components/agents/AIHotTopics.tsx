@@ -20,13 +20,15 @@ export function AIHotTopics() {
       try {
         const res = await fetch("/api/pulse/hot?limit=20");
         const data = await res.json();
-        
+
         if (data.items) {
-          const formattedItems = data.items.map((item: any) => ({
-            time: formatTime(item.date),
-            text: item.title,
-            url: item.url,
-          }));
+          const formattedItems = data.items.map(
+            (item: { date: string; title: string; url: string }) => ({
+              time: formatTime(item.date),
+              text: item.title,
+              url: item.url,
+            }),
+          );
           setHotItems(formattedItems);
         }
       } catch (error) {
@@ -51,66 +53,68 @@ export function AIHotTopics() {
 
   return (
     <NeonBorder color="magenta" className="rounded-xl">
-      <div className="bg-cyber-dark/80 backdrop-blur-xl p-6 rounded-xl h-full relative overflow-hidden">
+      <div className="bg-cyber-dark/80 relative h-full overflow-hidden rounded-xl p-6 backdrop-blur-xl">
         {/* Scan Line Effect */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute w-full h-[2px] bg-gradient-to-r from-transparent via-cyber-magenta/30 to-transparent animate-[scan-line_3s_linear_infinite]" />
+        <div className="pointer-events-none absolute inset-0">
+          <div className="via-cyber-magenta/30 absolute h-[2px] w-full animate-[scan-line_3s_linear_infinite] bg-gradient-to-r from-transparent to-transparent" />
         </div>
 
-        <div className="flex items-center gap-3 mb-4 relative z-10">
-          <TrendingUp className="w-5 h-5 text-cyber-magenta" />
+        <div className="relative z-10 mb-4 flex items-center gap-3">
+          <TrendingUp className="text-cyber-magenta h-5 w-5" />
           <h3 className="font-orbitron font-bold text-white">AI 热点</h3>
           <div className="ml-auto flex items-center gap-2">
-            <Flame className="w-3 h-3 text-cyber-magenta animate-pulse" />
-            <span className="text-xs text-white/40 font-mono">HOT</span>
-            <div className="w-2 h-2 rounded-full bg-cyber-magenta animate-pulse shadow-[0_0_10px_rgba(255,0,255,0.8)]" />
+            <Flame className="text-cyber-magenta h-3 w-3 animate-pulse" />
+            <span className="font-mono text-xs text-white/40">HOT</span>
+            <div className="bg-cyber-magenta h-2 w-2 animate-pulse rounded-full shadow-[0_0_10px_rgba(255,0,255,0.8)]" />
           </div>
         </div>
 
-        <div 
-          className="h-[340px] overflow-hidden relative"
+        <div
+          className="relative h-[340px] overflow-hidden"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
           {/* Gradient Masks */}
-          <div className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-cyber-dark/80 to-transparent z-10 pointer-events-none" />
-          <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-cyber-dark/80 to-transparent z-10 pointer-events-none" />
+          <div className="from-cyber-dark/80 pointer-events-none absolute top-0 right-0 left-0 z-10 h-12 bg-gradient-to-b to-transparent" />
+          <div className="from-cyber-dark/80 pointer-events-none absolute right-0 bottom-0 left-0 z-10 h-12 bg-gradient-to-t to-transparent" />
 
           {loading ? (
-            <div className="flex items-center justify-center h-full">
+            <div className="flex h-full items-center justify-center">
               <div className="flex flex-col items-center gap-4">
                 <div className="relative">
-                  <div className="w-12 h-12 border-2 border-cyber-magenta/30 border-t-cyber-magenta rounded-full animate-spin" />
-                  <div className="absolute inset-0 w-12 h-12 border-2 border-cyber-magenta/10 rounded-full animate-ping" />
+                  <div className="border-cyber-magenta/30 border-t-cyber-magenta h-12 w-12 animate-spin rounded-full border-2" />
+                  <div className="border-cyber-magenta/10 absolute inset-0 h-12 w-12 animate-ping rounded-full border-2" />
                 </div>
-                <div className="text-center space-y-2">
-                  <div className="text-cyber-magenta text-sm font-mono font-bold tracking-wider">
+                <div className="space-y-2 text-center">
+                  <div className="text-cyber-magenta font-mono text-sm font-bold tracking-wider">
                     [ TRACKING TRENDS ]
                   </div>
-                  <div className="text-white/60 text-xs font-mono">
-                    正在追踪全球热点动态...
-                  </div>
-                  <div className="flex items-center justify-center gap-1 text-cyber-magenta/60 text-xs font-mono">
+                  <div className="font-mono text-xs text-white/60">正在追踪全球热点动态...</div>
+                  <div className="text-cyber-magenta/60 flex items-center justify-center gap-1 font-mono text-xs">
                     <span className="animate-pulse">◆</span>
-                    <span className="animate-pulse" style={{ animationDelay: '0.2s' }}>◆</span>
-                    <span className="animate-pulse" style={{ animationDelay: '0.4s' }}>◆</span>
+                    <span className="animate-pulse" style={{ animationDelay: "0.2s" }}>
+                      ◆
+                    </span>
+                    <span className="animate-pulse" style={{ animationDelay: "0.4s" }}>
+                      ◆
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           ) : hotItems.length > 0 ? (
-            <div 
-              className={`space-y-4 ${isPaused ? '' : 'animate-[news-scroll_18s_linear_infinite]'}`}
-              style={{ willChange: 'transform' }}
+            <div
+              className={`space-y-4 ${isPaused ? "" : "animate-[news-scroll_18s_linear_infinite]"}`}
+              style={{ willChange: "transform" }}
             >
               {[...hotItems, ...hotItems].map((item, index) => (
-                <div 
-                  key={index} 
-                  className="group border-l-2 border-cyber-magenta/30 pl-4 hover:border-cyber-magenta transition-all duration-300"
+                <div
+                  key={index}
+                  className="group border-cyber-magenta/30 hover:border-cyber-magenta border-l-2 pl-4 transition-all duration-300"
                 >
-                  <div className="flex items-center gap-2 mb-1">
-                    <Flame className="w-3 h-3 text-cyber-magenta/60 group-hover:text-cyber-magenta group-hover:animate-pulse transition-all" />
-                    <p className="text-xs text-white/40 font-mono group-hover:text-cyber-magenta transition-colors">
+                  <div className="mb-1 flex items-center gap-2">
+                    <Flame className="text-cyber-magenta/60 group-hover:text-cyber-magenta h-3 w-3 transition-all group-hover:animate-pulse" />
+                    <p className="group-hover:text-cyber-magenta font-mono text-xs text-white/40 transition-colors">
                       {item.time}
                     </p>
                   </div>
@@ -119,12 +123,12 @@ export function AIHotTopics() {
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-white/70 hover:text-cyber-magenta transition-colors line-clamp-2 leading-relaxed group-hover:text-white"
+                      className="hover:text-cyber-magenta line-clamp-2 text-sm leading-relaxed text-white/70 transition-colors group-hover:text-white"
                     >
                       {item.text}
                     </a>
                   ) : (
-                    <p className="text-sm text-white/70 line-clamp-2 leading-relaxed group-hover:text-white transition-colors">
+                    <p className="line-clamp-2 text-sm leading-relaxed text-white/70 transition-colors group-hover:text-white">
                       {item.text}
                     </p>
                   )}
@@ -132,12 +136,12 @@ export function AIHotTopics() {
               ))}
             </div>
           ) : (
-            <div className="flex items-center justify-center h-full">
+            <div className="flex h-full items-center justify-center">
               <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-3">
-                  <TrendingUp className="w-6 h-6 text-white/20" />
+                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/5">
+                  <TrendingUp className="h-6 w-6 text-white/20" />
                 </div>
-                <div className="text-white/40 text-sm font-mono">暂无热点</div>
+                <div className="font-mono text-sm text-white/40">暂无热点</div>
               </div>
             </div>
           )}

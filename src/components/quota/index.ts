@@ -1,1 +1,1 @@
-export { QuotaDisplay } from './QuotaDisplay';
+export { QuotaDisplay } from "./QuotaDisplay";

@@ -1,44 +1,42 @@
-'use client'
+"use client";
 
-import { useState, useTransition } from 'react'
-import { forgotPassword } from '@/app/auth/actions'
+import { useState, useTransition } from "react";
+import { forgotPassword } from "@/app/auth/actions";
 
 interface ForgotPasswordFormProps {
-  onBack: () => void
+  onBack: () => void;
 }
 
 /**
  * 忘记密码表单组件
- * 
+ *
  * 发送密码重置邮件
  * 验证需求：13.1, 13.2
  */
 export default function ForgotPasswordForm({ onBack }: ForgotPasswordFormProps) {
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
-  const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   async function handleSubmit(formData: FormData) {
-    setError(null)
-    setSuccess(null)
-    
+    setError(null);
+    setSuccess(null);
+
     startTransition(async () => {
-      const result = await forgotPassword(formData)
-      
+      const result = await forgotPassword(formData);
+
       if (result?.error) {
-        setError(result.error)
+        setError(result.error);
       } else if (result?.success) {
-        setSuccess(result.message)
+        setSuccess(result.message);
       }
-    })
+    });
   }
 
   return (
     <form action={handleSubmit} className="space-y-4">
       {/* 说明文字 */}
-      <p className="text-sm text-white/60">
-        输入您的邮箱地址，我们将向您发送密码重置链接。
-      </p>
+      <p className="text-sm text-white/60">输入您的邮箱地址，我们将向您发送密码重置链接。</p>
 
       {/* 成功提示 */}
       {success && (
@@ -56,7 +54,7 @@ export default function ForgotPasswordForm({ onBack }: ForgotPasswordFormProps) 
 
       {/* 邮箱 */}
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-1">
+        <label htmlFor="email" className="mb-1 block text-sm font-medium text-white/80">
           邮箱地址
         </label>
         <input
@@ -65,7 +63,7 @@ export default function ForgotPasswordForm({ onBack }: ForgotPasswordFormProps) 
           type="email"
           required
           disabled={isPending}
-          className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           placeholder="your@email.com"
         />
       </div>
@@ -74,9 +72,9 @@ export default function ForgotPasswordForm({ onBack }: ForgotPasswordFormProps) 
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded bg-white px-4 py-2.5 font-medium text-black transition-all hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full rounded bg-white px-4 py-2.5 font-medium text-black transition-all hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {isPending ? '发送中...' : '发送重置链接'}
+        {isPending ? "发送中..." : "发送重置链接"}
       </button>
 
       {/* 返回登录 */}
@@ -85,11 +83,11 @@ export default function ForgotPasswordForm({ onBack }: ForgotPasswordFormProps) 
           type="button"
           onClick={onBack}
           disabled={isPending}
-          className="text-sm text-white/60 hover:text-white transition-colors disabled:opacity-50"
+          className="text-sm text-white/60 transition-colors hover:text-white disabled:opacity-50"
         >
           ← 返回登录
         </button>
       </div>
     </form>
-  )
+  );
 }

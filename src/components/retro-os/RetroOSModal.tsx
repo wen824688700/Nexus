@@ -54,7 +54,7 @@ export function RetroOSModal({ mounted, visible, onClose }: RetroOSModalProps) {
           <button
             type="button"
             onClick={onClose}
-            className="absolute -right-2 -top-2 z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white/20 bg-black/80 text-white/60 backdrop-blur-sm transition-all hover:border-white/40 hover:bg-black/90 hover:text-white md:-right-4 md:-top-4"
+            className="absolute -top-2 -right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white/20 bg-black/80 text-white/60 backdrop-blur-sm transition-all hover:border-white/40 hover:bg-black/90 hover:text-white md:-top-4 md:-right-4"
             aria-label="关闭"
           >
             <svg

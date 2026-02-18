@@ -1,9 +1,19 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { 
-  Bold, Italic, Code, Link, Heading1, Heading2, Heading3,
-  List, ListOrdered, Quote, Minus, Image
+import {
+  Bold,
+  Italic,
+  Code,
+  Link,
+  Heading1,
+  Heading2,
+  Heading3,
+  List,
+  ListOrdered,
+  Quote,
+  Minus,
+  Image,
 } from "lucide-react";
 
 interface MarkdownEditorProps {
@@ -25,15 +35,15 @@ export function MarkdownEditor({ value, onChange, images = {}, onImageAdd }: Mar
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     const selectedText = value.substring(start, end);
-    
+
     let prefix = "";
     let suffix = "";
-    
+
     // 如果需要新行，检查前后是否有换行符
     if (newLine) {
       const beforeText = value.substring(0, start);
       const afterText = value.substring(end);
-      
+
       if (beforeText && !beforeText.endsWith("\n")) {
         prefix = "\n";
       }
@@ -41,7 +51,7 @@ export function MarkdownEditor({ value, onChange, images = {}, onImageAdd }: Mar
         suffix = "\n";
       }
     }
-    
+
     const newText =
       value.substring(0, start) +
       prefix +
@@ -84,25 +94,25 @@ export function MarkdownEditor({ value, onChange, images = {}, onImageAdd }: Mar
       const reader = new FileReader();
       reader.onload = (event) => {
         const base64 = event.target?.result as string;
-        
+
         // 生成唯一 ID
         const imageId = `img-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        
+
         // 通知父组件存储图片数据
         if (onImageAdd) {
           onImageAdd(imageId, base64);
         } else {
-          console.error('❌ [MarkdownEditor] onImageAdd 未定义');
+          console.error("❌ [MarkdownEditor] onImageAdd 未定义");
         }
-        
+
         // 插入图片引用（使用 img:// 协议）
         const markdown = `![${file.name}](img://${imageId})`;
         insertMarkdown(markdown, "", true);
-        
+
         setUploading(false);
       };
       reader.onerror = () => {
-        console.error('❌ 图片读取失败');
+        console.error("❌ 图片读取失败");
         alert("图片读取失败");
         setUploading(false);
       };
@@ -118,119 +128,119 @@ export function MarkdownEditor({ value, onChange, images = {}, onImageAdd }: Mar
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="flex h-full flex-col">
       {/* Toolbar */}
-      <div className="flex items-center gap-1 p-2 border-b border-white/10 bg-white/5 overflow-x-auto">
+      <div className="flex items-center gap-1 overflow-x-auto border-b border-white/10 bg-white/5 p-2">
         <button
           type="button"
           onClick={() => insertMarkdown("# ", "")}
-          className="p-2 rounded hover:bg-white/10 text-white/70 hover:text-white transition-colors flex-shrink-0"
+          className="flex-shrink-0 rounded p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           title="标题 1"
         >
-          <Heading1 className="w-4 h-4" />
+          <Heading1 className="h-4 w-4" />
         </button>
         <button
           type="button"
           onClick={() => insertMarkdown("## ", "")}
-          className="p-2 rounded hover:bg-white/10 text-white/70 hover:text-white transition-colors flex-shrink-0"
+          className="flex-shrink-0 rounded p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           title="标题 2"
         >
-          <Heading2 className="w-4 h-4" />
+          <Heading2 className="h-4 w-4" />
         </button>
         <button
           type="button"
           onClick={() => insertMarkdown("### ", "")}
-          className="p-2 rounded hover:bg-white/10 text-white/70 hover:text-white transition-colors flex-shrink-0"
+          className="flex-shrink-0 rounded p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           title="标题 3"
         >
-          <Heading3 className="w-4 h-4" />
+          <Heading3 className="h-4 w-4" />
         </button>
-        
-        <div className="w-px h-6 bg-white/10 mx-1" />
-        
+
+        <div className="mx-1 h-6 w-px bg-white/10" />
+
         <button
           type="button"
           onClick={() => insertMarkdown("**", "**")}
-          className="p-2 rounded hover:bg-white/10 text-white/70 hover:text-white transition-colors flex-shrink-0"
+          className="flex-shrink-0 rounded p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           title="粗体"
         >
-          <Bold className="w-4 h-4" />
+          <Bold className="h-4 w-4" />
         </button>
         <button
           type="button"
           onClick={() => insertMarkdown("*", "*")}
-          className="p-2 rounded hover:bg-white/10 text-white/70 hover:text-white transition-colors flex-shrink-0"
+          className="flex-shrink-0 rounded p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           title="斜体"
         >
-          <Italic className="w-4 h-4" />
+          <Italic className="h-4 w-4" />
         </button>
-        
-        <div className="w-px h-6 bg-white/10 mx-1" />
-        
+
+        <div className="mx-1 h-6 w-px bg-white/10" />
+
         <button
           type="button"
           onClick={() => insertMarkdown("- ", "", true)}
-          className="p-2 rounded hover:bg-white/10 text-white/70 hover:text-white transition-colors flex-shrink-0"
+          className="flex-shrink-0 rounded p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           title="无序列表"
         >
-          <List className="w-4 h-4" />
+          <List className="h-4 w-4" />
         </button>
         <button
           type="button"
           onClick={() => insertMarkdown("1. ", "", true)}
-          className="p-2 rounded hover:bg-white/10 text-white/70 hover:text-white transition-colors flex-shrink-0"
+          className="flex-shrink-0 rounded p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           title="有序列表"
         >
-          <ListOrdered className="w-4 h-4" />
+          <ListOrdered className="h-4 w-4" />
         </button>
-        
-        <div className="w-px h-6 bg-white/10 mx-1" />
-        
+
+        <div className="mx-1 h-6 w-px bg-white/10" />
+
         <button
           type="button"
           onClick={() => insertMarkdown("> ", "", true)}
-          className="p-2 rounded hover:bg-white/10 text-white/70 hover:text-white transition-colors flex-shrink-0"
+          className="flex-shrink-0 rounded p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           title="引用"
         >
-          <Quote className="w-4 h-4" />
+          <Quote className="h-4 w-4" />
         </button>
         <button
           type="button"
           onClick={() => insertMarkdown("---", "", true)}
-          className="p-2 rounded hover:bg-white/10 text-white/70 hover:text-white transition-colors flex-shrink-0"
+          className="flex-shrink-0 rounded p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           title="分割线"
         >
-          <Minus className="w-4 h-4" />
+          <Minus className="h-4 w-4" />
         </button>
-        
-        <div className="w-px h-6 bg-white/10 mx-1" />
-        
+
+        <div className="mx-1 h-6 w-px bg-white/10" />
+
         <button
           type="button"
           onClick={() => insertMarkdown("`", "`")}
-          className="p-2 rounded hover:bg-white/10 text-white/70 hover:text-white transition-colors flex-shrink-0"
+          className="flex-shrink-0 rounded p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           title="行内代码"
         >
-          <Code className="w-4 h-4" />
+          <Code className="h-4 w-4" />
         </button>
         <button
           type="button"
           onClick={() => insertMarkdown("[", "](url)")}
-          className="p-2 rounded hover:bg-white/10 text-white/70 hover:text-white transition-colors flex-shrink-0"
+          className="flex-shrink-0 rounded p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
           title="链接"
         >
-          <Link className="w-4 h-4" />
+          <Link className="h-4 w-4" />
         </button>
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading}
-          className="p-2 rounded hover:bg-white/10 text-white/70 hover:text-white transition-colors flex-shrink-0 disabled:opacity-50"
+          className="flex-shrink-0 rounded p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-50"
           title="插入图片"
         >
-          <Image className="w-4 h-4" />
+          <Image className="h-4 w-4" />
         </button>
-        
+
         <input
           ref={fileInputRef}
           type="file"
@@ -245,7 +255,7 @@ export function MarkdownEditor({ value, onChange, images = {}, onImageAdd }: Mar
         ref={textareaRef}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="flex-1 p-4 bg-transparent text-white font-mono text-sm leading-relaxed resize-none focus:outline-none cyber-scrollbar"
+        className="cyber-scrollbar flex-1 resize-none bg-transparent p-4 font-mono text-sm leading-relaxed text-white focus:outline-none"
         placeholder="开始编写你的文章..."
       />
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState, useCallback } from "react";
 
 export interface MusicTrack {
   id: string;
@@ -19,7 +19,7 @@ export interface MusicPlayerState {
   duration: number;
   playlist: MusicTrack[];
   currentIndex: number;
-  playMode: 'sequential' | 'random' | 'loop';
+  playMode: "sequential" | "random" | "loop";
 }
 
 export const useMusicPlayer = () => {
@@ -36,22 +36,23 @@ export const useMusicPlayer = () => {
     duration: 0,
     playlist: [],
     currentIndex: 0,
-    playMode: 'sequential'
+    playMode: "sequential",
   });
 
   // 初始化音频上下文和分析器
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     // 创建音频元素
     if (!audioRef.current) {
       audioRef.current = new Audio();
       audioRef.current.volume = state.volume;
-      audioRef.current.crossOrigin = 'anonymous'; // 允许跨域音频分析
+      audioRef.current.crossOrigin = "anonymous"; // 允许跨域音频分析
     }
 
     // 创建音频上下文（只创建一次）
     if (!audioContextRef.current) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
       audioContextRef.current = new AudioContext();
       analyserRef.current = audioContextRef.current.createAnalyser();
@@ -65,33 +66,33 @@ export const useMusicPlayer = () => {
           sourceRef.current.connect(analyserRef.current);
           analyserRef.current.connect(audioContextRef.current.destination);
         } catch (error) {
-          console.error('Failed to create audio source:', error);
+          console.error("Failed to create audio source:", error);
         }
       }
     }
 
     // 监听音频事件
     const audio = audioRef.current;
-    
+
     const handleTimeUpdate = () => {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         currentTime: audio.currentTime,
-        duration: audio.duration || 0
+        duration: audio.duration || 0,
       }));
     };
 
     const handleEnded = () => {
       // 直接在这里处理下一首逻辑，避免依赖 playNext
-      setState(prevState => {
+      setState((prevState) => {
         const { playlist, currentIndex, playMode } = prevState;
         if (playlist.length === 0) return prevState;
 
         let nextIndex: number;
-        
-        if (playMode === 'random') {
+
+        if (playMode === "random") {
           nextIndex = Math.floor(Math.random() * playlist.length);
-        } else if (playMode === 'loop') {
+        } else if (playMode === "loop") {
           nextIndex = currentIndex;
         } else {
           nextIndex = (currentIndex + 1) % playlist.length;
@@ -109,43 +110,43 @@ export const useMusicPlayer = () => {
           currentTrack: nextTrack,
           currentIndex: nextIndex,
           isPlaying: true,
-          currentTime: 0
+          currentTime: 0,
         };
       });
     };
 
     const handleLoadedMetadata = () => {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        duration: audio.duration || 0
+        duration: audio.duration || 0,
       }));
     };
 
-    audio.addEventListener('timeupdate', handleTimeUpdate);
-    audio.addEventListener('ended', handleEnded);
-    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
 
     return () => {
-      audio.removeEventListener('timeupdate', handleTimeUpdate);
-      audio.removeEventListener('ended', handleEnded);
-      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
   }, []); // playNext 在 effect 内部通过闭包访问，不需要作为依赖
 
   // 播放
   const play = useCallback(async () => {
     if (!audioRef.current) return;
-    
+
     try {
       // 恢复音频上下文
-      if (audioContextRef.current?.state === 'suspended') {
+      if (audioContextRef.current?.state === "suspended") {
         await audioContextRef.current.resume();
       }
-      
+
       await audioRef.current.play();
-      setState(prev => ({ ...prev, isPlaying: true }));
+      setState((prev) => ({ ...prev, isPlaying: true }));
     } catch (error) {
-      console.error('播放失败:', error);
+      console.error("播放失败:", error);
     }
   }, []);
 
@@ -153,7 +154,7 @@ export const useMusicPlayer = () => {
   const pause = useCallback(() => {
     if (!audioRef.current) return;
     audioRef.current.pause();
-    setState(prev => ({ ...prev, isPlaying: false }));
+    setState((prev) => ({ ...prev, isPlaying: false }));
   }, []);
 
   // 切换播放/暂停
@@ -168,33 +169,36 @@ export const useMusicPlayer = () => {
   // 加载曲目
   const loadTrack = useCallback((track: MusicTrack) => {
     if (!audioRef.current) return;
-    
+
     audioRef.current.src = track.url;
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       currentTrack: track,
-      currentTime: 0
+      currentTime: 0,
     }));
   }, []);
 
   // 播放指定曲目
-  const playTrack = useCallback((track: MusicTrack, index: number) => {
-    loadTrack(track);
-    setState(prev => ({ ...prev, currentIndex: index }));
-    setTimeout(() => play(), 100);
-  }, [loadTrack, play]);
+  const playTrack = useCallback(
+    (track: MusicTrack, index: number) => {
+      loadTrack(track);
+      setState((prev) => ({ ...prev, currentIndex: index }));
+      setTimeout(() => play(), 100);
+    },
+    [loadTrack, play],
+  );
 
   // 下一首
   const playNext = useCallback(() => {
-    setState(prevState => {
+    setState((prevState) => {
       const { playlist, currentIndex, playMode } = prevState;
       if (playlist.length === 0) return prevState;
 
       let nextIndex: number;
-      
-      if (playMode === 'random') {
+
+      if (playMode === "random") {
         nextIndex = Math.floor(Math.random() * playlist.length);
-      } else if (playMode === 'loop') {
+      } else if (playMode === "loop") {
         nextIndex = currentIndex; // 单曲循环，保持当前索引
       } else {
         nextIndex = (currentIndex + 1) % playlist.length; // 顺序播放
@@ -205,14 +209,14 @@ export const useMusicPlayer = () => {
       if (audioRef.current && nextTrack) {
         audioRef.current.src = nextTrack.url;
         audioRef.current.currentTime = 0;
-        
+
         // 恢复音频上下文
-        if (audioContextRef.current?.state === 'suspended') {
+        if (audioContextRef.current?.state === "suspended") {
           audioContextRef.current.resume();
         }
-        
-        audioRef.current.play().catch(error => {
-          console.error('播放失败:', error);
+
+        audioRef.current.play().catch((error) => {
+          console.error("播放失败:", error);
         });
       }
 
@@ -221,7 +225,7 @@ export const useMusicPlayer = () => {
         currentTrack: nextTrack,
         currentIndex: nextIndex,
         isPlaying: true,
-        currentTime: 0
+        currentTime: 0,
       };
     });
   }, []);
@@ -240,7 +244,7 @@ export const useMusicPlayer = () => {
     if (!audioRef.current) return;
     const clampedVolume = Math.max(0, Math.min(1, volume));
     audioRef.current.volume = clampedVolume;
-    setState(prev => ({ ...prev, volume: clampedVolume }));
+    setState((prev) => ({ ...prev, volume: clampedVolume }));
   }, []);
 
   // 跳转到指定时间
@@ -250,13 +254,13 @@ export const useMusicPlayer = () => {
   }, []);
 
   // 设置播放模式
-  const setPlayMode = useCallback((mode: 'sequential' | 'random' | 'loop') => {
-    setState(prev => ({ ...prev, playMode: mode }));
+  const setPlayMode = useCallback((mode: "sequential" | "random" | "loop") => {
+    setState((prev) => ({ ...prev, playMode: mode }));
   }, []);
 
   // 设置播放列表
   const setPlaylist = useCallback((playlist: MusicTrack[]) => {
-    setState(prev => ({ ...prev, playlist }));
+    setState((prev) => ({ ...prev, playlist }));
   }, []);
 
   // 获取音频分析数据
@@ -267,7 +271,7 @@ export const useMusicPlayer = () => {
     const bufferLength = analyserRef.current.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
     analyserRef.current.getByteFrequencyData(dataArray);
-    
+
     return dataArray;
   }, []);
 
@@ -286,6 +290,6 @@ export const useMusicPlayer = () => {
     playTrack,
     getFrequencyData,
     audioRef,
-    analyserRef
+    analyserRef,
   };
 };

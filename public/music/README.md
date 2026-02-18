@@ -29,21 +29,21 @@ web/public/music/
 ```typescript
 const demoPlaylist: MusicTrack[] = [
   {
-    id: '1',
-    title: '深夜编码',           // 显示的歌曲名
-    artist: 'AI Composer',      // 艺术家名
-    genre: 'Lo-Fi',             // 音乐类型
-    url: '/music/lofi-1.mp3',   // 文件路径（从 public 开始）
-    duration: 180               // 时长（秒）
+    id: "1",
+    title: "深夜编码", // 显示的歌曲名
+    artist: "AI Composer", // 艺术家名
+    genre: "Lo-Fi", // 音乐类型
+    url: "/music/lofi-1.mp3", // 文件路径（从 public 开始）
+    duration: 180, // 时长（秒）
   },
   {
-    id: '2',
-    title: '专注时刻',
-    artist: 'AI Composer',
-    genre: 'Ambient',
-    url: '/music/ambient-1.mp3',
-    duration: 240
-  }
+    id: "2",
+    title: "专注时刻",
+    artist: "AI Composer",
+    genre: "Ambient",
+    url: "/music/ambient-1.mp3",
+    duration: 240,
+  },
 ];
 ```
 
@@ -65,6 +65,7 @@ Next.js 会自动将 `public` 目录映射到网站根路径 `/`
 ## 📊 获取音频时长
 
 如果不知道音频时长，可以：
+
 1. 先设置为 0：`duration: 0`
 2. 播放器会自动获取实际时长
 3. 或使用工具查看：右键文件 → 属性 → 详细信息

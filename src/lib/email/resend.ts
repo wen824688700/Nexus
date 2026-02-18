@@ -1,11 +1,11 @@
-import { Resend } from 'resend'
+import { Resend } from "resend";
 
 // 初始化 Resend 客户端
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 /**
  * 发送验证码邮件
- * 
+ *
  * @param to - 收件人邮箱
  * @param code - 6 位验证码
  * @param type - 验证码类型（signup 或 reset_password）
@@ -14,17 +14,18 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 export async function sendVerificationEmail(
   to: string,
   code: string,
-  type: 'signup' | 'reset_password' = 'signup'
+  type: "signup" | "reset_password" = "signup",
 ) {
-  const subject = type === 'signup' ? '验证您的邮箱' : '重置您的密码'
-  const title = type === 'signup' ? '邮箱验证码' : '密码重置验证码'
-  const description = type === 'signup' 
-    ? '感谢您注册 APEX AI Labs！请使用以下验证码完成注册：'
-    : '您正在重置密码，请使用以下验证码继续：'
+  const subject = type === "signup" ? "验证您的邮箱" : "重置您的密码";
+  const title = type === "signup" ? "邮箱验证码" : "密码重置验证码";
+  const description =
+    type === "signup"
+      ? "感谢您注册 APEX AI Labs！请使用以下验证码完成注册："
+      : "您正在重置密码，请使用以下验证码继续：";
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'APEX AI Labs <xiaomo@apex-ai-labs.live>',
+      from: "APEX AI Labs <xiaomo@apex-ai-labs.live>",
       to: [to],
       subject,
       html: `
@@ -98,20 +99,20 @@ export async function sendVerificationEmail(
           </body>
         </html>
       `,
-    })
+    });
 
     if (error) {
-      console.error('Resend error:', error)
-      return { success: false, error: error.message }
+      console.error("Resend error:", error);
+      return { success: false, error: error.message };
     }
 
-    return { success: true, data }
+    return { success: true, data };
   } catch (error) {
-    console.error('Send email error:', error)
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : '发送邮件失败' 
-    }
+    console.error("Send email error:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "发送邮件失败",
+    };
   }
 }
 
@@ -119,5 +120,5 @@ export async function sendVerificationEmail(
  * 生成 6 位随机验证码
  */
 export function generateVerificationCode(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString()
+  return Math.floor(100000 + Math.random() * 900000).toString();
 }

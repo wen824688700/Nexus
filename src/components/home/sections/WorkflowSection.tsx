@@ -52,7 +52,7 @@ interface OutputCardProps {
 
 const StageLabel = ({ step, title, subtitle, active, align }: StageLabelProps) => (
   <div
-    className={`mb-4 md:mb-6 flex flex-col ${
+    className={`mb-4 flex flex-col md:mb-6 ${
       align === "right"
         ? "md:items-end md:text-right"
         : align === "center"
@@ -62,7 +62,7 @@ const StageLabel = ({ step, title, subtitle, active, align }: StageLabelProps) =
   >
     <div className="relative">
       <span
-        className={`text-6xl md:text-7xl font-bold font-mono text-white/10 absolute -top-10 md:-top-12 z-[1] ${
+        className={`absolute -top-10 z-[1] font-mono text-6xl font-bold text-white/10 md:-top-12 md:text-7xl ${
           align === "right"
             ? "-right-8 md:-right-10"
             : align === "center"
@@ -73,14 +73,14 @@ const StageLabel = ({ step, title, subtitle, active, align }: StageLabelProps) =
         {step}
       </span>
       <h3
-        className={`relative z-10 text-lg md:text-xl font-orbitron font-bold transition-colors duration-300 ${
+        className={`font-orbitron relative z-10 text-lg font-bold transition-colors duration-300 md:text-xl ${
           active ? "text-white" : "text-gray-400"
         }`}
       >
         {title}
       </h3>
     </div>
-    <span className="text-[10px] md:text-xs font-mono tracking-[0.2em] text-cyan-500/70 mt-1">
+    <span className="mt-1 font-mono text-[10px] tracking-[0.2em] text-cyan-500/70 md:text-xs">
       {subtitle}
     </span>
   </div>
@@ -104,18 +104,16 @@ const SourceCard = ({ icon, title, desc, isActive, delay }: SourceCardProps) => 
           }
     }
     transition={{ duration: 0.5, delay }}
-    className="flex items-center gap-3 p-3 rounded border backdrop-blur-sm transition-all w-full max-w-[300px]"
+    className="flex w-full max-w-[300px] items-center gap-3 rounded border p-3 backdrop-blur-sm transition-all"
   >
-    <div
-      className={`p-1.5 rounded bg-black/50 ${isActive ? "text-cyan-400" : "text-gray-500"}`}
-    >
+    <div className={`rounded bg-black/50 p-1.5 ${isActive ? "text-cyan-400" : "text-gray-500"}`}>
       {icon}
     </div>
     <div>
       <div className={`text-sm font-medium ${isActive ? "text-white" : "text-gray-400"}`}>
         {title}
       </div>
-      <div className="text-[10px] md:text-xs text-gray-600 font-mono">{desc}</div>
+      <div className="font-mono text-[10px] text-gray-600 md:text-xs">{desc}</div>
     </div>
   </motion.div>
 );
@@ -125,15 +123,15 @@ const ProcessingStep = ({ icon, text, sub, color, barColor, delay }: ProcessingS
     initial={{ x: -10, opacity: 0 }}
     animate={{ x: 0, opacity: 1 }}
     transition={{ delay, duration: 0.4 }}
-    className="flex items-center gap-3 bg-white/5 p-2 rounded border border-white/5"
+    className="flex items-center gap-3 rounded border border-white/5 bg-white/5 p-2"
   >
-    <div className={`p-1.5 rounded-full bg-white/5 ${color}`}>{icon}</div>
-    <div className="flex-1 min-w-0">
-      <div className="flex justify-between items-center mb-1">
-        <span className={`text-sm font-medium truncate ${color}`}>{text}</span>
+    <div className={`rounded-full bg-white/5 p-1.5 ${color}`}>{icon}</div>
+    <div className="min-w-0 flex-1">
+      <div className="mb-1 flex items-center justify-between">
+        <span className={`truncate text-sm font-medium ${color}`}>{text}</span>
       </div>
-      <div className="text-[10px] text-gray-500 mb-1.5 truncate">{sub}</div>
-      <div className="h-1 w-full bg-gray-800 rounded-full overflow-hidden">
+      <div className="mb-1.5 truncate text-[10px] text-gray-500">{sub}</div>
+      <div className="h-1 w-full overflow-hidden rounded-full bg-gray-800">
         <motion.div
           className={`h-full ${barColor}`}
           initial={{ width: "0%" }}
@@ -153,17 +151,17 @@ const OutputCard = ({ title, type, count, active, delay }: OutputCardProps) => (
         : { scale: 1, opacity: 0.5, borderColor: "rgba(255,255,255,0.1)" }
     }
     transition={{ delay }}
-    className="w-full max-w-[260px] p-4 rounded-lg bg-white/5 backdrop-blur-sm border flex justify-between items-center group relative overflow-hidden"
+    className="group relative flex w-full max-w-[260px] items-center justify-between overflow-hidden rounded-lg border bg-white/5 p-4 backdrop-blur-sm"
   >
-    {active && <div className="absolute inset-0 bg-cyan-500/5 animate-pulse" />}
+    {active && <div className="absolute inset-0 animate-pulse bg-cyan-500/5" />}
 
     <div className="relative z-10">
-      <div className="text-sm font-bold text-gray-200 group-hover:text-cyan-400 transition-colors">
+      <div className="text-sm font-bold text-gray-200 transition-colors group-hover:text-cyan-400">
         {title}
       </div>
-      <div className="text-[10px] text-gray-500 font-mono mt-0.5">{type}</div>
+      <div className="mt-0.5 font-mono text-[10px] text-gray-500">{type}</div>
     </div>
-    <div className="relative z-10 px-2 py-1 rounded bg-cyan-950/50 text-cyan-400 text-xs font-mono border border-cyan-500/20">
+    <div className="relative z-10 rounded border border-cyan-500/20 bg-cyan-950/50 px-2 py-1 font-mono text-xs text-cyan-400">
       {count}
     </div>
   </motion.div>
@@ -171,12 +169,12 @@ const OutputCard = ({ title, type, count, active, delay }: OutputCardProps) => (
 
 export function WorkflowSection() {
   const [activeStage, setActiveStage] = useState(0);
-  const [dataFlowPhase, setDataFlowPhase] = useState<'none' | 'to-center' | 'to-output'>('none');
+  const [dataFlowPhase, setDataFlowPhase] = useState<"none" | "to-center" | "to-output">("none");
 
   useEffect(() => {
     // 初始阶段 0，停留 2 秒后开始流向中央
     const timer1 = setTimeout(() => {
-      setDataFlowPhase('to-center');
+      setDataFlowPhase("to-center");
     }, 2000);
 
     return () => clearTimeout(timer1);
@@ -184,63 +182,61 @@ export function WorkflowSection() {
 
   // 处理数据流动完成后的逻辑
   const handleDataFlowComplete = () => {
-    if (dataFlowPhase === 'to-center') {
+    if (dataFlowPhase === "to-center") {
       // 流向中央完成，切换到阶段 1（处理中）
       setActiveStage(1);
-      setDataFlowPhase('none');
-      
+      setDataFlowPhase("none");
+
       // 等待处理步骤完成（2.6秒动画 + 0.5秒缓冲）
       setTimeout(() => {
-        setDataFlowPhase('to-output');
+        setDataFlowPhase("to-output");
       }, 3100);
-    } else if (dataFlowPhase === 'to-output') {
+    } else if (dataFlowPhase === "to-output") {
       // 流向输出完成，切换到阶段 2（输出）
       setActiveStage(2);
-      setDataFlowPhase('none');
-      
+      setDataFlowPhase("none");
+
       // 停留 2 秒后重置
       setTimeout(() => {
         setActiveStage(0);
         setTimeout(() => {
-          setDataFlowPhase('to-center');
+          setDataFlowPhase("to-center");
         }, 2000);
       }, 2000);
     }
   };
 
   return (
-    <section className="relative w-full py-12 md:py-16 flex items-center justify-center text-white">
+    <section className="relative flex w-full items-center justify-center py-12 text-white md:py-16">
       {/* Background Layer */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_10%,transparent_100%)]" />
-        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[80%] h-[50%] bg-cyan-500/5 blur-[100px] rounded-full" />
-        <div className="absolute bottom-[-20%] right-0 w-[50%] h-[50%] bg-purple-500/5 blur-[100px] rounded-full" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.03)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_10%,transparent_100%)] bg-[size:4rem_4rem]" />
+        <div className="absolute top-[-20%] left-1/2 h-[50%] w-[80%] -translate-x-1/2 rounded-full bg-cyan-500/5 blur-[100px]" />
+        <div className="absolute right-0 bottom-[-20%] h-[50%] w-[50%] rounded-full bg-purple-500/5 blur-[100px]" />
       </div>
 
-      <div className="w-full max-w-[1400px] px-4 md:px-6 relative z-10">
+      <div className="relative z-10 w-full max-w-[1400px] px-4 md:px-6">
         {/* Header */}
-        <div className="text-center mb-8 md:mb-10">
+        <div className="mb-8 text-center md:mb-10">
           <GlitchText
             as="h2"
-            className="text-2xl md:text-4xl font-orbitron font-bold text-white mb-2"
+            className="font-orbitron mb-2 text-2xl font-bold text-white md:text-4xl"
           >
             全网 AI 情报工作流
           </GlitchText>
-          <p className="text-white/60 text-sm md:text-base">
-            自动化工作流 · 智能过滤 · 精准交付
-          </p>
+          <p className="text-sm text-white/60 md:text-base">自动化工作流 · 智能过滤 · 精准交付</p>
         </div>
 
         {/* Pipeline Visualization */}
-        <div className="grid grid-cols-1 md:grid-cols-[28%_44%_28%] gap-4 lg:gap-6 items-center relative">
+        <div className="relative grid grid-cols-1 items-center gap-4 md:grid-cols-[28%_44%_28%] lg:gap-6">
           {/* Connection Line (Desktop Only) */}
-          <div className="hidden md:block absolute top-1/2 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-900/50 to-transparent -translate-y-1/2 z-0">
-            {dataFlowPhase !== 'none' && (
+          <div className="absolute top-1/2 left-0 z-0 hidden h-[1px] w-full -translate-y-1/2 bg-gradient-to-r from-transparent via-cyan-900/50 to-transparent md:block">
+            {dataFlowPhase !== "none" && (
               <motion.div
                 key={dataFlowPhase}
-                className="absolute top-1/2 -translate-y-1/2 h-[3px] w-[100px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent blur-[2px]"
-                initial={{ left: dataFlowPhase === 'to-center' ? "-10%" : "50%" }}
-                animate={{ left: dataFlowPhase === 'to-center' ? "50%" : "110%" }}
+                className="absolute top-1/2 h-[3px] w-[100px] -translate-y-1/2 bg-gradient-to-r from-transparent via-cyan-400 to-transparent blur-[2px]"
+                initial={{ left: dataFlowPhase === "to-center" ? "-10%" : "50%" }}
+                animate={{ left: dataFlowPhase === "to-center" ? "50%" : "110%" }}
                 transition={{ duration: 2.5, ease: "easeInOut" }}
                 onAnimationComplete={handleDataFlowComplete}
               />
@@ -248,7 +244,7 @@ export function WorkflowSection() {
           </div>
 
           {/* Stage 1: Collection */}
-          <div className="relative z-10 flex flex-col justify-center h-full">
+          <div className="relative z-10 flex h-full flex-col justify-center">
             <StageLabel
               step="01"
               title="全球嗅探"
@@ -257,25 +253,25 @@ export function WorkflowSection() {
               align="left"
             />
 
-            <div className="space-y-3 relative pl-4">
-              <div className="absolute left-0 top-2 bottom-2 w-[2px] bg-gradient-to-b from-transparent via-cyan-500/30 to-transparent" />
+            <div className="relative space-y-3 pl-4">
+              <div className="absolute top-2 bottom-2 left-0 w-[2px] bg-gradient-to-b from-transparent via-cyan-500/30 to-transparent" />
 
               <SourceCard
-                icon={<Globe className="w-5 h-5" />}
+                icon={<Globe className="h-5 w-5" />}
                 title="权威媒体 RSS"
                 desc="Verge, TechCrunch, NYT"
                 isActive={activeStage === 0}
                 delay={0}
               />
               <SourceCard
-                icon={<Youtube className="w-5 h-5" />}
+                icon={<Youtube className="h-5 w-5" />}
                 title="视频平台 API"
                 desc="YouTube, TikTok Trends"
                 isActive={activeStage === 0}
                 delay={0.1}
               />
               <SourceCard
-                icon={<MessageCircle className="w-5 h-5" />}
+                icon={<MessageCircle className="h-5 w-5" />}
                 title="社区讨论"
                 desc="Reddit (r/Artificial)"
                 isActive={activeStage === 0}
@@ -295,7 +291,7 @@ export function WorkflowSection() {
             />
 
             <motion.div
-              className={`relative w-full aspect-[16/10] rounded-2xl border bg-black/80 backdrop-blur-xl overflow-hidden transition-all duration-500 group mx-auto max-w-[600px] ${
+              className={`group relative mx-auto aspect-[16/10] w-full max-w-[600px] overflow-hidden rounded-2xl border bg-black/80 backdrop-blur-xl transition-all duration-500 ${
                 activeStage === 1
                   ? "border-cyan-500/50 shadow-[0_0_40px_rgba(6,182,212,0.15)]"
                   : "border-white/10 opacity-80"
@@ -304,12 +300,12 @@ export function WorkflowSection() {
               <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:24px_24px]" />
 
               <div className="absolute inset-0 flex flex-col items-center justify-center p-4 md:p-6">
-                <div className="absolute top-4 flex items-center gap-2 text-cyan-400 font-mono text-[10px] md:text-xs tracking-widest opacity-80 bg-cyan-950/30 px-3 py-1 rounded-full border border-cyan-500/20">
+                <div className="absolute top-4 flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-950/30 px-3 py-1 font-mono text-[10px] tracking-widest text-cyan-400 opacity-80 md:text-xs">
                   <Cpu size={14} className="animate-pulse" />
                   DeepSeek-V3 ENGINE
                 </div>
 
-                <div className="w-full max-w-sm mt-6">
+                <div className="mt-6 w-full max-w-sm">
                   <AnimatePresence mode="wait">
                     {activeStage === 1 ? (
                       <motion.div
@@ -350,26 +346,24 @@ export function WorkflowSection() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="flex flex-col items-center justify-center h-full text-gray-500 gap-3"
+                        className="flex h-full flex-col items-center justify-center gap-3 text-gray-500"
                       >
-                        <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border border-white/10 flex items-center justify-center bg-white/5">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 md:h-16 md:w-16">
                           <Activity size={24} className="opacity-50" />
                         </div>
-                        <span className="font-mono text-xs tracking-widest">
-                          AWAITING INPUT...
-                        </span>
+                        <span className="font-mono text-xs tracking-widest">AWAITING INPUT...</span>
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
               </div>
 
-              <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50" />
+              <div className="absolute bottom-0 left-0 h-1 w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50" />
             </motion.div>
           </div>
 
           {/* Stage 3: Output */}
-          <div className="relative z-10 flex flex-col justify-center h-full">
+          <div className="relative z-10 flex h-full flex-col justify-center">
             <StageLabel
               step="03"
               title="知识交付"
@@ -378,7 +372,7 @@ export function WorkflowSection() {
               align="right"
             />
 
-            <div className="space-y-4 flex flex-col md:items-end pr-4 md:pr-0 border-l md:border-l-0 border-white/10 md:border-none pl-4 md:pl-0">
+            <div className="flex flex-col space-y-4 border-l border-white/10 pr-4 pl-4 md:items-end md:border-l-0 md:border-none md:pr-0 md:pl-0">
               <OutputCard
                 title="AI News Hub"
                 type="Notion Database"
@@ -398,7 +392,7 @@ export function WorkflowSection() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="mt-2 px-5 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-black font-bold rounded flex items-center gap-2 text-sm shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all"
+                  className="mt-2 flex items-center gap-2 rounded bg-cyan-500 px-5 py-2.5 text-sm font-bold text-black shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all hover:bg-cyan-400"
                 >
                   <Workflow size={16} />
                   查看数据流

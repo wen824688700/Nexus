@@ -180,26 +180,26 @@ export function AgentsPage() {
   };
 
   return (
-    <section className="min-h-screen pt-24 pb-16 px-4">
-      <div className="max-w-7xl mx-auto">
+    <section className="min-h-screen px-4 pt-24 pb-16">
+      <div className="mx-auto max-w-7xl">
         {/* Header */}
-        <div className="text-center mb-12 animate-[fade-in_0.6s_ease-out]">
-          <div className="inline-block px-4 py-1 rounded-full bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan text-sm font-mono mb-4">
+        <div className="mb-12 animate-[fade-in_0.6s_ease-out] text-center">
+          <div className="bg-cyber-cyan/10 border-cyber-cyan/30 text-cyber-cyan mb-4 inline-block rounded-full border px-4 py-1 font-mono text-sm">
             Agent 中心
           </div>
           <GlitchText
             as="h1"
-            className="text-4xl md:text-5xl font-orbitron font-bold text-white mb-4"
+            className="font-orbitron mb-4 text-4xl font-bold text-white md:text-5xl"
           >
             你的 AI 工具箱
           </GlitchText>
-          <p className="text-white/60 text-lg max-w-2xl mx-auto">
+          <p className="mx-auto max-w-2xl text-lg text-white/60">
             精选实用 AI 工具，一键调用，让 AI 为你提效
           </p>
         </div>
 
         {/* 公告 + 订阅 | AI资讯 + 热点 */}
-        <div className="grid lg:grid-cols-3 gap-6 mb-10 animate-[fade-in_0.8s_ease-out]">
+        <div className="mb-10 grid animate-[fade-in_0.8s_ease-out] gap-6 lg:grid-cols-3">
           {/* 左侧 */}
           <div className="space-y-4">
             <AnnouncementTicker />
@@ -207,35 +207,35 @@ export function AgentsPage() {
           </div>
 
           {/* 右侧 */}
-          <div className="lg:col-span-2 grid sm:grid-cols-2 gap-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:col-span-2">
             <AIInfoTicker />
             <AIHotTopics />
           </div>
         </div>
 
         {/* 分类标签栏 */}
-        <div className="flex flex-wrap justify-center gap-3 mb-8 animate-[fade-in_1s_ease-out]">
+        <div className="mb-8 flex animate-[fade-in_1s_ease-out] flex-wrap justify-center gap-3">
           {agentCategories.map((category) => (
             <button
               key={category.id}
               onClick={() => setActiveCategory(category.id)}
-              className={`px-6 py-3 rounded-lg font-medium transition-all ${
+              className={`rounded-lg px-6 py-3 font-medium transition-all ${
                 activeCategory === category.id
                   ? "bg-cyber-cyan text-cyber-dark shadow-neon-cyan"
-                  : "bg-white/5 text-white/70 hover:bg-white/10 hover:text-white border border-white/10"
+                  : "border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
               }`}
             >
-              <category.icon className="w-4 h-4 inline-block mr-2" />
+              <category.icon className="mr-2 inline-block h-4 w-4" />
               {category.name}
             </button>
           ))}
         </div>
 
         {/* 当前分类的智能体 */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div className="mb-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {currentCategory?.agents.map((agent, index) => (
-            <div 
-              key={agent.id} 
+            <div
+              key={agent.id}
               className="animate-[fade-in_0.6s_ease-out]"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
@@ -246,16 +246,10 @@ export function AgentsPage() {
 
         {/* 自定义技能区 */}
         <div className="animate-[fade-in_1.2s_ease-out]">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-orbitron font-bold text-white">
-              自定义技能
-            </h2>
-            <CyberButton
-              size="sm"
-              onClick={() => setCreateSkillOpen(true)}
-              className="group"
-            >
-              <Plus className="w-4 h-4 mr-2" />
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="font-orbitron text-2xl font-bold text-white">自定义技能</h2>
+            <CyberButton size="sm" onClick={() => setCreateSkillOpen(true)} className="group">
+              <Plus className="mr-2 h-4 w-4" />
               创建技能
             </CyberButton>
           </div>
@@ -263,22 +257,16 @@ export function AgentsPage() {
           {customSkills.length === 0 ? (
             <HolographicCard intensity="low">
               <div className="p-12 text-center">
-                <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4">
-                  <Plus className="w-8 h-8 text-white/40" />
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/5">
+                  <Plus className="h-8 w-8 text-white/40" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  还没有自定义技能
-                </h3>
-                <p className="text-white/60 mb-6">
-                  创建你的第一个自定义技能，连接任何 API
-                </p>
-                <CyberButton onClick={() => setCreateSkillOpen(true)}>
-                  开始创建
-                </CyberButton>
+                <h3 className="mb-2 text-xl font-bold text-white">还没有自定义技能</h3>
+                <p className="mb-6 text-white/60">创建你的第一个自定义技能，连接任何 API</p>
+                <CyberButton onClick={() => setCreateSkillOpen(true)}>开始创建</CyberButton>
               </div>
             </HolographicCard>
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {customSkills.map((skill) => (
                 <AgentCard
                   key={skill.id}
@@ -298,21 +286,34 @@ export function AgentsPage() {
       </div>
 
       {/* Modals */}
-      <CreateSkillModal
-        isOpen={isCreateSkillOpen}
-        onClose={() => setCreateSkillOpen(false)}
-      />
+      <CreateSkillModal isOpen={isCreateSkillOpen} onClose={() => setCreateSkillOpen(false)} />
 
       {selectedAgent && (
         <AgentModal
           mounted={agentModalMounted}
           visible={agentModalVisible}
-          agent={{ 
-            title: selectedAgent.name, 
-            botId: selectedAgent.id, 
-            icon: "✦", 
-            kind: (selectedAgent as { kind?: "portrait" | "chat" | "analysis" | "workflow" | "promptOptimizer" | "imageEditor" | "springFestivalMeme" | "audioAnalyzer" | "seedanceStoryboard" }).kind || "chat",
-            status: (selectedAgent.status === "busy" ? "online" : selectedAgent.status) as "online" | "offline"
+          agent={{
+            title: selectedAgent.name,
+            botId: selectedAgent.id,
+            icon: "✦",
+            kind:
+              (
+                selectedAgent as {
+                  kind?:
+                    | "portrait"
+                    | "chat"
+                    | "analysis"
+                    | "workflow"
+                    | "promptOptimizer"
+                    | "imageEditor"
+                    | "springFestivalMeme"
+                    | "audioAnalyzer"
+                    | "seedanceStoryboard";
+                }
+              ).kind || "chat",
+            status: (selectedAgent.status === "busy" ? "online" : selectedAgent.status) as
+              | "online"
+              | "offline",
           }}
           onClose={handleCloseAgentModal}
         />

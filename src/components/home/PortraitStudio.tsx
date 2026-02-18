@@ -27,8 +27,7 @@ const LOADING_STAGES = [
 
 const WELCOME_TXT2IMG = {
   greeting: "[ PORTRAIT STUDIO SYSTEM ONLINE ]",
-  description:
-    "专业级 AI 肖像生成系统。支持 Vogue 级虚拟肖像、电影质感大片、艺术风格定制。",
+  description: "专业级 AI 肖像生成系统。支持 Vogue 级虚拟肖像、电影质感大片、艺术风格定制。",
   cta: "输入风格描述或上传参考图片，系统将生成高质量肖像作品。",
   suggestions: [
     "极简主义男士肖像 → 黑白高对比",
@@ -193,28 +192,26 @@ export function PortraitStudio({ agentKey }: Props) {
   return (
     <div className="flex h-full flex-col p-6">
       {/* Header */}
-      <div className="mb-4 flex items-center justify-between border-b border-cyber-cyan/20 pb-3">
+      <div className="border-cyber-cyan/20 mb-4 flex items-center justify-between border-b pb-3">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-8 h-8 rounded bg-cyber-cyan/10 border border-cyber-cyan/30">
-            <Camera className="w-4 h-4 text-cyber-cyan" />
+          <div className="bg-cyber-cyan/10 border-cyber-cyan/30 flex h-8 w-8 items-center justify-center rounded border">
+            <Camera className="text-cyber-cyan h-4 w-4" />
           </div>
           <div>
-            <div className="font-mono text-xs tracking-[0.2em] text-cyber-cyan uppercase">
+            <div className="text-cyber-cyan font-mono text-xs tracking-[0.2em] uppercase">
               Portrait Studio
             </div>
-            <div className="font-mono text-[10px] text-white/40">
-              v3.0.2 | AI Art Director
-            </div>
+            <div className="font-mono text-[10px] text-white/40">v3.0.2 | AI Art Director</div>
           </div>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <div className="h-2 w-2 animate-pulse rounded-full bg-cyber-cyan shadow-[0_0_10px_rgba(0,243,255,0.8)]" />
-            <span className="text-[10px] font-mono tracking-widest text-cyber-cyan/80 uppercase">
+            <div className="bg-cyber-cyan h-2 w-2 animate-pulse rounded-full shadow-[0_0_10px_rgba(0,243,255,0.8)]" />
+            <span className="text-cyber-cyan/80 font-mono text-[10px] tracking-widest uppercase">
               Online
             </span>
           </div>
-          <div className="flex rounded-lg border border-cyber-cyan/20 bg-cyber-cyan/5 p-1">
+          <div className="border-cyber-cyan/20 bg-cyber-cyan/5 flex rounded-lg border p-1">
             <button
               type="button"
               onClick={() => {
@@ -222,13 +219,13 @@ export function PortraitStudio({ agentKey }: Props) {
                 setError(null);
               }}
               className={[
-                "rounded-md px-3 py-1.5 text-[10px] font-mono font-bold tracking-widest uppercase transition-all flex items-center gap-1.5",
-                mode === "txt2img" 
-                  ? "bg-cyber-cyan text-black shadow-[0_0_15px_rgba(0,243,255,0.4)]" 
-                  : "text-white/60 hover:text-cyber-cyan hover:bg-cyber-cyan/10",
+                "flex items-center gap-1.5 rounded-md px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest uppercase transition-all",
+                mode === "txt2img"
+                  ? "bg-cyber-cyan text-black shadow-[0_0_15px_rgba(0,243,255,0.4)]"
+                  : "hover:text-cyber-cyan hover:bg-cyber-cyan/10 text-white/60",
               ].join(" ")}
             >
-              <Sparkles className="w-3 h-3" />
+              <Sparkles className="h-3 w-3" />
               TXT→IMG
             </button>
             <button
@@ -238,37 +235,37 @@ export function PortraitStudio({ agentKey }: Props) {
                 setError(null);
               }}
               className={[
-                "rounded-md px-3 py-1.5 text-[10px] font-mono font-bold tracking-widest uppercase transition-all flex items-center gap-1.5",
-                mode === "img_edit" 
-                  ? "bg-cyber-cyan text-black shadow-[0_0_15px_rgba(0,243,255,0.4)]" 
-                  : "text-white/60 hover:text-cyber-cyan hover:bg-cyber-cyan/10",
+                "flex items-center gap-1.5 rounded-md px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest uppercase transition-all",
+                mode === "img_edit"
+                  ? "bg-cyber-cyan text-black shadow-[0_0_15px_rgba(0,243,255,0.4)]"
+                  : "hover:text-cyber-cyan hover:bg-cyber-cyan/10 text-white/60",
               ].join(" ")}
             >
-              <ImageIcon className="w-3 h-3" />
+              <ImageIcon className="h-3 w-3" />
               IMG→EDIT
             </button>
           </div>
         </div>
       </div>
 
-      <div className="flex gap-6 flex-1 min-h-0">
+      <div className="flex min-h-0 flex-1 gap-6">
         {/* Main Chat Area */}
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex min-w-0 flex-1 flex-col">
           {/* Chat Messages */}
-          <div className="relative mb-4 flex-1 overflow-y-auto rounded-2xl border border-cyber-cyan/20 bg-black/40 p-4 backdrop-blur-sm">
+          <div className="border-cyber-cyan/20 relative mb-4 flex-1 overflow-y-auto rounded-2xl border bg-black/40 p-4 backdrop-blur-sm">
             {/* Scan Line Effect */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
-              <div className="absolute w-full h-[2px] bg-gradient-to-r from-transparent via-cyber-cyan/20 to-transparent animate-[scan-line_4s_linear_infinite]" />
+            <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
+              <div className="via-cyber-cyan/20 absolute h-[2px] w-full animate-[scan-line_4s_linear_infinite] bg-gradient-to-r from-transparent to-transparent" />
             </div>
-            
+
             {messages.length === 0 && !loading ? (
-              <div className="flex h-full flex-col items-start justify-start gap-5 p-6 relative z-10">
-                <div className="flex gap-4 w-full">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-cyber-cyan/20 to-cyber-purple/20 border border-cyber-cyan/30 shadow-[0_0_20px_rgba(0,243,255,0.2)]">
-                    <Camera className="w-6 h-6 text-cyber-cyan" />
+              <div className="relative z-10 flex h-full flex-col items-start justify-start gap-5 p-6">
+                <div className="flex w-full gap-4">
+                  <div className="from-cyber-cyan/20 to-cyber-purple/20 border-cyber-cyan/30 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg border bg-gradient-to-br shadow-[0_0_20px_rgba(0,243,255,0.2)]">
+                    <Camera className="text-cyber-cyan h-6 w-6" />
                   </div>
                   <div className="flex-1">
-                    <div className="mb-3 text-sm font-orbitron font-bold text-cyber-cyan tracking-wide">
+                    <div className="font-orbitron text-cyber-cyan mb-3 text-sm font-bold tracking-wide">
                       {mode === "txt2img" ? WELCOME_TXT2IMG.greeting : WELCOME_IMG_EDIT.greeting}
                     </div>
                     <p className="mb-2 text-sm leading-relaxed text-white/70">
@@ -276,12 +273,14 @@ export function PortraitStudio({ agentKey }: Props) {
                         ? WELCOME_TXT2IMG.description
                         : WELCOME_IMG_EDIT.description}
                     </p>
-                    <p className="text-xs text-white/50 font-mono">{mode === "txt2img" ? WELCOME_TXT2IMG.cta : WELCOME_IMG_EDIT.cta}</p>
+                    <p className="font-mono text-xs text-white/50">
+                      {mode === "txt2img" ? WELCOME_TXT2IMG.cta : WELCOME_IMG_EDIT.cta}
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex w-full flex-col gap-2.5">
-                  <div className="text-xs font-mono text-cyber-cyan/60 uppercase tracking-wider mb-1">
+                  <div className="text-cyber-cyan/60 mb-1 font-mono text-xs tracking-wider uppercase">
                     ▸ Quick Actions
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -293,9 +292,9 @@ export function PortraitStudio({ agentKey }: Props) {
                         key={idx}
                         type="button"
                         onClick={() => handleSuggestionClick(suggestion)}
-                        className="rounded-lg border border-cyber-cyan/20 bg-cyber-cyan/5 px-4 py-3 text-xs text-white/80 transition-all hover:bg-cyber-cyan/10 hover:border-cyber-cyan/40 hover:shadow-[0_0_15px_rgba(0,243,255,0.1)] group"
+                        className="border-cyber-cyan/20 bg-cyber-cyan/5 hover:bg-cyber-cyan/10 hover:border-cyber-cyan/40 group rounded-lg border px-4 py-3 text-xs text-white/80 transition-all hover:shadow-[0_0_15px_rgba(0,243,255,0.1)]"
                       >
-                        <span className="font-mono group-hover:text-cyber-cyan transition-colors whitespace-nowrap">
+                        <span className="group-hover:text-cyber-cyan font-mono whitespace-nowrap transition-colors">
                           {suggestion}
                         </span>
                       </button>
@@ -314,16 +313,16 @@ export function PortraitStudio({ agentKey }: Props) {
                     ].join(" ")}
                   >
                     {msg.role === "assistant" ? (
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-cyber-cyan/20 to-cyber-purple/20 border border-cyber-cyan/30 shadow-[0_0_15px_rgba(0,243,255,0.2)]">
-                        <Camera className="w-5 h-5 text-cyber-cyan" />
+                      <div className="from-cyber-cyan/20 to-cyber-purple/20 border-cyber-cyan/30 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border bg-gradient-to-br shadow-[0_0_15px_rgba(0,243,255,0.2)]">
+                        <Camera className="text-cyber-cyan h-5 w-5" />
                       </div>
                     ) : null}
                     <div
                       className={[
-                        "max-w-[80%] rounded-lg px-4 py-3 text-sm leading-relaxed relative",
+                        "relative max-w-[80%] rounded-lg px-4 py-3 text-sm leading-relaxed",
                         msg.role === "user"
-                          ? "bg-white/10 text-white border border-white/20"
-                          : "bg-cyber-cyan/5 text-white/90 border border-cyber-cyan/20 shadow-[0_0_10px_rgba(0,243,255,0.05)]",
+                          ? "border border-white/20 bg-white/10 text-white"
+                          : "bg-cyber-cyan/5 border-cyber-cyan/20 border text-white/90 shadow-[0_0_10px_rgba(0,243,255,0.05)]",
                       ].join(" ")}
                     >
                       <div className="whitespace-pre-wrap">{msg.content}</div>
@@ -333,21 +332,21 @@ export function PortraitStudio({ agentKey }: Props) {
                           <img
                             src={msg.imageUrl}
                             alt="Generated"
-                            className="max-h-64 rounded-lg border-2 border-cyber-cyan/30 object-contain shadow-[0_0_20px_rgba(0,243,255,0.2)]"
+                            className="border-cyber-cyan/30 max-h-64 rounded-lg border-2 object-contain shadow-[0_0_20px_rgba(0,243,255,0.2)]"
                           />
                           <div className="mt-3 flex gap-2">
                             <a
                               href={msg.imageUrl}
                               target="_blank"
                               rel="noreferrer"
-                              className="rounded-md border border-cyber-cyan/30 bg-cyber-cyan/10 px-3 py-1.5 text-[10px] font-mono font-bold tracking-widest text-cyber-cyan uppercase hover:bg-cyber-cyan/20 hover:border-cyber-cyan/50 transition-all"
+                              className="border-cyber-cyan/30 bg-cyber-cyan/10 text-cyber-cyan hover:bg-cyber-cyan/20 hover:border-cyber-cyan/50 rounded-md border px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest uppercase transition-all"
                             >
                               查看原图
                             </a>
                             <a
                               href={msg.imageUrl}
                               download
-                              className="rounded-md bg-cyber-cyan px-3 py-1.5 text-[10px] font-mono font-bold tracking-widest text-black uppercase hover:bg-cyber-cyan/80 transition-all shadow-[0_0_15px_rgba(0,243,255,0.3)]"
+                              className="bg-cyber-cyan hover:bg-cyber-cyan/80 rounded-md px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest text-black uppercase shadow-[0_0_15px_rgba(0,243,255,0.3)] transition-all"
                             >
                               下载
                             </a>
@@ -356,7 +355,7 @@ export function PortraitStudio({ agentKey }: Props) {
                       ) : null}
                     </div>
                     {msg.role === "user" ? (
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-white/10 border border-white/20">
+                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-white/20 bg-white/10">
                         <span className="text-sm">👤</span>
                       </div>
                     ) : null}
@@ -365,16 +364,18 @@ export function PortraitStudio({ agentKey }: Props) {
 
                 {loading ? (
                   <div className="flex gap-3">
-                    <div className="flex h-10 w-10 flex-shrink-0 animate-pulse items-center justify-center rounded-lg bg-gradient-to-br from-cyber-cyan/20 to-cyber-purple/20 border border-cyber-cyan/30 shadow-[0_0_15px_rgba(0,243,255,0.2)]">
-                      <Camera className="w-5 h-5 text-cyber-cyan" />
+                    <div className="from-cyber-cyan/20 to-cyber-purple/20 border-cyber-cyan/30 flex h-10 w-10 flex-shrink-0 animate-pulse items-center justify-center rounded-lg border bg-gradient-to-br shadow-[0_0_15px_rgba(0,243,255,0.2)]">
+                      <Camera className="text-cyber-cyan h-5 w-5" />
                     </div>
-                    <div className="max-w-[80%] rounded-lg bg-cyber-cyan/5 border border-cyber-cyan/20 px-4 py-3 text-sm leading-relaxed text-cyber-cyan shadow-[0_0_10px_rgba(0,243,255,0.05)]">
+                    <div className="bg-cyber-cyan/5 border-cyber-cyan/20 text-cyber-cyan max-w-[80%] rounded-lg border px-4 py-3 text-sm leading-relaxed shadow-[0_0_10px_rgba(0,243,255,0.05)]">
                       <div className="flex items-center gap-2">
                         <div className="relative flex h-3 w-3 items-center justify-center">
-                          <div className="absolute h-3 w-3 animate-ping rounded-full bg-cyber-cyan opacity-75" />
-                          <div className="relative h-2 w-2 rounded-full bg-cyber-cyan" />
+                          <div className="bg-cyber-cyan absolute h-3 w-3 animate-ping rounded-full opacity-75" />
+                          <div className="bg-cyber-cyan relative h-2 w-2 rounded-full" />
                         </div>
-                        <span className="font-mono animate-pulse">{LOADING_STAGES[loadingStage]}</span>
+                        <span className="animate-pulse font-mono">
+                          {LOADING_STAGES[loadingStage]}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -387,7 +388,7 @@ export function PortraitStudio({ agentKey }: Props) {
 
           {/* Error Display */}
           {error ? (
-            <div className="mb-3 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-xs text-red-200 font-mono shadow-[0_0_15px_rgba(239,68,68,0.1)]">
+            <div className="mb-3 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 font-mono text-xs text-red-200 shadow-[0_0_15px_rgba(239,68,68,0.1)]">
               <div className="flex items-center gap-2">
                 <span className="text-red-400">⚠</span>
                 <span>{error}</span>
@@ -396,7 +397,7 @@ export function PortraitStudio({ agentKey }: Props) {
           ) : null}
 
           {/* Input Area */}
-          <div className="flex items-end gap-3 rounded-2xl border border-cyber-cyan/20 bg-cyber-cyan/5 p-4 backdrop-blur-sm">
+          <div className="border-cyber-cyan/20 bg-cyber-cyan/5 flex items-end gap-3 rounded-2xl border p-4 backdrop-blur-sm">
             <textarea
               ref={textareaRef}
               value={prompt}
@@ -407,19 +408,19 @@ export function PortraitStudio({ agentKey }: Props) {
                   ? "▸ 描述风格：发型 / 光影 / 镜头 / 背景 / 质感...（Enter 发送）"
                   : "▸ 编辑指令：皮肤质感 / 发丝细节 / 光影 / 背景 / 风格..."
               }
-              className="min-h-[44px] flex-1 resize-none rounded-lg border border-cyber-cyan/20 bg-black/40 px-4 py-3 text-xs text-white placeholder:text-white/40 placeholder:font-mono focus:ring-2 focus:ring-cyber-cyan/30 focus:outline-none focus:border-cyber-cyan/40 transition-all"
+              className="border-cyber-cyan/20 focus:ring-cyber-cyan/30 focus:border-cyber-cyan/40 min-h-[44px] flex-1 resize-none rounded-lg border bg-black/40 px-4 py-3 text-xs text-white transition-all placeholder:font-mono placeholder:text-white/40 focus:ring-2 focus:outline-none"
             />
             <button
               type="button"
               disabled={!loading && (!prompt.trim() || (mode === "img_edit" && !file))}
               onClick={loading ? handleAbort : run}
               className={[
-                "relative h-[44px] rounded-lg px-5 text-[10px] font-mono font-bold tracking-widest uppercase transition-all flex items-center gap-2",
+                "relative flex h-[44px] items-center gap-2 rounded-lg px-5 font-mono text-[10px] font-bold tracking-widest uppercase transition-all",
                 loading
-                  ? "bg-red-500/20 border border-red-500/40 text-red-300 hover:bg-red-500/30"
+                  ? "border border-red-500/40 bg-red-500/20 text-red-300 hover:bg-red-500/30"
                   : !prompt.trim() || (mode === "img_edit" && !file)
-                    ? "cursor-not-allowed bg-white/5 border border-white/10 text-white/30"
-                    : "bg-cyber-cyan border border-cyber-cyan text-black hover:bg-cyber-cyan/80 shadow-[0_0_15px_rgba(0,243,255,0.3)]",
+                    ? "cursor-not-allowed border border-white/10 bg-white/5 text-white/30"
+                    : "bg-cyber-cyan border-cyber-cyan hover:bg-cyber-cyan/80 border text-black shadow-[0_0_15px_rgba(0,243,255,0.3)]",
               ].join(" ")}
             >
               {loading ? (
@@ -432,12 +433,12 @@ export function PortraitStudio({ agentKey }: Props) {
                 </>
               ) : mode === "txt2img" ? (
                 <>
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Sparkles className="h-3.5 w-3.5" />
                   Generate
                 </>
               ) : (
                 <>
-                  <ImageIcon className="w-3.5 h-3.5" />
+                  <ImageIcon className="h-3.5 w-3.5" />
                   Retouch
                 </>
               )}
@@ -447,11 +448,11 @@ export function PortraitStudio({ agentKey }: Props) {
 
         {/* Sidebar: Info Panel */}
         <div className="w-80 flex-shrink-0">
-          <div className="rounded-2xl border border-cyber-cyan/20 bg-cyber-cyan/5 p-5 backdrop-blur-sm h-full">
-            <div className="mb-3 text-sm font-orbitron font-bold tracking-wide text-cyber-cyan">
+          <div className="border-cyber-cyan/20 bg-cyber-cyan/5 h-full rounded-2xl border p-5 backdrop-blur-sm">
+            <div className="font-orbitron text-cyber-cyan mb-3 text-sm font-bold tracking-wide">
               AI 肖像艺术指导系统
             </div>
-            <p className="text-xs leading-relaxed text-white/70 font-mono mb-4">
+            <p className="mb-4 font-mono text-xs leading-relaxed text-white/70">
               {mode === "txt2img"
                 ? "▸ 输入风格描述 → 生成专业级肖像 → 下载高清原图"
                 : "▸ 上传照片 → 输入编辑指令 → 专业级重塑输出"}
@@ -461,7 +462,7 @@ export function PortraitStudio({ agentKey }: Props) {
               <div className="mt-4">
                 {file ? (
                   <div className="flex items-center gap-4">
-                    <div className="h-20 w-20 overflow-hidden rounded-lg border-2 border-cyber-cyan/30 bg-black shadow-[0_0_15px_rgba(0,243,255,0.1)]">
+                    <div className="border-cyber-cyan/30 h-20 w-20 overflow-hidden rounded-lg border-2 bg-black shadow-[0_0_15px_rgba(0,243,255,0.1)]">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={previewUrl || undefined}
@@ -470,28 +471,28 @@ export function PortraitStudio({ agentKey }: Props) {
                       />
                     </div>
                     <div className="flex-1">
-                      <div className="text-xs font-semibold text-white truncate">{file.name}</div>
-                      <div className="font-mono mt-1 text-[10px] text-cyber-cyan/60">
+                      <div className="truncate text-xs font-semibold text-white">{file.name}</div>
+                      <div className="text-cyber-cyan/60 mt-1 font-mono text-[10px]">
                         {(file.size / 1024 / 1024).toFixed(2)} MB
                       </div>
                       <div className="mt-3 flex gap-2">
                         <button
                           type="button"
-                          className="rounded-md border border-cyber-cyan/20 bg-cyber-cyan/5 px-3 py-1 text-[10px] font-mono font-bold tracking-widest text-white/80 uppercase hover:bg-cyber-cyan/10 hover:border-cyber-cyan/40 transition-all flex items-center gap-1"
+                          className="border-cyber-cyan/20 bg-cyber-cyan/5 hover:bg-cyber-cyan/10 hover:border-cyber-cyan/40 flex items-center gap-1 rounded-md border px-3 py-1 font-mono text-[10px] font-bold tracking-widest text-white/80 uppercase transition-all"
                           onClick={() => {
                             setFile(null);
                             if (inputRef.current) inputRef.current.value = "";
                           }}
                         >
-                          <X className="w-3 h-3" />
+                          <X className="h-3 w-3" />
                           Remove
                         </button>
                         <button
                           type="button"
-                          className="rounded-md border border-cyber-cyan/20 bg-cyber-cyan/5 px-3 py-1 text-[10px] font-mono font-bold tracking-widest text-white/80 uppercase hover:bg-cyber-cyan/10 hover:border-cyber-cyan/40 transition-all flex items-center gap-1"
+                          className="border-cyber-cyan/20 bg-cyber-cyan/5 hover:bg-cyber-cyan/10 hover:border-cyber-cyan/40 flex items-center gap-1 rounded-md border px-3 py-1 font-mono text-[10px] font-bold tracking-widest text-white/80 uppercase transition-all"
                           onClick={() => inputRef.current?.click()}
                         >
-                          <Upload className="w-3 h-3" />
+                          <Upload className="h-3 w-3" />
                           Replace
                         </button>
                       </div>
@@ -500,17 +501,19 @@ export function PortraitStudio({ agentKey }: Props) {
                 ) : (
                   <button
                     type="button"
-                    className="group flex w-full items-center justify-between rounded-lg border border-dashed border-cyber-cyan/30 bg-black/40 px-4 py-4 text-left transition-all hover:bg-black/60 hover:border-cyber-cyan/50 hover:shadow-[0_0_15px_rgba(0,243,255,0.1)]"
+                    className="group border-cyber-cyan/30 hover:border-cyber-cyan/50 flex w-full items-center justify-between rounded-lg border border-dashed bg-black/40 px-4 py-4 text-left transition-all hover:bg-black/60 hover:shadow-[0_0_15px_rgba(0,243,255,0.1)]"
                     onClick={() => inputRef.current?.click()}
                   >
                     <div>
-                      <div className="text-xs font-semibold text-white flex items-center gap-2">
-                        <Upload className="w-4 h-4 text-cyber-cyan" />
+                      <div className="flex items-center gap-2 text-xs font-semibold text-white">
+                        <Upload className="text-cyber-cyan h-4 w-4" />
                         上传参考照片
                       </div>
-                      <div className="font-mono mt-1 text-[10px] text-white/50">PNG / JPG / WEBP</div>
+                      <div className="mt-1 font-mono text-[10px] text-white/50">
+                        PNG / JPG / WEBP
+                      </div>
                     </div>
-                    <div className="font-mono text-[10px] tracking-[0.2em] text-cyber-cyan/60 uppercase group-hover:text-cyber-cyan transition-colors">
+                    <div className="text-cyber-cyan/60 group-hover:text-cyber-cyan font-mono text-[10px] tracking-[0.2em] uppercase transition-colors">
                       Choose
                     </div>
                   </button>

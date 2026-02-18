@@ -10,23 +10,23 @@
   --text-primary: #ffffff;
   --text-secondary: #e0e0e0;
   --text-muted: #a0a0a0;
-  
+
   /* 发光效果 */
   --glow-cyan: rgba(0, 243, 255, 0.6);
   --glow-magenta: rgba(255, 0, 255, 0.6);
   --glow-purple: rgba(112, 0, 255, 0.6);
-  
+
   /* 缓动函数 */
   --ease-cyber: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-glitch: cubic-bezier(0.87, 0, 0.13, 1);
   --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-  
+
   /* 动画时长 */
   --duration-fast: 300ms;
   --duration-medium: 500ms;
   --duration-slow: 800ms;
-  
+
   /* 旧变量保留兼容性 */
   --card-bg: #121212;
   --border-color: rgba(255, 255, 255, 0.08);
@@ -42,13 +42,13 @@
   --font-sans: var(--font-sans-var);
   --font-mono: var(--font-mono-var);
   --font-display: var(--font-display-var);
-  
+
   /* 赛博朋克颜色 - 添加到 Tailwind 调色板 */
   --color-cyber-dark: #0a0a0f;
   --color-cyber-cyan: #00f3ff;
   --color-cyber-magenta: #ff00ff;
   --color-cyber-purple: #7000ff;
-  
+
   /* 自定义动画 */
   --animate-glow-pulse: glow-pulse 3s ease-in-out infinite;
   --animate-float: float 6s ease-in-out infinite;
@@ -58,16 +58,36 @@
 }
 
 /* Tailwind 颜色类 */
-.text-cyber-cyan { color: var(--cyber-cyan); }
-.text-cyber-magenta { color: var(--neon-magenta); }
-.text-cyber-purple { color: var(--electric-purple); }
-.bg-cyber-dark { background-color: var(--cyber-dark); }
-.bg-cyber-cyan { background-color: var(--cyber-cyan); }
-.bg-cyber-magenta { background-color: var(--neon-magenta); }
-.bg-cyber-purple { background-color: var(--electric-purple); }
-.border-cyber-cyan { border-color: var(--cyber-cyan); }
-.border-cyber-magenta { border-color: var(--neon-magenta); }
-.border-cyber-purple { border-color: var(--electric-purple); }
+.text-cyber-cyan {
+  color: var(--cyber-cyan);
+}
+.text-cyber-magenta {
+  color: var(--neon-magenta);
+}
+.text-cyber-purple {
+  color: var(--electric-purple);
+}
+.bg-cyber-dark {
+  background-color: var(--cyber-dark);
+}
+.bg-cyber-cyan {
+  background-color: var(--cyber-cyan);
+}
+.bg-cyber-magenta {
+  background-color: var(--neon-magenta);
+}
+.bg-cyber-purple {
+  background-color: var(--electric-purple);
+}
+.border-cyber-cyan {
+  border-color: var(--cyber-cyan);
+}
+.border-cyber-magenta {
+  border-color: var(--neon-magenta);
+}
+.border-cyber-purple {
+  border-color: var(--electric-purple);
+}
 
 html,
 body {
@@ -225,12 +245,7 @@ iframe {
   inset: 0;
   z-index: -10;
   overflow: hidden;
-  background: linear-gradient(
-    180deg,
-    #0a0a0a 0%,
-    #050505 50%,
-    #000000 100%
-  );
+  background: linear-gradient(180deg, #0a0a0a 0%, #050505 50%, #000000 100%);
   pointer-events: none;
 }
 
@@ -250,7 +265,9 @@ iframe {
   );
   transform: translate(-50%, -50%);
   pointer-events: none;
-  transition: left 0.3s ease-out, top 0.3s ease-out;
+  transition:
+    left 0.3s ease-out,
+    top 0.3s ease-out;
   mix-blend-mode: screen;
   filter: blur(30px);
 }
@@ -376,13 +393,13 @@ iframe {
   animation: slideIn 0.3s ease-out;
 }
 
-
 /* ========================================
    Cyberpunk Animations
    ======================================== */
 
 @keyframes glow-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.4;
   }
   50% {
@@ -391,7 +408,8 @@ iframe {
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -464,7 +482,8 @@ iframe {
 }
 
 @keyframes shake {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0) translateY(0) rotate(0deg);
   }
   10% {
@@ -550,12 +569,14 @@ iframe {
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   .animate-glow-pulse,
   .animate-float,
   .animate-grid-rotate,
@@ -574,13 +595,13 @@ iframe {
   .preserve-3d {
     transform-style: flat;
   }
-  
+
   .perspective-1200 {
     perspective: none;
   }
-  
+
   /* Reduce particle count on mobile */
-  .ocean-bubble:nth-child(n+6) {
+  .ocean-bubble:nth-child(n + 6) {
     display: none;
   }
 }

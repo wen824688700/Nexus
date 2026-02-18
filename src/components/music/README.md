@@ -5,6 +5,7 @@
 ## 功能特性
 
 ### 1. 基础播放控制
+
 - ✅ 播放/暂停
 - ✅ 上一首/下一首
 - ✅ 音量控制
@@ -12,12 +13,14 @@
 - ✅ 播放模式（顺序/随机/循环）
 
 ### 2. 赛博波浪可视化
+
 - ✅ 实时音频频谱分析
 - ✅ 多层波浪效果
 - ✅ 霓虹发光渐变
 - ✅ 跟随音乐律动
 
 ### 3. 设置面板
+
 - ✅ 音乐风格选择（Lo-Fi、Ambient、Chillhop等）
 - ✅ 情绪氛围滑块
 - ✅ 节奏BPM调节
@@ -25,6 +28,7 @@
 - ✅ 视觉效果强度
 
 ### 4. 两种显示模式
+
 - **浮动模式**：右下角小部件，可展开控制面板
 - **模态框模式**：全屏居中显示，完整功能
 
@@ -33,7 +37,7 @@
 ### 浮动模式（小部件）
 
 ```tsx
-import { FloatingMusicPlayer } from '@/components/music';
+import { FloatingMusicPlayer } from "@/components/music";
 
 export default function Page() {
   return (
@@ -48,24 +52,17 @@ export default function Page() {
 ### 模态框模式
 
 ```tsx
-import { useState } from 'react';
-import { FloatingMusicPlayer } from '@/components/music';
+import { useState } from "react";
+import { FloatingMusicPlayer } from "@/components/music";
 
 export default function Page() {
   const [showPlayer, setShowPlayer] = useState(false);
 
   return (
     <>
-      <button onClick={() => setShowPlayer(true)}>
-        打开音乐播放器
-      </button>
+      <button onClick={() => setShowPlayer(true)}>打开音乐播放器</button>
 
-      {showPlayer && (
-        <FloatingMusicPlayer 
-          mode="modal" 
-          onClose={() => setShowPlayer(false)} 
-        />
-      )}
+      {showPlayer && <FloatingMusicPlayer mode="modal" onClose={() => setShowPlayer(false)} />}
     </>
   );
 }
@@ -74,18 +71,15 @@ export default function Page() {
 ### 仅使用波浪可视化
 
 ```tsx
-import { CyberWaveVisualizer } from '@/components/music';
-import { useMusicPlayer } from '@/components/music';
+import { CyberWaveVisualizer } from "@/components/music";
+import { useMusicPlayer } from "@/components/music";
 
 export default function Page() {
   const { isPlaying, getFrequencyData } = useMusicPlayer();
 
   return (
     <>
-      <CyberWaveVisualizer 
-        isPlaying={isPlaying} 
-        getFrequencyData={getFrequencyData} 
-      />
+      <CyberWaveVisualizer isPlaying={isPlaying} getFrequencyData={getFrequencyData} />
       {/* 你的页面内容 */}
     </>
   );
@@ -108,17 +102,17 @@ web/src/components/music/
 ## 自定义播放列表
 
 ```tsx
-import { useMusicPlayer, type MusicTrack } from '@/components/music';
+import { useMusicPlayer, type MusicTrack } from "@/components/music";
 
 const myPlaylist: MusicTrack[] = [
   {
-    id: '1',
-    title: '我的音乐',
-    artist: 'AI Composer',
-    genre: 'Lo-Fi',
-    url: 'https://example.com/music.mp3',
-    duration: 180
-  }
+    id: "1",
+    title: "我的音乐",
+    artist: "AI Composer",
+    genre: "Lo-Fi",
+    url: "https://example.com/music.mp3",
+    duration: 180,
+  },
 ];
 
 function MyPlayer() {

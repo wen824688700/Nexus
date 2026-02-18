@@ -1,58 +1,80 @@
-'use client'
+"use client";
 
-import { createContext, useContext, useState, ReactNode } from 'react'
-import AuthModal from './AuthModal'
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
+import AuthModal from "./AuthModal";
 
-type AuthView = 'login' | 'signup' | 'forgot-password'
+type AuthView = "login" | "signup" | "forgot-password";
 
 interface AuthContextType {
-  openAuthModal: (view?: AuthView) => void
-  closeAuthModal: () => void
+  user: User | null;
+  loading: boolean;
+  openAuthModal: (view?: AuthView) => void;
+  closeAuthModal: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function useAuth() {
-  const context = useContext(AuthContext)
+  const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within AuthProvider')
+    throw new Error("useAuth must be used within AuthProvider");
   }
-  return context
+  return context;
 }
 
 interface AuthProviderProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 /**
  * 认证提供者组件
- * 
- * 管理认证模态框的全局状态
+ *
+ * 管理认证模态框的全局状态和用户认证状态
  * 提供打开/关闭模态框的方法
- * 
+ *
  * 验证需求：1.2, 1.4, 8.2
  */
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [initialView, setInitialView] = useState<AuthView>('login')
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [initialView, setInitialView] = useState<AuthView>("login");
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const openAuthModal = (view: AuthView = 'login') => {
-    setInitialView(view)
-    setIsModalOpen(true)
-  }
+  useEffect(() => {
+    const supabase = createClient();
+
+    // 获取初始会话
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    // 监听认证状态变化
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const openAuthModal = (view: AuthView = "login") => {
+    setInitialView(view);
+    setIsModalOpen(true);
+  };
 
   const closeAuthModal = () => {
-    setIsModalOpen(false)
-  }
+    setIsModalOpen(false);
+  };
 
   return (
-    <AuthContext.Provider value={{ openAuthModal, closeAuthModal }}>
+    <AuthContext.Provider value={{ user, loading, openAuthModal, closeAuthModal }}>
       {children}
-      <AuthModal 
-        isOpen={isModalOpen} 
-        onClose={closeAuthModal}
-        initialView={initialView}
-      />
+      <AuthModal isOpen={isModalOpen} onClose={closeAuthModal} initialView={initialView} />
     </AuthContext.Provider>
-  )
+  );
 }

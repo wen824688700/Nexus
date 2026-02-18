@@ -18,27 +18,27 @@ const announcements = [
 export const AnnouncementTicker = memo(function AnnouncementTicker() {
   // 复制一份公告用于无缝循环
   const doubledAnnouncements = [...announcements, ...announcements];
-  
+
   return (
     <NeonBorder color="cyan" className="rounded-xl">
-      <div className="bg-cyber-dark/80 backdrop-blur-xl p-6 rounded-xl overflow-hidden">
-        <div className="flex items-center gap-3 mb-4">
-          <Megaphone className="w-5 h-5 text-cyber-cyan animate-pulse" />
+      <div className="bg-cyber-dark/80 overflow-hidden rounded-xl p-6 backdrop-blur-xl">
+        <div className="mb-4 flex items-center gap-3">
+          <Megaphone className="text-cyber-cyan h-5 w-5 animate-pulse" />
           <h3 className="font-orbitron font-bold text-white">最新动态</h3>
         </div>
 
         {/* 跑马灯容器 */}
         <div className="relative h-[120px] overflow-hidden">
           {/* 渐变遮罩 - 上下边缘 */}
-          <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-cyber-dark/80 to-transparent z-10 pointer-events-none" />
-          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-cyber-dark/80 to-transparent z-10 pointer-events-none" />
-          
+          <div className="from-cyber-dark/80 pointer-events-none absolute top-0 right-0 left-0 z-10 h-8 bg-gradient-to-b to-transparent" />
+          <div className="from-cyber-dark/80 pointer-events-none absolute right-0 bottom-0 left-0 z-10 h-8 bg-gradient-to-t to-transparent" />
+
           {/* 滚动内容 */}
           <div className="animate-marquee-vertical space-y-3">
             {doubledAnnouncements.map((announcement, index) => (
               <div
                 key={index}
-                className="text-sm text-white/70 leading-relaxed hover:text-cyber-cyan transition-colors cursor-default whitespace-nowrap px-2"
+                className="hover:text-cyber-cyan cursor-default px-2 text-sm leading-relaxed whitespace-nowrap text-white/70 transition-colors"
               >
                 {announcement}
               </div>

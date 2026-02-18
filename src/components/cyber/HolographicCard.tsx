@@ -1,20 +1,20 @@
 "use client";
 
-import React, { useState } from 'react';
-import { cn } from '@/lib/utils';
+import React, { useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface HolographicCardProps {
   children: React.ReactNode;
   className?: string;
-  intensity?: 'low' | 'medium' | 'high';
+  intensity?: "low" | "medium" | "high";
   onClick?: () => void;
 }
 
 export const HolographicCard: React.FC<HolographicCardProps> = ({
   children,
   className,
-  intensity = 'medium',
-  onClick
+  intensity = "medium",
+  onClick,
 }) => {
   const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 });
   const [isHovered, setIsHovered] = useState(false);
@@ -29,7 +29,7 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({
   const intensityMap = {
     low: 0.3,
     medium: 0.5,
-    high: 0.8
+    high: 0.8,
   };
 
   const opacity = intensityMap[intensity];
@@ -37,12 +37,12 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-xl',
-        'bg-gradient-to-br from-white/5 to-white/[0.02]',
-        'border border-white/10',
-        'transition-all duration-300',
-        onClick && 'cursor-pointer',
-        className
+        "relative overflow-hidden rounded-xl",
+        "bg-gradient-to-br from-white/5 to-white/[0.02]",
+        "border border-white/10",
+        "transition-all duration-300",
+        onClick && "cursor-pointer",
+        className,
       )}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
@@ -52,8 +52,8 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({
       {/* Holographic shine effect */}
       <div
         className={cn(
-          'absolute inset-0 pointer-events-none transition-opacity duration-300',
-          isHovered ? 'opacity-100' : 'opacity-0'
+          "pointer-events-none absolute inset-0 transition-opacity duration-300",
+          isHovered ? "opacity-100" : "opacity-0",
         )}
         style={{
           background: `
@@ -65,34 +65,30 @@ export const HolographicCard: React.FC<HolographicCardProps> = ({
               transparent 70%
             )
           `,
-          mixBlendMode: 'overlay'
+          mixBlendMode: "overlay",
         }}
       />
-      
+
       {/* Scan line overlay */}
-      <div 
-        className={cn(
-          'absolute inset-0 pointer-events-none',
-          isHovered && 'opacity-100'
-        )}
+      <div
+        className={cn("pointer-events-none absolute inset-0", isHovered && "opacity-100")}
         style={{
-          background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 243, 255, 0.03) 2px, rgba(0, 243, 255, 0.03) 4px)'
+          background:
+            "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 243, 255, 0.03) 2px, rgba(0, 243, 255, 0.03) 4px)",
         }}
       />
-      
+
       {/* Content */}
-      <div className="relative z-10">
-        {children}
-      </div>
-      
+      <div className="relative z-10">{children}</div>
+
       {/* Border glow on hover */}
-      <div 
+      <div
         className={cn(
-          'absolute inset-0 rounded-xl pointer-events-none transition-opacity duration-300',
-          isHovered ? 'opacity-100' : 'opacity-0'
+          "pointer-events-none absolute inset-0 rounded-xl transition-opacity duration-300",
+          isHovered ? "opacity-100" : "opacity-0",
         )}
         style={{
-          boxShadow: `inset 0 0 30px rgba(0, 243, 255, ${opacity * 0.3})`
+          boxShadow: `inset 0 0 30px rgba(0, 243, 255, ${opacity * 0.3})`,
         }}
       />
     </div>

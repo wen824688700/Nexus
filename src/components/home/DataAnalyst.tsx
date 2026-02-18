@@ -35,13 +35,16 @@ type Props = {
 
 const MARKDOWN_COMPONENTS = {
   h1: ({ ...props }: HTMLAttributes<HTMLHeadingElement>) => (
-    <h1 className="mb-4 text-lg font-orbitron font-bold text-cyber-cyan border-l-4 border-cyber-cyan pl-3 shadow-[0_0_10px_rgba(0,243,255,0.3)]" {...props} />
+    <h1
+      className="font-orbitron text-cyber-cyan border-cyber-cyan mb-4 border-l-4 pl-3 text-lg font-bold shadow-[0_0_10px_rgba(0,243,255,0.3)]"
+      {...props}
+    />
   ),
   h2: ({ ...props }: HTMLAttributes<HTMLHeadingElement>) => (
-    <h2 className="mt-5 mb-3 text-base font-orbitron font-semibold text-white" {...props} />
+    <h2 className="font-orbitron mt-5 mb-3 text-base font-semibold text-white" {...props} />
   ),
   h3: ({ ...props }: HTMLAttributes<HTMLHeadingElement>) => (
-    <h3 className="mt-4 mb-2 text-sm font-orbitron font-medium text-white/90" {...props} />
+    <h3 className="font-orbitron mt-4 mb-2 text-sm font-medium text-white/90" {...props} />
   ),
   p: ({ ...props }: HTMLAttributes<HTMLParagraphElement>) => (
     <p className="mb-3 text-sm leading-relaxed text-white/70" {...props} />
@@ -53,10 +56,13 @@ const MARKDOWN_COMPONENTS = {
     <ol className="mb-3 list-inside list-decimal space-y-1.5 text-sm" {...props} />
   ),
   li: ({ ...props }: HTMLAttributes<HTMLLIElement>) => (
-    <li className="text-sm text-white/70 flex items-start gap-2 before:content-['▸'] before:text-cyber-cyan before:flex-shrink-0 before:mt-0.5" {...props} />
+    <li
+      className="before:text-cyber-cyan flex items-start gap-2 text-sm text-white/70 before:mt-0.5 before:flex-shrink-0 before:content-['▸']"
+      {...props}
+    />
   ),
   strong: ({ ...props }: HTMLAttributes<HTMLElement>) => (
-    <strong className="font-semibold text-cyber-cyan" {...props} />
+    <strong className="text-cyber-cyan font-semibold" {...props} />
   ),
   em: ({ ...props }: HTMLAttributes<HTMLElement>) => (
     <em className="text-white/80 italic" {...props} />
@@ -65,14 +71,14 @@ const MARKDOWN_COMPONENTS = {
     const isInline = !className?.includes("language-");
     return isInline ? (
       <code
-        className="rounded bg-cyber-cyan/10 px-1.5 py-0.5 font-mono text-xs text-cyber-cyan border border-cyber-cyan/30"
+        className="bg-cyber-cyan/10 text-cyber-cyan border-cyber-cyan/30 rounded border px-1.5 py-0.5 font-mono text-xs"
         {...props}
       >
         {children}
       </code>
     ) : (
       <code
-        className="block overflow-x-auto rounded-lg border border-cyber-cyan/30 bg-black/60 p-4 font-mono text-xs text-white/80 shadow-inner"
+        className="border-cyber-cyan/30 block overflow-x-auto rounded-lg border bg-black/60 p-4 font-mono text-xs text-white/80 shadow-inner"
         {...props}
       >
         {children}
@@ -81,14 +87,14 @@ const MARKDOWN_COMPONENTS = {
   },
   img: ({ ...props }: ImgHTMLAttributes<HTMLImageElement>) => (
     <img
-      className="mt-4 w-full rounded-lg border-2 border-cyber-cyan/30 shadow-[0_0_20px_rgba(0,243,255,0.2)]"
+      className="border-cyber-cyan/30 mt-4 w-full rounded-lg border-2 shadow-[0_0_20px_rgba(0,243,255,0.2)]"
       loading="lazy"
       {...props}
     />
   ),
   a: ({ ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) => (
     <a
-      className="text-cyber-cyan underline decoration-cyber-cyan/40 underline-offset-2 hover:decoration-cyber-cyan transition-colors"
+      className="text-cyber-cyan decoration-cyber-cyan/40 hover:decoration-cyber-cyan underline underline-offset-2 transition-colors"
       target="_blank"
       rel="noopener noreferrer"
       {...props}
@@ -96,7 +102,7 @@ const MARKDOWN_COMPONENTS = {
   ),
   blockquote: ({ ...props }: HTMLAttributes<HTMLQuoteElement>) => (
     <blockquote
-      className="border-l-2 border-cyber-cyan/60 pl-3 text-sm italic text-white/70 bg-cyber-cyan/5 py-2 rounded-r"
+      className="border-cyber-cyan/60 bg-cyber-cyan/5 rounded-r border-l-2 py-2 pl-3 text-sm text-white/70 italic"
       {...props}
     />
   ),
@@ -112,12 +118,17 @@ function MarkdownContent({ content }: { content: string }) {
 
 function ToolStatusIndicator({ tool }: { tool: ToolCall }) {
   const isRunning = tool.status === "running";
-  const icon = tool.name === "create_chart" ? <BarChart3 className="w-3.5 h-3.5" /> : <Database className="w-3.5 h-3.5" />;
+  const icon =
+    tool.name === "create_chart" ? (
+      <BarChart3 className="h-3.5 w-3.5" />
+    ) : (
+      <Database className="h-3.5 w-3.5" />
+    );
 
   return (
     <div
       className={[
-        "group flex items-center gap-3 rounded-lg border px-4 py-2.5 text-xs transition-all relative overflow-hidden",
+        "group relative flex items-center gap-3 overflow-hidden rounded-lg border px-4 py-2.5 text-xs transition-all",
         isRunning
           ? "animate-slideIn border-cyber-cyan/40 bg-cyber-cyan/5 shadow-[0_0_15px_rgba(0,243,255,0.1)]"
           : "border-white/10 bg-white/5 opacity-70",
@@ -125,28 +136,34 @@ function ToolStatusIndicator({ tool }: { tool: ToolCall }) {
     >
       {/* Scan line effect for running tools */}
       {isRunning && (
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-cyber-cyan/50 to-transparent animate-[scan-line_2s_linear_infinite]" />
+        <div className="pointer-events-none absolute inset-0">
+          <div className="via-cyber-cyan/50 absolute h-[1px] w-full animate-[scan-line_2s_linear_infinite] bg-gradient-to-r from-transparent to-transparent" />
         </div>
       )}
-      
-      <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center relative z-10">
+
+      <div className="relative z-10 flex h-5 w-5 flex-shrink-0 items-center justify-center">
         {isRunning ? (
           <div className="relative flex h-3 w-3 items-center justify-center">
-            <div className="absolute h-3 w-3 animate-ping rounded-full bg-cyber-cyan opacity-75" />
-            <div className="relative h-2 w-2 rounded-full bg-cyber-cyan shadow-[0_0_10px_rgba(0,243,255,0.8)]" />
+            <div className="bg-cyber-cyan absolute h-3 w-3 animate-ping rounded-full opacity-75" />
+            <div className="bg-cyber-cyan relative h-2 w-2 rounded-full shadow-[0_0_10px_rgba(0,243,255,0.8)]" />
           </div>
         ) : (
-          <div className="text-green-400 text-sm">✓</div>
+          <div className="text-sm text-green-400">✓</div>
         )}
       </div>
       <div className="text-cyber-cyan/80 flex-shrink-0">{icon}</div>
-      <span className="font-mono flex-1 truncate text-white/80">{tool.description}</span>
+      <span className="flex-1 truncate font-mono text-white/80">{tool.description}</span>
       {isRunning && (
         <div className="flex gap-0.5">
-          <div className="w-1 h-1 rounded-full bg-cyber-cyan animate-pulse" />
-          <div className="w-1 h-1 rounded-full bg-cyber-cyan animate-pulse" style={{ animationDelay: '0.2s' }} />
-          <div className="w-1 h-1 rounded-full bg-cyber-cyan animate-pulse" style={{ animationDelay: '0.4s' }} />
+          <div className="bg-cyber-cyan h-1 w-1 animate-pulse rounded-full" />
+          <div
+            className="bg-cyber-cyan h-1 w-1 animate-pulse rounded-full"
+            style={{ animationDelay: "0.2s" }}
+          />
+          <div
+            className="bg-cyber-cyan h-1 w-1 animate-pulse rounded-full"
+            style={{ animationDelay: "0.4s" }}
+          />
         </div>
       )}
     </div>
@@ -225,7 +242,7 @@ export function DataAnalyst({ agentKey }: Props) {
       const fd = new FormData();
       fd.set("query", prompt || "请分析上传的文件");
       fd.set("session_id", sessionId); // 传递会话 ID
-      
+
       // 添加所有文件到 FormData
       files.forEach((file, index) => {
         fd.append(`file_${index}`, file);
@@ -437,53 +454,49 @@ export function DataAnalyst({ agentKey }: Props) {
   return (
     <div className="flex h-full flex-col p-6">
       {/* Header */}
-      <div className="mb-4 flex items-center justify-between border-b border-cyber-cyan/20 pb-3">
+      <div className="border-cyber-cyan/20 mb-4 flex items-center justify-between border-b pb-3">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-8 h-8 rounded bg-cyber-cyan/10 border border-cyber-cyan/30">
-            <BarChart3 className="w-4 h-4 text-cyber-cyan" />
+          <div className="bg-cyber-cyan/10 border-cyber-cyan/30 flex h-8 w-8 items-center justify-center rounded border">
+            <BarChart3 className="text-cyber-cyan h-4 w-4" />
           </div>
           <div>
-            <div className="font-mono text-xs tracking-[0.2em] text-cyber-cyan uppercase">
+            <div className="text-cyber-cyan font-mono text-xs tracking-[0.2em] uppercase">
               Data Analytics
             </div>
-            <div className="font-mono text-[10px] text-white/40">
-              v2.1.0 | Neural Engine
-            </div>
+            <div className="font-mono text-[10px] text-white/40">v2.1.0 | Neural Engine</div>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-2 w-2 animate-pulse rounded-full bg-cyber-cyan shadow-[0_0_10px_rgba(0,243,255,0.8)]" />
-          <span className="text-[10px] font-mono tracking-widest text-cyber-cyan/80 uppercase">
+          <div className="bg-cyber-cyan h-2 w-2 animate-pulse rounded-full shadow-[0_0_10px_rgba(0,243,255,0.8)]" />
+          <span className="text-cyber-cyan/80 font-mono text-[10px] tracking-widest uppercase">
             Online
           </span>
         </div>
       </div>
 
       {/* Chat Area */}
-      <div className="relative mb-4 flex-1 overflow-y-auto rounded-2xl border border-cyber-cyan/20 bg-black/40 p-4 backdrop-blur-sm">
+      <div className="border-cyber-cyan/20 relative mb-4 flex-1 overflow-y-auto rounded-2xl border bg-black/40 p-4 backdrop-blur-sm">
         {/* Scan Line Effect */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
-          <div className="absolute w-full h-[2px] bg-gradient-to-r from-transparent via-cyber-cyan/20 to-transparent animate-[scan-line_4s_linear_infinite]" />
+        <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
+          <div className="via-cyber-cyan/20 absolute h-[2px] w-full animate-[scan-line_4s_linear_infinite] bg-gradient-to-r from-transparent to-transparent" />
         </div>
         {messages.length === 0 && !loading ? (
-          <div className="flex h-full flex-col items-start justify-start gap-5 p-6 relative z-10">
-            <div className="flex gap-4 w-full">
-              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-cyber-cyan/20 to-cyber-purple/20 border border-cyber-cyan/30 shadow-[0_0_20px_rgba(0,243,255,0.2)]">
-                <BarChart3 className="w-6 h-6 text-cyber-cyan" />
+          <div className="relative z-10 flex h-full flex-col items-start justify-start gap-5 p-6">
+            <div className="flex w-full gap-4">
+              <div className="from-cyber-cyan/20 to-cyber-purple/20 border-cyber-cyan/30 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg border bg-gradient-to-br shadow-[0_0_20px_rgba(0,243,255,0.2)]">
+                <BarChart3 className="text-cyber-cyan h-6 w-6" />
               </div>
               <div className="flex-1">
-                <div className="mb-3 text-sm font-orbitron font-bold text-cyber-cyan tracking-wide">
+                <div className="font-orbitron text-cyber-cyan mb-3 text-sm font-bold tracking-wide">
                   {WELCOME.greeting}
                 </div>
-                <p className="mb-2 text-sm leading-relaxed text-white/70">
-                  {WELCOME.description}
-                </p>
-                <p className="text-xs text-white/50 font-mono">{WELCOME.cta}</p>
+                <p className="mb-2 text-sm leading-relaxed text-white/70">{WELCOME.description}</p>
+                <p className="font-mono text-xs text-white/50">{WELCOME.cta}</p>
               </div>
             </div>
 
             <div className="flex w-full flex-col gap-2.5">
-              <div className="text-xs font-mono text-cyber-cyan/60 uppercase tracking-wider mb-1">
+              <div className="text-cyber-cyan/60 mb-1 font-mono text-xs tracking-wider uppercase">
                 ▸ Quick Actions
               </div>
               <div className="flex flex-wrap gap-2">
@@ -492,9 +505,9 @@ export function DataAnalyst({ agentKey }: Props) {
                     key={idx}
                     type="button"
                     onClick={() => handleSuggestionClick(suggestion)}
-                    className="rounded-lg border border-cyber-cyan/20 bg-cyber-cyan/5 px-4 py-3 text-xs text-white/80 transition-all hover:bg-cyber-cyan/10 hover:border-cyber-cyan/40 hover:shadow-[0_0_15px_rgba(0,243,255,0.1)] group"
+                    className="border-cyber-cyan/20 bg-cyber-cyan/5 hover:bg-cyber-cyan/10 hover:border-cyber-cyan/40 group rounded-lg border px-4 py-3 text-xs text-white/80 transition-all hover:shadow-[0_0_15px_rgba(0,243,255,0.1)]"
                   >
-                    <span className="font-mono group-hover:text-cyber-cyan transition-colors whitespace-nowrap">
+                    <span className="group-hover:text-cyber-cyan font-mono whitespace-nowrap transition-colors">
                       {suggestion}
                     </span>
                   </button>
@@ -513,16 +526,16 @@ export function DataAnalyst({ agentKey }: Props) {
                   ].join(" ")}
                 >
                   {msg.role === "assistant" ? (
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-cyber-cyan/20 to-cyber-purple/20 border border-cyber-cyan/30 shadow-[0_0_15px_rgba(0,243,255,0.2)]">
-                      <BarChart3 className="w-5 h-5 text-cyber-cyan" />
+                    <div className="from-cyber-cyan/20 to-cyber-purple/20 border-cyber-cyan/30 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border bg-gradient-to-br shadow-[0_0_15px_rgba(0,243,255,0.2)]">
+                      <BarChart3 className="text-cyber-cyan h-5 w-5" />
                     </div>
                   ) : null}
                   <div
                     className={[
-                      "max-w-[80%] rounded-lg px-4 py-3 text-sm leading-relaxed relative",
+                      "relative max-w-[80%] rounded-lg px-4 py-3 text-sm leading-relaxed",
                       msg.role === "user"
-                        ? "bg-white/10 text-white border border-white/20"
-                        : "bg-cyber-cyan/5 text-white/90 border border-cyber-cyan/20 shadow-[0_0_10px_rgba(0,243,255,0.05)]",
+                        ? "border border-white/20 bg-white/10 text-white"
+                        : "bg-cyber-cyan/5 border-cyber-cyan/20 border text-white/90 shadow-[0_0_10px_rgba(0,243,255,0.05)]",
                     ].join(" ")}
                   >
                     {msg.role === "assistant" ? (
@@ -535,12 +548,14 @@ export function DataAnalyst({ agentKey }: Props) {
                         {msg.files.map((file, idx) => (
                           <div
                             key={idx}
-                            className="flex items-center gap-2 rounded-lg border border-cyber-cyan/20 bg-cyber-cyan/5 px-3 py-2"
+                            className="border-cyber-cyan/20 bg-cyber-cyan/5 flex items-center gap-2 rounded-lg border px-3 py-2"
                           >
-                            <FileText className="w-3.5 h-3.5 text-cyber-cyan flex-shrink-0" />
-                            <div className="flex-1 min-w-0">
-                              <div className="truncate text-xs font-semibold text-white">{file.name}</div>
-                              <div className="font-mono text-[10px] text-cyber-cyan/60">
+                            <FileText className="text-cyber-cyan h-3.5 w-3.5 flex-shrink-0" />
+                            <div className="min-w-0 flex-1">
+                              <div className="truncate text-xs font-semibold text-white">
+                                {file.name}
+                              </div>
+                              <div className="text-cyber-cyan/60 font-mono text-[10px]">
                                 {(file.size / 1024).toFixed(1)} KB
                               </div>
                             </div>
@@ -550,9 +565,9 @@ export function DataAnalyst({ agentKey }: Props) {
                     ) : null}
                     {msg.charts && msg.charts.length > 0 ? (
                       <div className="mt-4 space-y-3">
-                        <div className="flex items-center gap-2 border-t border-cyber-cyan/20 pt-3">
-                          <BarChart3 className="w-4 h-4 text-cyber-cyan" />
-                          <span className="text-xs font-mono font-semibold text-cyber-cyan uppercase tracking-wider">
+                        <div className="border-cyber-cyan/20 flex items-center gap-2 border-t pt-3">
+                          <BarChart3 className="text-cyber-cyan h-4 w-4" />
+                          <span className="text-cyber-cyan font-mono text-xs font-semibold tracking-wider uppercase">
                             Generated Charts ({msg.charts.length})
                           </span>
                         </div>
@@ -560,7 +575,7 @@ export function DataAnalyst({ agentKey }: Props) {
                           {msg.charts.map((chart, idx) => (
                             <div
                               key={idx}
-                              className="group relative overflow-hidden rounded-lg border-2 border-cyber-cyan/30 bg-black/60 p-3 transition-all hover:border-cyber-cyan/50 hover:shadow-[0_0_20px_rgba(0,243,255,0.2)]"
+                              className="group border-cyber-cyan/30 hover:border-cyber-cyan/50 relative overflow-hidden rounded-lg border-2 bg-black/60 p-3 transition-all hover:shadow-[0_0_20px_rgba(0,243,255,0.2)]"
                             >
                               <img
                                 src={chart.url}
@@ -575,7 +590,7 @@ export function DataAnalyst({ agentKey }: Props) {
                                 <a
                                   href={chart.url}
                                   download={`${chart.title}.png`}
-                                  className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded border border-cyber-cyan/30 bg-cyber-cyan/10 text-xs transition-all hover:bg-cyber-cyan/20 hover:border-cyber-cyan/50 hover:shadow-[0_0_10px_rgba(0,243,255,0.3)]"
+                                  className="border-cyber-cyan/30 bg-cyber-cyan/10 hover:bg-cyber-cyan/20 hover:border-cyber-cyan/50 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded border text-xs transition-all hover:shadow-[0_0_10px_rgba(0,243,255,0.3)]"
                                   title="下载图表"
                                 >
                                   ⬇
@@ -588,7 +603,7 @@ export function DataAnalyst({ agentKey }: Props) {
                     ) : null}
                   </div>
                   {msg.role === "user" ? (
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-white/10 border border-white/20">
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-white/20 bg-white/10">
                       <span className="text-sm">👤</span>
                     </div>
                   ) : null}
@@ -598,17 +613,17 @@ export function DataAnalyst({ agentKey }: Props) {
 
             {loading && streamingContent ? (
               <div className="flex gap-3">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-cyber-cyan/20 to-cyber-purple/20 border border-cyber-cyan/30 shadow-[0_0_15px_rgba(0,243,255,0.2)] animate-pulse">
-                  <BarChart3 className="w-5 h-5 text-cyber-cyan" />
+                <div className="from-cyber-cyan/20 to-cyber-purple/20 border-cyber-cyan/30 flex h-10 w-10 flex-shrink-0 animate-pulse items-center justify-center rounded-lg border bg-gradient-to-br shadow-[0_0_15px_rgba(0,243,255,0.2)]">
+                  <BarChart3 className="text-cyber-cyan h-5 w-5" />
                 </div>
-                <div className="max-w-[80%] rounded-lg bg-cyber-cyan/5 border border-cyber-cyan/20 px-4 py-3 text-sm leading-relaxed text-white/90 shadow-[0_0_10px_rgba(0,243,255,0.05)]">
+                <div className="bg-cyber-cyan/5 border-cyber-cyan/20 max-w-[80%] rounded-lg border px-4 py-3 text-sm leading-relaxed text-white/90 shadow-[0_0_10px_rgba(0,243,255,0.05)]">
                   <MarkdownContent content={streamingContent} />
-                  <span className="inline-block h-4 w-1 animate-pulse bg-cyber-cyan shadow-[0_0_10px_rgba(0,243,255,0.8)]" />
+                  <span className="bg-cyber-cyan inline-block h-4 w-1 animate-pulse shadow-[0_0_10px_rgba(0,243,255,0.8)]" />
                   {streamingCharts.length > 0 ? (
                     <div className="mt-4 space-y-3">
-                      <div className="flex items-center gap-2 border-t border-cyber-cyan/20 pt-3">
-                        <BarChart3 className="w-4 h-4 text-cyber-cyan" />
-                        <span className="text-xs font-mono font-semibold text-cyber-cyan uppercase tracking-wider">
+                      <div className="border-cyber-cyan/20 flex items-center gap-2 border-t pt-3">
+                        <BarChart3 className="text-cyber-cyan h-4 w-4" />
+                        <span className="text-cyber-cyan font-mono text-xs font-semibold tracking-wider uppercase">
                           Generated Charts ({streamingCharts.length})
                         </span>
                       </div>
@@ -616,7 +631,7 @@ export function DataAnalyst({ agentKey }: Props) {
                         {streamingCharts.map((chart, idx) => (
                           <div
                             key={idx}
-                            className="overflow-hidden rounded-lg border-2 border-cyber-cyan/30 bg-black/60 p-3"
+                            className="border-cyber-cyan/30 overflow-hidden rounded-lg border-2 bg-black/60 p-3"
                           >
                             <img
                               src={chart.url}
@@ -631,7 +646,7 @@ export function DataAnalyst({ agentKey }: Props) {
                               <a
                                 href={chart.url}
                                 download={`${chart.title}.png`}
-                                className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded border border-cyber-cyan/30 bg-cyber-cyan/10 text-xs transition-all hover:bg-cyber-cyan/20"
+                                className="border-cyber-cyan/30 bg-cyber-cyan/10 hover:bg-cyber-cyan/20 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded border text-xs transition-all"
                                 title="下载图表"
                               >
                                 ⬇
@@ -646,20 +661,22 @@ export function DataAnalyst({ agentKey }: Props) {
               </div>
             ) : loading ? (
               <div className="flex gap-3">
-                <div className="flex h-10 w-10 flex-shrink-0 animate-pulse items-center justify-center rounded-lg bg-gradient-to-br from-cyber-cyan/20 to-cyber-purple/20 border border-cyber-cyan/30 shadow-[0_0_15px_rgba(0,243,255,0.2)]">
-                  <BarChart3 className="w-5 h-5 text-cyber-cyan" />
+                <div className="from-cyber-cyan/20 to-cyber-purple/20 border-cyber-cyan/30 flex h-10 w-10 flex-shrink-0 animate-pulse items-center justify-center rounded-lg border bg-gradient-to-br shadow-[0_0_15px_rgba(0,243,255,0.2)]">
+                  <BarChart3 className="text-cyber-cyan h-5 w-5" />
                 </div>
                 <div className="flex-1 space-y-3">
-                  <div className="w-fit rounded-lg bg-cyber-cyan/5 border border-cyber-cyan/20 px-4 py-3 text-sm leading-relaxed text-cyber-cyan shadow-[0_0_10px_rgba(0,243,255,0.05)]">
+                  <div className="bg-cyber-cyan/5 border-cyber-cyan/20 text-cyber-cyan w-fit rounded-lg border px-4 py-3 text-sm leading-relaxed shadow-[0_0_10px_rgba(0,243,255,0.05)]">
                     <div className="flex items-center gap-2">
                       <div className="relative flex h-3 w-3 items-center justify-center">
-                        <div className="absolute h-3 w-3 animate-ping rounded-full bg-cyber-cyan opacity-75" />
-                        <div className="relative h-2 w-2 rounded-full bg-cyber-cyan" />
+                        <div className="bg-cyber-cyan absolute h-3 w-3 animate-ping rounded-full opacity-75" />
+                        <div className="bg-cyber-cyan relative h-2 w-2 rounded-full" />
                       </div>
-                      <span className="font-mono animate-pulse whitespace-nowrap">[ ANALYZING DATA ]</span>
+                      <span className="animate-pulse font-mono whitespace-nowrap">
+                        [ ANALYZING DATA ]
+                      </span>
                     </div>
                   </div>
-                  
+
                   {/* 工具调用状态 */}
                   {streamingTools.length > 0 ? (
                     <div className="space-y-2">
@@ -679,7 +696,7 @@ export function DataAnalyst({ agentKey }: Props) {
 
       {/* Error Display */}
       {error ? (
-        <div className="mb-3 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-xs text-red-200 font-mono shadow-[0_0_15px_rgba(239,68,68,0.1)]">
+        <div className="mb-3 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 font-mono text-xs text-red-200 shadow-[0_0_15px_rgba(239,68,68,0.1)]">
           <div className="flex items-center gap-2">
             <span className="text-red-400">⚠</span>
             <span>{error}</span>
@@ -693,24 +710,24 @@ export function DataAnalyst({ agentKey }: Props) {
           {files.map((file, idx) => (
             <div
               key={idx}
-              className="flex items-center gap-3 rounded-lg border border-cyber-cyan/20 bg-cyber-cyan/5 px-4 py-3 shadow-[0_0_10px_rgba(0,243,255,0.05)]"
+              className="border-cyber-cyan/20 bg-cyber-cyan/5 flex items-center gap-3 rounded-lg border px-4 py-3 shadow-[0_0_10px_rgba(0,243,255,0.05)]"
             >
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded border border-cyber-cyan/30 bg-cyber-cyan/10">
-                <FileText className="w-5 h-5 text-cyber-cyan" />
+              <div className="border-cyber-cyan/30 bg-cyber-cyan/10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded border">
+                <FileText className="text-cyber-cyan h-5 w-5" />
               </div>
-              <div className="flex-1 min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="truncate text-xs font-semibold text-white">{file.name}</div>
-                <div className="font-mono text-[10px] text-cyber-cyan/60">
+                <div className="text-cyber-cyan/60 font-mono text-[10px]">
                   {(file.size / 1024 / 1024).toFixed(2)} MB
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => removeFile(idx)}
-                className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded border border-white/20 text-white/60 transition-all hover:bg-red-500/20 hover:border-red-500/30 hover:text-red-400"
+                className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded border border-white/20 text-white/60 transition-all hover:border-red-500/30 hover:bg-red-500/20 hover:text-red-400"
                 aria-label="移除文件"
               >
-                <X className="w-4 h-4" />
+                <X className="h-4 w-4" />
               </button>
             </div>
           ))}
@@ -719,15 +736,15 @@ export function DataAnalyst({ agentKey }: Props) {
 
       {/* Input Area */}
       <div className="flex flex-col gap-3">
-        <div className="flex items-end gap-3 rounded-lg border border-cyber-cyan/20 bg-black/40 p-3 backdrop-blur-sm shadow-[0_0_15px_rgba(0,243,255,0.05)]">
+        <div className="border-cyber-cyan/20 flex items-end gap-3 rounded-lg border bg-black/40 p-3 shadow-[0_0_15px_rgba(0,243,255,0.05)] backdrop-blur-sm">
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded border border-cyber-cyan/30 bg-cyber-cyan/10 transition-all hover:bg-cyber-cyan/20 hover:border-cyber-cyan/50 hover:shadow-[0_0_15px_rgba(0,243,255,0.2)]"
+            className="border-cyber-cyan/30 bg-cyber-cyan/10 hover:bg-cyber-cyan/20 hover:border-cyber-cyan/50 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded border transition-all hover:shadow-[0_0_15px_rgba(0,243,255,0.2)]"
             aria-label="上传文件"
             title="上传 Excel、CSV、图表、文档等"
           >
-            <Upload className="w-5 h-5 text-cyber-cyan" />
+            <Upload className="text-cyber-cyan h-5 w-5" />
           </button>
           <textarea
             ref={textareaRef}
@@ -735,19 +752,19 @@ export function DataAnalyst({ agentKey }: Props) {
             onChange={(e) => setPrompt(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="输入分析需求或上传文件...（Enter 发送，Shift+Enter 换行）"
-            className="min-h-[44px] flex-1 resize-none rounded border border-cyber-cyan/20 bg-black/60 px-4 py-3 text-xs text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-cyber-cyan/30 focus:border-cyber-cyan/40 font-mono"
+            className="border-cyber-cyan/20 focus:ring-cyber-cyan/30 focus:border-cyber-cyan/40 min-h-[44px] flex-1 resize-none rounded border bg-black/60 px-4 py-3 font-mono text-xs text-white placeholder:text-white/30 focus:ring-2 focus:outline-none"
           />
           <button
             type="button"
             disabled={!loading && !prompt.trim() && files.length === 0}
             onClick={loading ? handleAbort : run}
             className={[
-              "relative h-11 rounded px-5 text-[10px] font-mono font-bold tracking-widest uppercase transition-all flex items-center gap-2",
+              "relative flex h-11 items-center gap-2 rounded px-5 font-mono text-[10px] font-bold tracking-widest uppercase transition-all",
               loading
-                ? "bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]"
+                ? "border border-red-500/30 bg-red-500/20 text-red-400 shadow-[0_0_15px_rgba(239,68,68,0.2)] hover:bg-red-500/30"
                 : !prompt.trim() && files.length === 0
-                  ? "cursor-not-allowed bg-white/5 text-white/30 border border-white/10"
-                  : "bg-cyber-cyan text-black border border-cyber-cyan hover:bg-cyber-cyan/90 shadow-[0_0_20px_rgba(0,243,255,0.3)]",
+                  ? "cursor-not-allowed border border-white/10 bg-white/5 text-white/30"
+                  : "bg-cyber-cyan border-cyber-cyan hover:bg-cyber-cyan/90 border text-black shadow-[0_0_20px_rgba(0,243,255,0.3)]",
             ].join(" ")}
           >
             {loading ? (
@@ -760,15 +777,17 @@ export function DataAnalyst({ agentKey }: Props) {
               </>
             ) : (
               <>
-                <Send className="w-3.5 h-3.5" />
+                <Send className="h-3.5 w-3.5" />
                 Analyze
               </>
             )}
           </button>
         </div>
-        <div className="font-mono px-2 text-[9px] tracking-wider text-cyber-cyan/40 uppercase flex items-center gap-2">
-          <Zap className="w-3 h-3" />
-          <span>支持：Excel (.xlsx, .xls) / CSV / 图表 (PNG, JPG) / 文档 (PDF, DOCX) / 最大 10MB</span>
+        <div className="text-cyber-cyan/40 flex items-center gap-2 px-2 font-mono text-[9px] tracking-wider uppercase">
+          <Zap className="h-3 w-3" />
+          <span>
+            支持：Excel (.xlsx, .xls) / CSV / 图表 (PNG, JPG) / 文档 (PDF, DOCX) / 最大 10MB
+          </span>
         </div>
       </div>
 

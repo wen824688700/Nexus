@@ -16,56 +16,55 @@ export function ArticlePreviewCard({
   isLocked = false,
 }: ArticlePreviewCardProps) {
   // 获取文章预览（优先使用 summary，否则从 content 提取）
-  const preview = 'summary' in article && article.summary
-    ? article.summary
-    : 'content' in article
-      ? article.content.slice(0, 150) + (article.content.length > 150 ? "..." : "")
-      : article.title;
+  const preview =
+    "summary" in article && article.summary
+      ? article.summary
+      : "content" in article
+        ? article.content.slice(0, 150) + (article.content.length > 150 ? "..." : "")
+        : article.title;
 
   return (
-    <div onClick={onClick} className="cursor-pointer group">
-      <NeonBorder color="cyan" className="rounded-xl h-full">
-        <div className="bg-cyber-dark/80 backdrop-blur-xl p-6 rounded-xl h-full flex flex-col relative overflow-hidden">
+    <div onClick={onClick} className="group cursor-pointer">
+      <NeonBorder color="cyan" className="h-full rounded-xl">
+        <div className="bg-cyber-dark/80 relative flex h-full flex-col overflow-hidden rounded-xl p-6 backdrop-blur-xl">
           {/* Lock Overlay */}
           {isLocked && (
             <div className="absolute top-4 right-4 z-10">
-              <div className="w-8 h-8 rounded-full bg-cyber-magenta/20 border border-cyber-magenta/50 flex items-center justify-center">
-                <Lock className="w-4 h-4 text-cyber-magenta" />
+              <div className="bg-cyber-magenta/20 border-cyber-magenta/50 flex h-8 w-8 items-center justify-center rounded-full border">
+                <Lock className="text-cyber-magenta h-4 w-4" />
               </div>
             </div>
           )}
 
           {/* Title */}
-          <h3 className="text-xl font-orbitron font-bold text-white mb-3 group-hover:text-cyber-cyan transition-colors">
+          <h3 className="font-orbitron group-hover:text-cyber-cyan mb-3 text-xl font-bold text-white transition-colors">
             {article.title}
           </h3>
 
           {/* Meta Info */}
-          <div className="flex items-center gap-4 mb-4 text-xs text-white/50">
+          <div className="mb-4 flex items-center gap-4 text-xs text-white/50">
             <div className="flex items-center gap-1">
-              <Calendar className="w-3 h-3" />
+              <Calendar className="h-3 w-3" />
               <span>{new Date(article.createdAt).toLocaleDateString("zh-CN")}</span>
             </div>
             {article.tags.length > 0 && (
               <div className="flex items-center gap-1">
-                <Tag className="w-3 h-3" />
+                <Tag className="h-3 w-3" />
                 <span>{article.tags[0]}</span>
               </div>
             )}
           </div>
 
           {/* Preview */}
-          <p className="text-white/60 text-sm leading-relaxed flex-1 line-clamp-4">
-            {preview}
-          </p>
+          <p className="line-clamp-4 flex-1 text-sm leading-relaxed text-white/60">{preview}</p>
 
           {/* Tags */}
           {article.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-white/10">
+            <div className="mt-4 flex flex-wrap gap-2 border-t border-white/10 pt-4">
               {article.tags.slice(0, 3).map((tag, index) => (
                 <span
                   key={index}
-                  className="px-2 py-1 text-xs rounded bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan/30"
+                  className="bg-cyber-cyan/10 text-cyber-cyan border-cyber-cyan/30 rounded border px-2 py-1 text-xs"
                 >
                   {tag}
                 </span>
@@ -76,8 +75,8 @@ export function ArticlePreviewCard({
           {/* Locked Badge */}
           {isLocked && (
             <div className="mt-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-magenta/10 border border-cyber-magenta/30 text-cyber-magenta text-xs">
-                <Lock className="w-3 h-3" />
+              <div className="bg-cyber-magenta/10 border-cyber-magenta/30 text-cyber-magenta inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs">
+                <Lock className="h-3 w-3" />
                 <span>需要解锁</span>
               </div>
             </div>

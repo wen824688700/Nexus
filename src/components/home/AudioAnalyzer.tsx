@@ -1,7 +1,16 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import { Upload, Music, Loader2, AlertCircle, CheckCircle2, Copy, Check, Sparkles } from "lucide-react";
+import {
+  Upload,
+  Music,
+  Loader2,
+  AlertCircle,
+  CheckCircle2,
+  Copy,
+  Check,
+  Sparkles,
+} from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { NeonBorder, CyberButton, GlitchText } from "@/components/cyber";
 
@@ -23,14 +32,14 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [sessionId] = useState(() => `user_${Date.now()}`);
-  
+
   // 分析结果和工具调用状态
   const [analysisResult, setAnalysisResult] = useState("");
   const [streamingContent, setStreamingContent] = useState("");
   const [toolCalls, setToolCalls] = useState<ToolCall[]>([]);
   const [showCopyToast, setShowCopyToast] = useState(false);
   const [hasAnalyzed, setHasAnalyzed] = useState(false);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
 
@@ -66,12 +75,19 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
   // 处理文件选择
   const handleFileSelect = useCallback((file: File) => {
     // 验证文件类型
-    const validTypes = ["audio/mpeg", "audio/mp3", "audio/wav", "audio/ogg", "audio/m4a", "audio/flac"];
+    const validTypes = [
+      "audio/mpeg",
+      "audio/mp3",
+      "audio/wav",
+      "audio/ogg",
+      "audio/m4a",
+      "audio/flac",
+    ];
     const validExtensions = [".mp3", ".wav", ".ogg", ".m4a", ".flac"];
-    
+
     const isValidType = validTypes.includes(file.type);
-    const isValidExtension = validExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
-    
+    const isValidExtension = validExtensions.some((ext) => file.name.toLowerCase().endsWith(ext));
+
     if (!isValidType && !isValidExtension) {
       setError("请上传音频文件（支持 MP3、WAV、OGG、M4A、FLAC 格式）");
       return;
@@ -99,27 +115,33 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
     setIsDragging(false);
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      handleFileSelect(file);
-    }
-  }, [handleFileSelect]);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+
+      const file = e.dataTransfer.files[0];
+      if (file) {
+        handleFileSelect(file);
+      }
+    },
+    [handleFileSelect],
+  );
 
   // 点击上传
   const handleUploadClick = useCallback(() => {
     fileInputRef.current?.click();
   }, []);
 
-  const handleFileInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      handleFileSelect(file);
-    }
-  }, [handleFileSelect]);
+  const handleFileInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        handleFileSelect(file);
+      }
+    },
+    [handleFileSelect],
+  );
 
   // 移除文件
   const handleRemoveFile = useCallback(() => {
@@ -130,135 +152,147 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
   }, []);
 
   // 发送消息
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!uploadedFile) {
-      setError("请先上传音频文件");
-      return;
-    }
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    setLoading(true);
-    setError(null);
-    setStreamingContent("");
-    setToolCalls([]);
-    setAnalysisResult("");
-    setHasAnalyzed(true);
-
-    try {
-      // 构建 FormData
-      const formData = new FormData();
-      formData.append("query", prompt.trim() || "请分析这个音频的风格特征，生成可用于 AI 音乐生成的提示词");
-      formData.append("session_id", sessionId);
-      formData.append("file_count", "1");
-      formData.append("file_0", uploadedFile);
-
-      // 调用 API
-      const response = await fetch(`/api/agents/${agentKey}/run`, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: { message: "请求失败" } }));
-        throw new Error(errorData.error?.message || `请求失败: ${response.status}`);
+      if (!uploadedFile) {
+        setError("请先上传音频文件");
+        return;
       }
 
-      // 处理流式响应
-      const reader = response.body?.getReader();
-      if (!reader) {
-        throw new Error("无法读取响应流");
-      }
+      setLoading(true);
+      setError(null);
+      setStreamingContent("");
+      setToolCalls([]);
+      setAnalysisResult("");
+      setHasAnalyzed(true);
 
-      const decoder = new TextDecoder();
-      let buffer = "";
-      let fullContent = "";
+      try {
+        // 构建 FormData
+        const formData = new FormData();
+        formData.append(
+          "query",
+          prompt.trim() || "请分析这个音频的风格特征，生成可用于 AI 音乐生成的提示词",
+        );
+        formData.append("session_id", sessionId);
+        formData.append("file_count", "1");
+        formData.append("file_0", uploadedFile);
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+        // 调用 API
+        const response = await fetch(`/api/agents/${agentKey}/run`, {
+          method: "POST",
+          body: formData,
+        });
 
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() || "";
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ error: { message: "请求失败" } }));
+          throw new Error(errorData.error?.message || `请求失败: ${response.status}`);
+        }
 
-        for (const line of lines) {
-          if (!line.trim() || !line.startsWith("data: ")) continue;
-          
-          const data = line.slice(6).trim();
-          if (data === "[DONE]") continue;
+        // 处理流式响应
+        const reader = response.body?.getReader();
+        if (!reader) {
+          throw new Error("无法读取响应流");
+        }
 
-          try {
-            const json = JSON.parse(data);
+        const decoder = new TextDecoder();
+        let buffer = "";
+        let fullContent = "";
 
-            // 处理工具调用开始
-            if (json.type === "tool_start") {
-              const toolId = `tool_${Date.now()}_${Math.random()}`;
-              const toolName = json.tool || "音频分析";
-              setToolCalls(prev => [...prev, {
-                id: toolId,
-                name: toolName,
-                status: "running",
-                description: getToolDescription(toolName)
-              }]);
-              scrollToBottom();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() || "";
+
+          for (const line of lines) {
+            if (!line.trim() || !line.startsWith("data: ")) continue;
+
+            const data = line.slice(6).trim();
+            if (data === "[DONE]") continue;
+
+            try {
+              const json = JSON.parse(data);
+
+              // 处理工具调用开始
+              if (json.type === "tool_start") {
+                const toolId = `tool_${Date.now()}_${Math.random()}`;
+                const toolName = json.tool || "音频分析";
+                setToolCalls((prev) => [
+                  ...prev,
+                  {
+                    id: toolId,
+                    name: toolName,
+                    status: "running",
+                    description: getToolDescription(toolName),
+                  },
+                ]);
+                scrollToBottom();
+              }
+
+              // 处理工具调用完成
+              if (json.type === "tool_complete") {
+                const toolName = json.tool || "音频分析";
+                setToolCalls((prev) => {
+                  // 找到最后一个 running 状态的工具并标记为完成
+                  const lastRunningIndex = prev.findIndex((t) => t.status === "running");
+                  if (lastRunningIndex !== -1) {
+                    const updated = [...prev];
+                    updated[lastRunningIndex] = {
+                      ...updated[lastRunningIndex],
+                      status: "complete",
+                    };
+                    return updated;
+                  }
+                  return prev;
+                });
+                scrollToBottom();
+              }
+
+              // 处理内容
+              if (json.content && !json.done) {
+                fullContent += json.content;
+                setStreamingContent(fullContent);
+                scrollToBottom();
+              }
+
+              // 处理完成
+              if (json.done) {
+                const finalContent = json.fullAnswer || fullContent;
+                setAnalysisResult(finalContent);
+                setStreamingContent("");
+              }
+
+              // 处理错误
+              if (json.error) {
+                throw new Error(json.error.message || "分析失败");
+              }
+            } catch (parseErr) {
+              console.error("解析 SSE 数据失败:", parseErr);
             }
-
-            // 处理工具调用完成
-            if (json.type === "tool_complete") {
-              const toolName = json.tool || "音频分析";
-              setToolCalls(prev => {
-                // 找到最后一个 running 状态的工具并标记为完成
-                const lastRunningIndex = prev.findIndex(t => t.status === "running");
-                if (lastRunningIndex !== -1) {
-                  const updated = [...prev];
-                  updated[lastRunningIndex] = { ...updated[lastRunningIndex], status: "complete" };
-                  return updated;
-                }
-                return prev;
-              });
-              scrollToBottom();
-            }
-
-            // 处理内容
-            if (json.content && !json.done) {
-              fullContent += json.content;
-              setStreamingContent(fullContent);
-              scrollToBottom();
-            }
-
-            // 处理完成
-            if (json.done) {
-              const finalContent = json.fullAnswer || fullContent;
-              setAnalysisResult(finalContent);
-              setStreamingContent("");
-            }
-
-            // 处理错误
-            if (json.error) {
-              throw new Error(json.error.message || "分析失败");
-            }
-          } catch (parseErr) {
-            console.error("解析 SSE 数据失败:", parseErr);
           }
         }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "未知错误";
+        setError(message);
+        console.error("[Audio Analyzer Error]", err);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "未知错误";
-      setError(message);
-      console.error("[Audio Analyzer Error]", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [uploadedFile, prompt, sessionId, agentKey, scrollToBottom]);
+    },
+    [uploadedFile, prompt, sessionId, agentKey, scrollToBottom],
+  );
 
   // 获取工具描述
   function getToolDescription(toolName: string): string {
     const descriptions: Record<string, string> = {
-      "音频分析": "正在分析音频的频谱、节奏、音色特征...",
-      "风格识别": "正在识别音乐流派和风格特征...",
-      "特征提取": "正在提取音频的专业特征参数...",
-      "提示词生成": "正在生成 AI 音乐提示词...",
+      音频分析: "正在分析音频的频谱、节奏、音色特征...",
+      风格识别: "正在识别音乐流派和风格特征...",
+      特征提取: "正在提取音频的专业特征参数...",
+      提示词生成: "正在生成 AI 音乐提示词...",
     };
     return descriptions[toolName] || `正在执行 ${toolName}...`;
   }
@@ -266,15 +300,16 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
   return (
     <div className="flex h-full">
       {/* ========== 左侧：上传和输入区域 ========== */}
-      <div className="w-1/2 h-full overflow-y-auto border-r border-white/10 bg-cyber-dark/30 p-6">
+      <div className="bg-cyber-dark/30 h-full w-1/2 overflow-y-auto border-r border-white/10 p-6">
         <div className="space-y-6">
           {/* 标题 */}
           <div>
-            <GlitchText as="h3" className="text-2xl font-orbitron font-bold text-white mb-2">
+            <GlitchText as="h3" className="font-orbitron mb-2 text-2xl font-bold text-white">
               音频风格分析
             </GlitchText>
             <p className="text-sm text-white/60">
-              上传音频文件，AI 将智能识别音乐风格、节奏、情绪等特征，生成专业的音频分析报告和 AI 音乐提示词
+              上传音频文件，AI 将智能识别音乐风格、节奏、情绪等特征，生成专业的音频分析报告和 AI
+              音乐提示词
             </p>
           </div>
 
@@ -319,7 +354,7 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
               <span>上传音频文件</span>
               <span className="text-cyber-magenta text-xs">*</span>
             </label>
-            
+
             {!uploadedFile ? (
               <div
                 onDragOver={handleDragOver}
@@ -330,7 +365,7 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
                   "cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center transition-all",
                   isDragging
                     ? "border-purple-500 bg-purple-500/20"
-                    : "border-white/20 bg-white/5 hover:border-purple-500/50 hover:bg-purple-500/10"
+                    : "border-white/20 bg-white/5 hover:border-purple-500/50 hover:bg-purple-500/10",
                 ].join(" ")}
               >
                 <input
@@ -388,7 +423,7 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="例如：重点分析节奏和情绪特征..."
               disabled={loading}
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/40 outline-none transition-all focus:border-purple-500/50 focus:bg-white/10 disabled:opacity-50"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/40 transition-all outline-none focus:border-purple-500/50 focus:bg-white/10 disabled:opacity-50"
             />
           </div>
 
@@ -405,12 +440,12 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
               >
                 {loading ? (
                   <>
-                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                     分析中
                   </>
                 ) : (
                   <>
-                    <Sparkles className="h-5 w-5 mr-2" />
+                    <Sparkles className="mr-2 h-5 w-5" />
                     开始分析
                   </>
                 )}
@@ -427,13 +462,8 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
                   重新开始
                 </CyberButton>
                 {!loading && analysisResult && (
-                  <CyberButton
-                    variant="primary"
-                    size="lg"
-                    glowColor="cyan"
-                    onClick={handleCopy}
-                  >
-                    <Copy className="h-5 w-5 mr-2" />
+                  <CyberButton variant="primary" size="lg" glowColor="cyan" onClick={handleCopy}>
+                    <Copy className="mr-2 h-5 w-5" />
                     复制结果
                   </CyberButton>
                 )}
@@ -444,7 +474,7 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
           {/* 工具调用状态 */}
           {toolCalls.length > 0 && (
             <div className="space-y-2">
-              <div className="text-xs text-white/60 font-mono">分析进度：</div>
+              <div className="font-mono text-xs text-white/60">分析进度：</div>
               {toolCalls.map((tool) => (
                 <div
                   key={tool.id}
@@ -452,23 +482,19 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
                     "flex items-center gap-3 rounded-lg border p-3 transition-all",
                     tool.status === "running"
                       ? "border-cyber-cyan/30 bg-cyber-cyan/5"
-                      : "border-green-500/30 bg-green-500/5"
+                      : "border-green-500/30 bg-green-500/5",
                   ].join(" ")}
                 >
                   <div className="flex-shrink-0">
                     {tool.status === "running" ? (
-                      <Loader2 className="h-4 w-4 animate-spin text-cyber-cyan" />
+                      <Loader2 className="text-cyber-cyan h-4 w-4 animate-spin" />
                     ) : (
                       <CheckCircle2 className="h-4 w-4 text-green-400" />
                     )}
                   </div>
                   <div className="flex-1">
-                    <div className="font-mono text-xs font-bold text-white">
-                      {tool.name}
-                    </div>
-                    <div className="text-[10px] text-white/50">
-                      {tool.description}
-                    </div>
+                    <div className="font-mono text-xs font-bold text-white">{tool.name}</div>
+                    <div className="text-[10px] text-white/50">{tool.description}</div>
                   </div>
                 </div>
               ))}
@@ -478,64 +504,59 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
       </div>
 
       {/* ========== 右侧：输出预览区域 ========== */}
-      <div className="w-1/2 h-full overflow-y-auto bg-black/20 p-6">
-        <div className="h-full flex flex-col">
+      <div className="h-full w-1/2 overflow-y-auto bg-black/20 p-6">
+        <div className="flex h-full flex-col">
           {/* 标题 */}
-          <div className="flex items-center justify-between mb-4">
-            <GlitchText as="h3" className="text-lg font-orbitron text-white">
+          <div className="mb-4 flex items-center justify-between">
+            <GlitchText as="h3" className="font-orbitron text-lg text-white">
               分析报告
             </GlitchText>
             {analysisResult && (
-              <span className="text-xs text-green-400 font-mono animate-pulse">
-                [ 分析完成 ]
-              </span>
+              <span className="animate-pulse font-mono text-xs text-green-400">[ 分析完成 ]</span>
             )}
           </div>
 
           {/* 输出容器 */}
-          <NeonBorder 
-            color="cyan" 
-            intensity={analysisResult ? "high" : "low"} 
+          <NeonBorder
+            color="cyan"
+            intensity={analysisResult ? "high" : "low"}
             animated={!!analysisResult}
             className="flex-1"
           >
-            <div className="bg-black/60 h-full flex flex-col">
+            <div className="flex h-full flex-col bg-black/60">
               {/* 终端标题栏 */}
-              <div className="flex items-center gap-2 px-4 py-2 border-b border-white/10 bg-white/5">
-                <span className="w-2 h-2 rounded-full bg-red-500/50" />
-                <span className="w-2 h-2 rounded-full bg-yellow-500/50" />
-                <span className="w-2 h-2 rounded-full bg-green-500/50" />
-                <span className="ml-2 text-[10px] text-white/30 font-mono">
-                  {analysisResult || streamingContent ? "audio_analysis.md" : "waiting_for_upload..."}
+              <div className="flex items-center gap-2 border-b border-white/10 bg-white/5 px-4 py-2">
+                <span className="h-2 w-2 rounded-full bg-red-500/50" />
+                <span className="h-2 w-2 rounded-full bg-yellow-500/50" />
+                <span className="h-2 w-2 rounded-full bg-green-500/50" />
+                <span className="ml-2 font-mono text-[10px] text-white/30">
+                  {analysisResult || streamingContent
+                    ? "audio_analysis.md"
+                    : "waiting_for_upload..."}
                 </span>
               </div>
 
               {/* 内容区 */}
-              <div 
-                ref={outputRef}
-                className="flex-1 p-4 overflow-y-auto"
-              >
+              <div ref={outputRef} className="flex-1 overflow-y-auto p-4">
                 {!hasAnalyzed ? (
-                  <div className="h-full flex items-center justify-center text-white/30">
+                  <div className="flex h-full items-center justify-center text-white/30">
                     <div className="text-center">
-                      <div className="text-4xl mb-4">🎵</div>
+                      <div className="mb-4 text-4xl">🎵</div>
                       <p className="font-mono text-sm">上传音频文件开始分析</p>
                     </div>
                   </div>
                 ) : loading && !streamingContent ? (
-                  <div className="h-full flex items-center justify-center text-white/30">
+                  <div className="flex h-full items-center justify-center text-white/30">
                     <div className="text-center">
-                      <div className="text-4xl mb-4 animate-pulse">🎼</div>
+                      <div className="mb-4 animate-pulse text-4xl">🎼</div>
                       <p className="font-mono text-sm">正在上传和分析音频...</p>
                     </div>
                   </div>
                 ) : (
                   <div className="prose prose-invert prose-sm max-w-none">
-                    <ReactMarkdown>
-                      {analysisResult || streamingContent}
-                    </ReactMarkdown>
+                    <ReactMarkdown>{analysisResult || streamingContent}</ReactMarkdown>
                     {loading && streamingContent && (
-                      <span className="inline-block h-4 w-1 animate-pulse bg-cyber-cyan ml-1" />
+                      <span className="bg-cyber-cyan ml-1 inline-block h-4 w-1 animate-pulse" />
                     )}
                   </div>
                 )}
@@ -543,31 +564,26 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
 
               {/* 底部操作栏 */}
               {(analysisResult || streamingContent) && (
-                <div className="flex items-center justify-between gap-2 px-4 py-3 border-t border-white/10 bg-white/5 relative">
-                  <div className="text-[10px] text-white/40 font-mono">
-                    {analysisResult 
-                      ? `${analysisResult.length} 字符` 
+                <div className="relative flex items-center justify-between gap-2 border-t border-white/10 bg-white/5 px-4 py-3">
+                  <div className="font-mono text-[10px] text-white/40">
+                    {analysisResult
+                      ? `${analysisResult.length} 字符`
                       : `生成中... ${streamingContent.length} 字符`}
                   </div>
                   <div className="flex gap-2">
                     {!loading && analysisResult && (
                       <CyberButton variant="outline" size="sm" onClick={handleCopy}>
-                        <Copy className="w-4 h-4 mr-1" />
+                        <Copy className="mr-1 h-4 w-4" />
                         复制
                       </CyberButton>
                     )}
                   </div>
-                  
+
                   {/* 复制成功提示 */}
                   {showCopyToast && (
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 
-                                  bg-cyber-cyan/90 text-black px-4 py-2 rounded-lg 
-                                  font-orbitron text-sm font-bold
-                                  shadow-[0_0_20px_rgba(0,243,255,0.5)]
-                                  animate-[fade-in_0.2s_ease-out]
-                                  pointer-events-none z-50">
+                    <div className="bg-cyber-cyan/90 font-orbitron pointer-events-none absolute top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 animate-[fade-in_0.2s_ease-out] rounded-lg px-4 py-2 text-sm font-bold text-black shadow-[0_0_20px_rgba(0,243,255,0.5)]">
                       <div className="flex items-center gap-2">
-                        <Check className="w-4 h-4" />
+                        <Check className="h-4 w-4" />
                         <span>已复制到剪贴板</span>
                       </div>
                     </div>

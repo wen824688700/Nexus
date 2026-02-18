@@ -53,50 +53,48 @@ export function PainPointsSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-20 px-4">
-      <div className="max-w-7xl mx-auto">
+    <section ref={sectionRef} className="px-4 py-20">
+      <div className="mx-auto max-w-7xl">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div className="mb-16 text-center">
           <GlitchText
             as="h2"
-            className="text-3xl md:text-5xl font-orbitron font-bold text-white mb-4"
+            className="font-orbitron mb-4 text-3xl font-bold text-white md:text-5xl"
           >
             你是否也有这些困扰？
           </GlitchText>
-          <p className="text-white/60 text-lg">
-            在 AI 时代，这些痛点阻碍了我们的效率提升
-          </p>
+          <p className="text-lg text-white/60">在 AI 时代，这些痛点阻碍了我们的效率提升</p>
         </div>
 
         {/* Pain Point Cards */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid gap-6 md:grid-cols-3">
           {painPoints.map((point, index) => (
             <div key={index} className="pain-card">
               <HolographicCard intensity="medium">
-                <div className="p-8 h-full flex flex-col">
+                <div className="flex h-full flex-col p-8">
                   {/* Icon */}
                   <div
-                    className={`w-16 h-16 rounded-xl bg-gradient-to-br from-cyber-${point.color}/20 to-cyber-${point.color}/5 flex items-center justify-center mb-6 border border-cyber-${point.color}/30`}
+                    className={`h-16 w-16 rounded-xl bg-gradient-to-br from-cyber-${point.color}/20 to-cyber-${point.color}/5 mb-6 flex items-center justify-center border border-cyber-${point.color}/30`}
                   >
-                    <point.icon className={`w-8 h-8 text-cyber-${point.color}`} />
+                    <point.icon className={`h-8 w-8 text-cyber-${point.color}`} />
                   </div>
 
                   {/* Title */}
                   <GlitchText
                     as="h3"
-                    className="text-2xl font-orbitron font-bold text-white mb-4"
+                    className="font-orbitron mb-4 text-2xl font-bold text-white"
                     intensity="low"
                   >
                     {point.title}
                   </GlitchText>
 
                   {/* Description */}
-                  <p className="text-white/60 leading-relaxed flex-1">
-                    {point.description}
-                  </p>
+                  <p className="flex-1 leading-relaxed text-white/60">{point.description}</p>
 
                   {/* Decorative Line */}
-                  <div className={`mt-6 h-1 w-20 bg-gradient-to-r from-cyber-${point.color} to-transparent rounded-full`} />
+                  <div
+                    className={`mt-6 h-1 w-20 bg-gradient-to-r from-cyber-${point.color} rounded-full to-transparent`}
+                  />
                 </div>
               </HolographicCard>
             </div>

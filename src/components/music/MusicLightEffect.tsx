@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, useRef } from 'react';
-import { useAppStore } from '@/store/appStore';
+import { useEffect, useState, useRef } from "react";
+import { useAppStore } from "@/store/appStore";
 
 export const MusicLightEffect = () => {
   const { isPlaying } = useAppStore();
@@ -22,10 +22,12 @@ export const MusicLightEffect = () => {
         });
 
         // Lerp 平滑过渡
-        setBars(prev => prev.map((current, i) => {
-          const target = targetBarsRef.current[i];
-          return current + (target - current) * 0.15;
-        }));
+        setBars((prev) =>
+          prev.map((current, i) => {
+            const target = targetBarsRef.current[i];
+            return current + (target - current) * 0.15;
+          }),
+        );
 
         animationRef.current = requestAnimationFrame(animate);
       };
@@ -33,14 +35,14 @@ export const MusicLightEffect = () => {
     } else {
       // 停止时平滑回到最低
       const reset = () => {
-        setBars(prev => {
-          const newBars = prev.map(h => h + (5 - h) * 0.1);
-          if (newBars.every(h => Math.abs(h - 5) < 0.5)) {
+        setBars((prev) => {
+          const newBars = prev.map((h) => h + (5 - h) * 0.1);
+          if (newBars.every((h) => Math.abs(h - 5) < 0.5)) {
             return Array(32).fill(5);
           }
           return newBars;
         });
-        if (!bars.every(h => Math.abs(h - 5) < 0.5)) {
+        if (!bars.every((h) => Math.abs(h - 5) < 0.5)) {
           animationRef.current = requestAnimationFrame(reset);
         }
       };
@@ -55,9 +57,9 @@ export const MusicLightEffect = () => {
   }, [isPlaying]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-40 pointer-events-none z-0 overflow-hidden">
+    <div className="pointer-events-none fixed right-0 bottom-0 left-0 z-0 h-40 overflow-hidden">
       {/* 地面网格背景 */}
-      <div 
+      <div
         className="absolute inset-0"
         style={{
           background: `
@@ -75,13 +77,13 @@ export const MusicLightEffect = () => {
               rgba(0, 243, 255, 0.05) 30px
             )
           `,
-          transform: 'perspective(500px) rotateX(60deg)',
-          transformOrigin: 'center bottom'
+          transform: "perspective(500px) rotateX(60deg)",
+          transformOrigin: "center bottom",
         }}
       />
 
       {/* 条状律动效果 */}
-      <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center gap-[2px] px-4">
+      <div className="absolute right-0 bottom-0 left-0 flex items-end justify-center gap-[2px] px-4">
         {bars.map((height, i) => (
           <div
             key={i}
@@ -93,21 +95,21 @@ export const MusicLightEffect = () => {
                 rgba(0, 243, 255, 0.4) 50%,
                 rgba(255, 0, 255, 0.6) 100%
               )`,
-              boxShadow: height > 30 ? `0 0 ${height / 3}px rgba(0, 243, 255, 0.5)` : 'none',
-              opacity: 0.6 + (height / 100) * 0.4
+              boxShadow: height > 30 ? `0 0 ${height / 3}px rgba(0, 243, 255, 0.5)` : "none",
+              opacity: 0.6 + (height / 100) * 0.4,
             }}
           />
         ))}
       </div>
 
       {/* 底部发光条 */}
-      <div 
-        className="absolute bottom-0 left-0 right-0 h-1"
+      <div
+        className="absolute right-0 bottom-0 left-0 h-1"
         style={{
-          background: 'linear-gradient(90deg, transparent, #00f3ff, #ff00ff, #00f3ff, transparent)',
-          boxShadow: isPlaying ? '0 0 20px rgba(0, 243, 255, 0.8)' : 'none',
+          background: "linear-gradient(90deg, transparent, #00f3ff, #ff00ff, #00f3ff, transparent)",
+          boxShadow: isPlaying ? "0 0 20px rgba(0, 243, 255, 0.8)" : "none",
           opacity: isPlaying ? 1 : 0.3,
-          transition: 'all 0.3s ease'
+          transition: "all 0.3s ease",
         }}
       />
     </div>

@@ -1,2 +1,2 @@
-export { QuantumVaultWidget } from './QuantumVaultWidget';
-export { VaultPage } from './VaultPage';
+export { QuantumVaultWidget } from "./QuantumVaultWidget";
+export { VaultPage } from "./VaultPage";

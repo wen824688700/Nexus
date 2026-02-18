@@ -75,11 +75,11 @@ export async function GET() {
     return NextResponse.json({ articles });
   } catch (error) {
     console.error("[Knowledge API] Failed to fetch articles:", error);
-    
+
     // 降级到 Mock 数据
-    return NextResponse.json({ 
+    return NextResponse.json({
       articles: MOCK_ARTICLES,
-      warning: "使用示例数据，请配置 Notion 集成"
+      warning: "使用示例数据，请配置 Notion 集成",
     });
   }
 }

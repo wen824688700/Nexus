@@ -32,7 +32,7 @@ export function Taskbar() {
           >
             🪟 开始
           </button>
-          
+
           {/* 打开的窗口列表 */}
           {state.openWindows.map((window) => (
             <button
@@ -50,7 +50,7 @@ export function Taskbar() {
             </button>
           ))}
         </div>
-        
+
         <div className="flex h-6 items-center border-t-2 border-l-2 border-black/50 px-2 font-mono text-[10px] font-bold text-[#e5e5e5]">
           {time}
         </div>

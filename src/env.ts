@@ -16,7 +16,7 @@ const envSchema = z.object({
   COZE_BOT_ID: z.string().min(1).optional(), // legacy single-bot fallback
   COZE_PORTRAIT_BOT_ID: z.string().min(1).optional(),
   COZE_PORTRAIT_WORKFLOW_ID: z.string().min(1).optional(),
-  
+
   // Data Analyst Agent (数据分析专家)
   COZE_ANALYST_API_URL: z.string().url().optional(),
   COZE_ANALYST_TOKEN: z.string().min(1).optional(),
@@ -52,7 +52,7 @@ const envSchema = z.object({
   // Supabase (Authentication)
   NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1), // 必需，用于创建用户时跳过邮箱确认
 
   // Site Configuration
   NEXT_PUBLIC_SITE_URL: z.string().url(),

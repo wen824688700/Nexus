@@ -2,7 +2,17 @@
 
 import { useState, useRef, useCallback } from "react";
 import { GlitchText, CyberButton, NeonBorder } from "@/components/cyber";
-import { Sparkles, Copy, RefreshCw, Check, Film, Zap, Upload, X, Image as ImageIcon } from "lucide-react";
+import {
+  Sparkles,
+  Copy,
+  RefreshCw,
+  Check,
+  Film,
+  Zap,
+  Upload,
+  X,
+  Image as ImageIcon,
+} from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -15,13 +25,13 @@ export function SeedanceStoryboard() {
   const [streamingContent, setStreamingContent] = useState("");
   const [showCopyToast, setShowCopyToast] = useState(false);
   const [sessionId] = useState(() => `user_${Date.now()}`);
-  
+
   // 图片上传相关
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   const outputRef = useRef<HTMLDivElement>(null);
 
   // 开始使用
@@ -30,51 +40,54 @@ export function SeedanceStoryboard() {
   };
 
   // 处理文件选择
-  const handleFileSelect = useCallback((files: FileList) => {
-    const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    const maxFiles = 3; // 最多3张图片
-    
-    const newFiles: File[] = [];
-    const newPreviews: string[] = [];
-    
-    // 检查文件数量
-    if (uploadedFiles.length + files.length > maxFiles) {
-      setError(`最多只能上传 ${maxFiles} 张参考图片`);
-      return;
-    }
-    
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      
-      // 验证文件类型
-      if (!validTypes.includes(file.type)) {
-        setError("请上传图片文件（支持 JPG、PNG、WEBP 格式）");
-        continue;
+  const handleFileSelect = useCallback(
+    (files: FileList) => {
+      const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      const maxFiles = 3; // 最多3张图片
+
+      const newFiles: File[] = [];
+      const newPreviews: string[] = [];
+
+      // 检查文件数量
+      if (uploadedFiles.length + files.length > maxFiles) {
+        setError(`最多只能上传 ${maxFiles} 张参考图片`);
+        return;
       }
-      
-      // 验证文件大小
-      if (file.size > maxSize) {
-        setError("单个文件大小不能超过 10MB");
-        continue;
-      }
-      
-      newFiles.push(file);
-      
-      // 生成预览
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        newPreviews.push(e.target?.result as string);
-        if (newPreviews.length === newFiles.length) {
-          setUploadedFiles([...uploadedFiles, ...newFiles]);
-          setPreviewUrls([...previewUrls, ...newPreviews]);
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        // 验证文件类型
+        if (!validTypes.includes(file.type)) {
+          setError("请上传图片文件（支持 JPG、PNG、WEBP 格式）");
+          continue;
         }
-      };
-      reader.readAsDataURL(file);
-    }
-    
-    setError(null);
-  }, [uploadedFiles, previewUrls]);
+
+        // 验证文件大小
+        if (file.size > maxSize) {
+          setError("单个文件大小不能超过 10MB");
+          continue;
+        }
+
+        newFiles.push(file);
+
+        // 生成预览
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          newPreviews.push(e.target?.result as string);
+          if (newPreviews.length === newFiles.length) {
+            setUploadedFiles([...uploadedFiles, ...newFiles]);
+            setPreviewUrls([...previewUrls, ...newPreviews]);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+
+      setError(null);
+    },
+    [uploadedFiles, previewUrls],
+  );
 
   // 拖拽处理
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -87,31 +100,40 @@ export function SeedanceStoryboard() {
     setIsDragging(false);
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    
-    if (e.dataTransfer.files.length > 0) {
-      handleFileSelect(e.dataTransfer.files);
-    }
-  }, [handleFileSelect]);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+
+      if (e.dataTransfer.files.length > 0) {
+        handleFileSelect(e.dataTransfer.files);
+      }
+    },
+    [handleFileSelect],
+  );
 
   // 点击上传
   const handleUploadClick = useCallback(() => {
     fileInputRef.current?.click();
   }, []);
 
-  const handleFileInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      handleFileSelect(e.target.files);
-    }
-  }, [handleFileSelect]);
+  const handleFileInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files.length > 0) {
+        handleFileSelect(e.target.files);
+      }
+    },
+    [handleFileSelect],
+  );
 
   // 移除文件
-  const handleRemoveFile = useCallback((index: number) => {
-    setUploadedFiles(uploadedFiles.filter((_, i) => i !== index));
-    setPreviewUrls(previewUrls.filter((_, i) => i !== index));
-  }, [uploadedFiles, previewUrls]);
+  const handleRemoveFile = useCallback(
+    (index: number) => {
+      setUploadedFiles(uploadedFiles.filter((_, i) => i !== index));
+      setPreviewUrls(previewUrls.filter((_, i) => i !== index));
+    },
+    [uploadedFiles, previewUrls],
+  );
 
   // 生成分镜脚本
   const handleGenerate = async () => {
@@ -128,7 +150,7 @@ export function SeedanceStoryboard() {
       formData.append("query", prompt);
       formData.append("sessionId", sessionId);
       formData.append("file_count", uploadedFiles.length.toString());
-      
+
       // 添加文件
       uploadedFiles.forEach((file, index) => {
         formData.append(`file_${index}`, file);
@@ -281,21 +303,21 @@ function WelcomeView({ onStart }: { onStart: () => void }) {
   ];
 
   return (
-    <div className="h-full flex items-center justify-center p-6 overflow-y-auto">
-      <NeonBorder color="gradient" intensity="high" animated className="max-w-6xl w-full">
+    <div className="flex h-full items-center justify-center overflow-y-auto p-6">
+      <NeonBorder color="gradient" intensity="high" animated className="w-full max-w-6xl">
         <div className="bg-cyber-dark/90 p-8">
-          <div className="flex gap-8 items-center">
+          <div className="flex items-center gap-8">
             {/* 左侧：标题 + 功能特性 */}
             <div className="flex-1">
               <div className="mb-6">
                 <GlitchText
                   as="h2"
-                  className="text-3xl font-orbitron font-bold text-white mb-3"
+                  className="font-orbitron mb-3 text-3xl font-bold text-white"
                   intensity="high"
                 >
                   ◢ Seedance 2.0 分镜助手 ◣
                 </GlitchText>
-                <p className="text-white/60 text-base">
+                <p className="text-base text-white/60">
                   将你的创意转化为专业的即梦 Seedance 2.0 分镜脚本，让视频创作更高效
                 </p>
               </div>
@@ -304,32 +326,32 @@ function WelcomeView({ onStart }: { onStart: () => void }) {
                 {features.map((feature) => (
                   <div
                     key={feature.title}
-                    className="p-4 rounded-lg bg-white/5 border border-white/10 hover:border-cyber-cyan/50 transition-all group"
+                    className="hover:border-cyber-cyan/50 group rounded-lg border border-white/10 bg-white/5 p-4 transition-all"
                   >
-                    <div className={`w-8 h-8 rounded-lg bg-${feature.color}-500/20 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform`}>
-                      <feature.icon className={`w-4 h-4 text-cyber-${feature.color}`} />
+                    <div
+                      className={`h-8 w-8 rounded-lg bg-${feature.color}-500/20 mb-2 flex items-center justify-center transition-transform group-hover:scale-110`}
+                    >
+                      <feature.icon className={`h-4 w-4 text-cyber-${feature.color}`} />
                     </div>
-                    <h3 className="font-orbitron text-white font-bold text-sm mb-1">
+                    <h3 className="font-orbitron mb-1 text-sm font-bold text-white">
                       {feature.title}
                     </h3>
-                    <p className="text-white/50 text-xs leading-relaxed">
-                      {feature.desc}
-                    </p>
+                    <p className="text-xs leading-relaxed text-white/50">{feature.desc}</p>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* 右侧：示例 + 按钮 */}
-            <div className="flex-shrink-0 w-80 flex flex-col items-center justify-center">
+            <div className="flex w-80 flex-shrink-0 flex-col items-center justify-center">
               <div className="mb-8 w-full">
-                <div className="text-xs text-white/40 font-mono mb-3 text-center">示例输入</div>
-                <div className="bg-black/40 border border-cyber-cyan/30 rounded-lg p-4 mb-4">
-                  <p className="text-white/70 text-sm font-mono">
+                <div className="mb-3 text-center font-mono text-xs text-white/40">示例输入</div>
+                <div className="border-cyber-cyan/30 mb-4 rounded-lg border bg-black/40 p-4">
+                  <p className="font-mono text-sm text-white/70">
                     &quot;我想做一个海边日落的视频，镜头从远处慢慢推进，最后定格在夕阳下的剪影&quot;
                   </p>
                 </div>
-                <div className="text-xs text-white/40 font-mono text-center">
+                <div className="text-center font-mono text-xs text-white/40">
                   ↓ AI 生成专业分镜脚本 ↓
                 </div>
               </div>
@@ -339,9 +361,9 @@ function WelcomeView({ onStart }: { onStart: () => void }) {
                 size="lg"
                 glowColor="cyan"
                 onClick={onStart}
-                className="animate-pulse w-full"
+                className="w-full animate-pulse"
               >
-                <Sparkles className="w-5 h-5 mr-2" />
+                <Sparkles className="mr-2 h-5 w-5" />
                 立即开始
                 <span className="ml-2">&gt;&gt;</span>
               </CyberButton>
@@ -406,31 +428,27 @@ function GeneratorView({
   return (
     <div className="flex h-full">
       {/* 左侧：输入区域 */}
-      <div className="w-1/2 h-full overflow-y-auto border-r border-white/10 bg-cyber-dark/30 p-6">
+      <div className="bg-cyber-dark/30 h-full w-1/2 overflow-y-auto border-r border-white/10 p-6">
         <div className="space-y-6">
           {/* 输入框 */}
-          <div className="rounded-lg border border-cyber-cyan/50 bg-cyber-cyan/5 p-4">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="font-mono text-sm font-bold text-cyber-cyan">01</span>
+          <div className="border-cyber-cyan/50 bg-cyber-cyan/5 rounded-lg border p-4">
+            <div className="mb-4 flex items-center gap-3">
+              <span className="text-cyber-cyan font-mono text-sm font-bold">01</span>
               <h4 className="font-orbitron text-white">描述你的视频创意</h4>
             </div>
 
-            <p className="text-xs text-white/50 mb-3">
+            <p className="mb-3 text-xs text-white/50">
               用一句话描述你想要的视频内容、镜头运动、场景氛围等
             </p>
 
             <div className="relative">
-              <span className="absolute left-4 top-4 text-cyber-cyan animate-pulse">&gt;</span>
+              <span className="text-cyber-cyan absolute top-4 left-4 animate-pulse">&gt;</span>
               <textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="例如：海边日落，镜头从远处推进到夕阳剪影..."
                 disabled={loading}
-                className="w-full h-32 bg-black/50 border border-cyber-cyan/30 rounded-lg 
-                         pl-10 pr-4 py-3 text-white text-sm placeholder-white/30
-                         focus:border-cyber-cyan focus:shadow-[0_0_15px_rgba(0,243,255,0.2)]
-                         transition-all duration-300 font-mono resize-none
-                         disabled:opacity-50 disabled:cursor-not-allowed"
+                className="border-cyber-cyan/30 focus:border-cyber-cyan h-32 w-full resize-none rounded-lg border bg-black/50 py-3 pr-4 pl-10 font-mono text-sm text-white placeholder-white/30 transition-all duration-300 focus:shadow-[0_0_15px_rgba(0,243,255,0.2)] disabled:cursor-not-allowed disabled:opacity-50"
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && e.ctrlKey) {
                     handleGenerate();
@@ -448,39 +466,32 @@ function GeneratorView({
                 disabled={loading || !prompt.trim()}
               >
                 {loading ? (
-                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
-                  <Film className="w-4 h-4 mr-2" />
+                  <Film className="mr-2 h-4 w-4" />
                 )}
                 {loading ? "生成中..." : "生成分镜"}
               </CyberButton>
 
               {hasContent && (
-                <CyberButton
-                  variant="outline"
-                  size="sm"
-                  onClick={handleReset}
-                  disabled={loading}
-                >
-                  <RefreshCw className="w-4 h-4 mr-2" />
+                <CyberButton variant="outline" size="sm" onClick={handleReset} disabled={loading}>
+                  <RefreshCw className="mr-2 h-4 w-4" />
                   重新开始
                 </CyberButton>
               )}
             </div>
 
-            <div className="mt-3 text-xs text-white/40 font-mono">
-              提示：Ctrl + Enter 快速生成
-            </div>
+            <div className="mt-3 font-mono text-xs text-white/40">提示：Ctrl + Enter 快速生成</div>
           </div>
 
           {/* 图片上传区域 */}
-          <div className="rounded-lg border border-cyber-magenta/50 bg-cyber-magenta/5 p-4">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="font-mono text-sm font-bold text-cyber-magenta">02</span>
+          <div className="border-cyber-magenta/50 bg-cyber-magenta/5 rounded-lg border p-4">
+            <div className="mb-4 flex items-center gap-3">
+              <span className="text-cyber-magenta font-mono text-sm font-bold">02</span>
               <h4 className="font-orbitron text-white">上传参考图片（可选）</h4>
             </div>
 
-            <p className="text-xs text-white/50 mb-3">
+            <p className="mb-3 text-xs text-white/50">
               上传武侠风图片、打斗场景、侠客造型等参考素材（最多3张）
             </p>
 
@@ -501,17 +512,15 @@ function GeneratorView({
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={handleUploadClick}
-                className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all ${
+                className={`cursor-pointer rounded-lg border-2 border-dashed p-8 text-center transition-all ${
                   isDragging
                     ? "border-cyber-magenta bg-cyber-magenta/10"
-                    : "border-white/20 hover:border-cyber-magenta/50 hover:bg-white/5"
+                    : "hover:border-cyber-magenta/50 border-white/20 hover:bg-white/5"
                 }`}
               >
-                <Upload className="w-8 h-8 text-white/40 mx-auto mb-3" />
-                <p className="text-white/60 text-sm mb-1">
-                  点击上传或拖拽图片到此处
-                </p>
-                <p className="text-white/40 text-xs">
+                <Upload className="mx-auto mb-3 h-8 w-8 text-white/40" />
+                <p className="mb-1 text-sm text-white/60">点击上传或拖拽图片到此处</p>
+                <p className="text-xs text-white/40">
                   支持 JPG、PNG、WEBP 格式，单个文件不超过 10MB
                 </p>
               </div>
@@ -520,24 +529,22 @@ function GeneratorView({
                 {/* 已上传的图片预览 */}
                 <div className="grid grid-cols-3 gap-3">
                   {previewUrls.map((url, index) => (
-                    <div key={index} className="relative group">
-                      <div className="aspect-square rounded-lg overflow-hidden border border-cyber-magenta/30">
+                    <div key={index} className="group relative">
+                      <div className="border-cyber-magenta/30 aspect-square overflow-hidden rounded-lg border">
                         <img
                           src={url}
                           alt={`参考图片 ${index + 1}`}
-                          className="w-full h-full object-cover"
+                          className="h-full w-full object-cover"
                         />
                       </div>
                       <button
                         onClick={() => handleRemoveFile(index)}
-                        className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-red-500 text-white 
-                                 flex items-center justify-center opacity-0 group-hover:opacity-100 
-                                 transition-opacity hover:bg-red-600"
+                        className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-red-600"
                       >
-                        <X className="w-4 h-4" />
+                        <X className="h-4 w-4" />
                       </button>
-                      <div className="absolute bottom-0 left-0 right-0 bg-black/60 px-2 py-1">
-                        <p className="text-xs text-white/80 truncate">
+                      <div className="absolute right-0 bottom-0 left-0 bg-black/60 px-2 py-1">
+                        <p className="truncate text-xs text-white/80">
                           {uploadedFiles[index].name}
                         </p>
                       </div>
@@ -549,11 +556,9 @@ function GeneratorView({
                 {uploadedFiles.length < 3 && (
                   <button
                     onClick={handleUploadClick}
-                    className="w-full py-2 border border-dashed border-cyber-magenta/30 rounded-lg
-                             text-cyber-magenta text-sm hover:bg-cyber-magenta/5 transition-colors
-                             flex items-center justify-center gap-2"
+                    className="border-cyber-magenta/30 text-cyber-magenta hover:bg-cyber-magenta/5 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed py-2 text-sm transition-colors"
                   >
-                    <ImageIcon className="w-4 h-4" />
+                    <ImageIcon className="h-4 w-4" />
                     继续添加图片（{uploadedFiles.length}/3）
                   </button>
                 )}
@@ -565,10 +570,10 @@ function GeneratorView({
           {error && (
             <div className="rounded-lg border border-red-500/50 bg-red-500/10 p-4">
               <div className="flex items-start gap-3">
-                <span className="text-red-400 text-xl">⚠</span>
+                <span className="text-xl text-red-400">⚠</span>
                 <div>
-                  <h4 className="text-red-400 font-bold mb-1">生成失败</h4>
-                  <p className="text-red-300/80 text-sm">{error}</p>
+                  <h4 className="mb-1 font-bold text-red-400">生成失败</h4>
+                  <p className="text-sm text-red-300/80">{error}</p>
                 </div>
               </div>
             </div>
@@ -577,7 +582,7 @@ function GeneratorView({
           {/* 使用说明 */}
           {!hasContent && !loading && (
             <div className="rounded-lg border border-white/10 bg-white/5 p-4">
-              <h4 className="font-orbitron text-white mb-3 text-sm">💡 使用技巧</h4>
+              <h4 className="font-orbitron mb-3 text-sm text-white">💡 使用技巧</h4>
               <ul className="space-y-2 text-xs text-white/60">
                 <li className="flex items-start gap-2">
                   <span className="text-cyber-cyan">•</span>
@@ -602,53 +607,44 @@ function GeneratorView({
       </div>
 
       {/* 右侧：输出区域 */}
-      <div 
-        ref={outputRef}
-        className="w-1/2 h-full overflow-y-auto bg-black/20 p-6"
-      >
-        <div className="h-full flex flex-col">
-          <div className="flex items-center justify-between mb-4">
-            <GlitchText as="h3" className="text-lg font-orbitron text-white">
+      <div ref={outputRef} className="h-full w-1/2 overflow-y-auto bg-black/20 p-6">
+        <div className="flex h-full flex-col">
+          <div className="mb-4 flex items-center justify-between">
+            <GlitchText as="h3" className="font-orbitron text-lg text-white">
               分镜脚本
             </GlitchText>
             {hasContent && (
-              <span className="text-xs text-green-400 font-mono animate-pulse">
-                [ 生成完成 ]
-              </span>
+              <span className="animate-pulse font-mono text-xs text-green-400">[ 生成完成 ]</span>
             )}
           </div>
 
-          <NeonBorder 
-            color="cyan" 
-            intensity={hasContent ? "high" : "low"} 
-            animated={!!hasContent}
-          >
-            <div className="bg-black/60 min-h-[500px] flex flex-col">
+          <NeonBorder color="cyan" intensity={hasContent ? "high" : "low"} animated={!!hasContent}>
+            <div className="flex min-h-[500px] flex-col bg-black/60">
               {/* 终端标题栏 */}
-              <div className="flex items-center gap-2 px-4 py-2 border-b border-white/10 bg-white/5">
-                <span className="w-2 h-2 rounded-full bg-red-500/50" />
-                <span className="w-2 h-2 rounded-full bg-yellow-500/50" />
-                <span className="w-2 h-2 rounded-full bg-green-500/50" />
-                <span className="ml-2 text-[10px] text-white/30 font-mono">
+              <div className="flex items-center gap-2 border-b border-white/10 bg-white/5 px-4 py-2">
+                <span className="h-2 w-2 rounded-full bg-red-500/50" />
+                <span className="h-2 w-2 rounded-full bg-yellow-500/50" />
+                <span className="h-2 w-2 rounded-full bg-green-500/50" />
+                <span className="ml-2 font-mono text-[10px] text-white/30">
                   {hasContent ? "seedance_storyboard.md" : "waiting_for_input..."}
                 </span>
               </div>
 
               {/* 内容区 */}
-              <div className="flex-1 p-6 overflow-y-auto">
+              <div className="flex-1 overflow-y-auto p-6">
                 {!hasContent && !loading && (
-                  <div className="h-full flex items-center justify-center text-white/30">
+                  <div className="flex h-full items-center justify-center text-white/30">
                     <div className="text-center">
-                      <div className="text-4xl mb-4">🎬</div>
+                      <div className="mb-4 text-4xl">🎬</div>
                       <p className="font-mono text-sm">在左侧输入创意开始生成</p>
                     </div>
                   </div>
                 )}
 
                 {loading && !streamingContent && (
-                  <div className="h-full flex items-center justify-center text-white/30">
+                  <div className="flex h-full items-center justify-center text-white/30">
                     <div className="text-center">
-                      <div className="text-4xl mb-4 animate-pulse">✨</div>
+                      <div className="mb-4 animate-pulse text-4xl">✨</div>
                       <p className="font-mono text-sm">AI 正在生成分镜脚本...</p>
                     </div>
                   </div>
@@ -660,7 +656,7 @@ function GeneratorView({
                       {streamingContent || result}
                     </ReactMarkdown>
                     {loading && streamingContent && (
-                      <span className="inline-block w-2 h-4 bg-cyber-cyan animate-pulse ml-1" />
+                      <span className="bg-cyber-cyan ml-1 inline-block h-4 w-2 animate-pulse" />
                     )}
                   </div>
                 )}
@@ -668,30 +664,20 @@ function GeneratorView({
 
               {/* 底部操作栏 */}
               {hasContent && (
-                <div className="flex items-center justify-between gap-2 px-4 py-3 border-t border-white/10 bg-white/5 relative">
-                  <div className="text-xs text-white/40 font-mono">
+                <div className="relative flex items-center justify-between gap-2 border-t border-white/10 bg-white/5 px-4 py-3">
+                  <div className="font-mono text-xs text-white/40">
                     {result.length || streamingContent.length} 字符
                   </div>
-                  <CyberButton 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={handleCopy}
-                    disabled={loading}
-                  >
-                    <Copy className="w-4 h-4 mr-1" />
+                  <CyberButton variant="outline" size="sm" onClick={handleCopy} disabled={loading}>
+                    <Copy className="mr-1 h-4 w-4" />
                     复制脚本
                   </CyberButton>
 
                   {/* 复制成功提示 */}
                   {showCopyToast && (
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 
-                                  bg-cyber-cyan/90 text-black px-4 py-2 rounded-lg 
-                                  font-orbitron text-sm font-bold
-                                  shadow-[0_0_20px_rgba(0,243,255,0.5)]
-                                  animate-[fade-in_0.2s_ease-out]
-                                  pointer-events-none z-50">
+                    <div className="bg-cyber-cyan/90 font-orbitron pointer-events-none absolute top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 animate-[fade-in_0.2s_ease-out] rounded-lg px-4 py-2 text-sm font-bold text-black shadow-[0_0_20px_rgba(0,243,255,0.5)]">
                       <div className="flex items-center gap-2">
-                        <Check className="w-4 h-4" />
+                        <Check className="h-4 w-4" />
                         <span>已复制到剪贴板</span>
                       </div>
                     </div>
