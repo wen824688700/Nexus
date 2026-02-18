@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect, useRef, useTransition } from 'react'
-import { LogOut, User } from 'lucide-react'
-import Image from 'next/image'
+import { LogOut } from 'lucide-react'
 import { signOut } from '@/app/auth/actions'
+import UserAvatar from './UserAvatar'
 
 interface UserMenuProps {
   user: {
@@ -59,19 +59,7 @@ export default function UserMenu({ user }: UserMenuProps) {
         aria-expanded={isOpen}
       >
         {/* 头像 */}
-        {user.avatar_url ? (
-          <Image
-            src={user.avatar_url}
-            alt={displayName}
-            width={24}
-            height={24}
-            className="h-6 w-6 rounded-full"
-          />
-        ) : (
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10">
-            <User size={14} className="text-white/60" />
-          </div>
-        )}
+        <UserAvatar user={user} size="sm" />
         
         {/* 用户名/邮箱 */}
         <span className="text-sm font-medium text-white max-w-[120px] truncate">
@@ -85,19 +73,7 @@ export default function UserMenu({ user }: UserMenuProps) {
           {/* 用户信息 */}
           <div className="border-b border-white/10 p-4">
             <div className="flex items-center gap-3">
-              {user.avatar_url ? (
-                <Image
-                  src={user.avatar_url}
-                  alt={displayName}
-                  width={40}
-                  height={40}
-                  className="h-10 w-10 rounded-full"
-                />
-              ) : (
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10">
-                  <User size={20} className="text-white/60" />
-                </div>
-              )}
+              <UserAvatar user={user} size="md" />
               <div className="flex-1 min-w-0">
                 {user.username && (
                   <p className="text-sm font-medium text-white truncate">
