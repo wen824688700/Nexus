@@ -80,14 +80,16 @@ export function KnowledgePage() {
       return;
     }
 
-    // 缓存未命中，立即打开阅读视图
-    const placeholderArticle: Article = {
-      ...metadata,
-      content: "", // 空内容，显示加载状态
-    };
-    setCurrentArticle(placeholderArticle);
+    // 缓存未命中，立即打开阅读视图并开始加载
     setIsModalOpen(true);
     setLoadingContent(true);
+
+    // 创建占位文章（显示加载状态）
+    const placeholderArticle: Article = {
+      ...metadata,
+      content: "", // 空内容，触发加载状态
+    };
+    setCurrentArticle(placeholderArticle);
 
     // 后台加载完整内容
     try {

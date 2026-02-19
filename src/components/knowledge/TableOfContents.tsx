@@ -29,31 +29,38 @@ export function TableOfContents({ content, scrollContainerId, onItemClick }: Tab
       return;
     }
 
-    const lines = content.split("\n");
-    const items: TocItem[] = [];
+    // 使用 requestIdleCallback 或 setTimeout 避免阻塞主线程
+    const parseContent = () => {
+      const lines = content.split("\n");
+      const items: TocItem[] = [];
 
-    lines.forEach((line, index) => {
-      // 匹配 Markdown 标题 (# ## ###)
-      const match = line.match(/^(#{1,3})\s+(.+)$/);
-      if (match) {
-        const level = match[1].length;
-        let text = match[2].trim();
+      lines.forEach((line, index) => {
+        // 匹配 Markdown 标题 (# ## ###)
+        const match = line.match(/^(#{1,3})\s+(.+)$/);
+        if (match) {
+          const level = match[1].length;
+          let text = match[2].trim();
 
-        // 移除 Markdown 格式标记（粗体、斜体、代码等）
-        text = text
-          .replace(/\*\*/g, "") // 移除粗体 **text**
-          .replace(/\*/g, "") // 移除斜体 *text*
-          .replace(/`/g, "") // 移除代码 `code`
-          .replace(/~~(.+?)~~/g, "$1") // 移除删除线 ~~text~~
-          .trim();
+          // 移除 Markdown 格式标记（粗体、斜体、代码等）
+          text = text
+            .replace(/\*\*/g, "") // 移除粗体 **text**
+            .replace(/\*/g, "") // 移除斜体 *text*
+            .replace(/`/g, "") // 移除代码 `code`
+            .replace(/~~(.+?)~~/g, "$1") // 移除删除线 ~~text~~
+            .trim();
 
-        const id = `heading-${index}-${text.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-")}`;
+          const id = `heading-${index}-${text.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-")}`;
 
-        items.push({ id, text, level });
-      }
-    });
+          items.push({ id, text, level });
+        }
+      });
 
-    setTocItems(items);
+      setTocItems(items);
+    };
+
+    // 使用 setTimeout 避免阻塞渲染
+    const timer = setTimeout(parseContent, 0);
+    return () => clearTimeout(timer);
   }, [content]);
 
   // 监听滚动，高亮当前章节

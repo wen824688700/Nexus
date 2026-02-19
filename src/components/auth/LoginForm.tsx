@@ -18,12 +18,19 @@ export default function LoginForm({ onForgotPassword, onSignup }: LoginFormProps
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  async function handleSubmit(formData: FormData) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault(); // 阻止表单默认提交行为
     setError(null);
+    
+    const formData = new FormData(e.currentTarget);
+    
     startTransition(async () => {
       const result = await login(formData);
       if (result?.error) {
         setError(result.error);
+      } else if (result?.success) {
+        // 登录成功，强制刷新整个页面
+        window.location.href = "/";
       }
     });
   }
@@ -35,11 +42,12 @@ export default function LoginForm({ onForgotPassword, onSignup }: LoginFormProps
       if (result?.error) {
         setError(result.error);
       }
+      // Google OAuth 会自动重定向
     });
   }
 
   return (
-    <form action={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       {/* 错误提示 */}
       {error && (
         <div className="rounded border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-400">

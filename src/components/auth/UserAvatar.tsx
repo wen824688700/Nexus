@@ -79,7 +79,11 @@ export default function UserAvatar({
 
   async function handleSignOut() {
     try {
-      await signOut();
+      const result = await signOut();
+      if (result?.success) {
+        // 登出成功，刷新页面
+        window.location.href = "/";
+      }
     } catch (error) {
       console.error("Failed to sign out:", error);
     }

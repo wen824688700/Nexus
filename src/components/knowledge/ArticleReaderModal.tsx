@@ -392,11 +392,11 @@ export function ArticleReaderModal({ article, isLoading, onClose }: ArticleReade
 
       {/* 内容区 - 左侧目录 + 右侧文章 */}
       <div className="flex flex-1 overflow-hidden">
-        {/* 左侧目录 */}
+        {/* 左侧目录 - 始终基于完整内容生成 */}
         {showToc && (
           <div className="cyber-scrollbar w-64 flex-shrink-0 overflow-y-auto border-r border-white/10 bg-white/5">
             <TableOfContents
-              content={article.content}
+              content={article.content} // 使用完整内容生成目录
               scrollContainerId="article-content-scroll"
               onItemClick={() => {
                 // 点击目录时，强制加载完整内容

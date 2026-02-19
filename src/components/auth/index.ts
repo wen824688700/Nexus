@@ -7,3 +7,4 @@ export { default as UserAvatar } from "./UserAvatar";
 export { default as AuthModal } from "./AuthModal";
 export { AuthProvider, useAuth } from "./AuthProvider";
 export { NavbarAuth } from "./NavbarAuth";
+export { WelcomeModal } from "./WelcomeModal";

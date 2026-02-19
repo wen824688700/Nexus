@@ -22,7 +22,7 @@ export function ProgressiveMarkdownPreview({
   const [visibleContent, setVisibleContent] = useState("");
   const [hasMore, setHasMore] = useState(false);
   const observerRef = useRef<HTMLDivElement>(null);
-  const CHUNK_SIZE = 5000; // 每次渲染 5000 字符
+  const CHUNK_SIZE = 3000; // 每次渲染 3000 字符（减小块大小，更快显示首屏）
 
   // 初始化：显示前面部分内容
   useEffect(() => {
@@ -41,12 +41,20 @@ export function ProgressiveMarkdownPreview({
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setHasMore(false);
     } else {
-      // 渐进式加载
+      // 渐进式加载：首屏快速显示
       const initialContent = content.slice(0, CHUNK_SIZE);
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisibleContent(initialContent);
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setHasMore(content.length > CHUNK_SIZE);
+
+      // 如果内容较短，直接显示全部
+      if (content.length <= CHUNK_SIZE * 2) {
+        setTimeout(() => {
+          setVisibleContent(content);
+          setHasMore(false);
+        }, 100);
+      }
     }
   }, [content, forceFullContent]);
 
@@ -65,7 +73,8 @@ export function ProgressiveMarkdownPreview({
         }
       },
       {
-        rootMargin: "200px", // 提前 200px 开始加载
+        rootMargin: "400px", // 提前 400px 开始加载（更激进的预加载）
+        threshold: 0,
       },
     );
 

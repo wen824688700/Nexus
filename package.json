@@ -12,7 +12,8 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "check": "npm run lint && npm run typecheck && npm run format:check",
-    "cleanup:users": "tsx scripts/cleanup-orphaned-users.ts"
+    "cleanup:users": "tsx scripts/cleanup-orphaned-users.ts",
+    "check:vercel": "tsx scripts/check-vercel-config.ts"
   },
   "dependencies": {
     "@notionhq/client": "^5.9.0",

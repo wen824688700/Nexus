@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import AuthModal from "./AuthModal";
 import InviteFriendsModal from "./InviteFriendsModal";
+import { WelcomeModal } from "./WelcomeModal";
 
 type AuthView = "login" | "signup" | "forgot-password";
 
@@ -43,6 +44,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [initialView, setInitialView] = useState<AuthView>("login");
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -53,18 +55,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       setLoading(false);
+      
+      // 如果用户已登录且未禁用欢迎弹窗，显示欢迎消息
+      if (session?.user) {
+        const dismissed = localStorage.getItem("apex_welcome_dismissed");
+        if (!dismissed) {
+          // 延迟 1 秒显示，体验更好
+          setTimeout(() => setIsWelcomeModalOpen(true), 1000);
+        }
+      }
     });
 
     // 监听认证状态变化
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      const previousUser = user;
       setUser(session?.user ?? null);
       setLoading(false);
+      
+      // 当用户登录时（从无用户到有用户），显示欢迎弹窗
+      if (event === "SIGNED_IN" && session?.user && !previousUser) {
+        const dismissed = localStorage.getItem("apex_welcome_dismissed");
+        if (!dismissed) {
+          setTimeout(() => setIsWelcomeModalOpen(true), 1000);
+        }
+      }
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [user]);
 
   const openAuthModal = (view: AuthView = "login") => {
     setInitialView(view);
@@ -97,6 +117,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       {children}
       <AuthModal isOpen={isModalOpen} onClose={closeAuthModal} initialView={initialView} />
       <InviteFriendsModal isOpen={isInviteModalOpen} onClose={closeInviteFriendsModal} />
+      <WelcomeModal isOpen={isWelcomeModalOpen} onClose={() => setIsWelcomeModalOpen(false)} />
     </AuthContext.Provider>
   );
 }

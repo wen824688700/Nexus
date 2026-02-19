@@ -27,6 +27,7 @@ export default function SignupForm({ onLogin }: SignupFormProps) {
   const [countdown, setCountdown] = useState(0);
   const [isPending, startTransition] = useTransition();
   const [isSendingCode, setIsSendingCode] = useState(false);
+  const [codeInputRef, setCodeInputRef] = useState<HTMLInputElement | null>(null);
 
   const passwordStrength = password ? calculatePasswordStrength(password) : null;
 
@@ -70,6 +71,12 @@ export default function SignupForm({ onLogin }: SignupFormProps) {
             return prev - 1;
           });
         }, 1000);
+        
+        // 自动聚焦到验证码输入框
+        setTimeout(() => {
+          codeInputRef?.focus();
+          codeInputRef?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 100);
       } else {
         console.error("[SignupForm] No result from sendVerificationCode");
         setError("发送验证码失败，请稍后重试");
@@ -224,47 +231,29 @@ export default function SignupForm({ onLogin }: SignupFormProps) {
           </button>
         </div>
         {fieldErrors.email && <p className="mt-1 text-xs text-red-400">{fieldErrors.email[0]}</p>}
-      </div>
-
-      {/* 验证码 */}
-      {codeSent && (
-        <div>
-          <label htmlFor="code" className="mb-1 block text-sm font-medium text-white/80">
-            验证码
-          </label>
-          <input
-            id="code"
-            name="code"
-            type="text"
-            required
-            maxLength={6}
-            disabled={isPending}
-            value={code}
-            onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-            className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-            placeholder="请输入 6 位验证码"
-          />
-          <p className="mt-1 text-xs text-white/60">验证码已发送到您的邮箱，请查收</p>
-        </div>
-      )}
-
-      {/* 邀请码（可选） */}
-      <div>
-        <label htmlFor="invite_code" className="mb-1 block text-sm font-medium text-white/80">
-          邀请码 <span className="text-white/40">(可选)</span>
-        </label>
-        <input
-          id="invite_code"
-          name="invite_code"
-          type="text"
-          disabled={isPending}
-          value={inviteCode}
-          onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
-          maxLength={6}
-          className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-          placeholder="输入邀请码可获得额外奖励"
-        />
-        <p className="mt-1 text-xs text-white/60">使用邀请码注册，您和邀请人各获得 30 永久积分</p>
+        
+        {/* 验证码输入框 - 紧跟在邮箱下方 */}
+        {codeSent && (
+          <div className="mt-3">
+            <label htmlFor="code" className="mb-1 block text-sm font-medium text-white/80">
+              验证码
+            </label>
+            <input
+              ref={setCodeInputRef}
+              id="code"
+              name="code"
+              type="text"
+              required
+              maxLength={6}
+              disabled={isPending}
+              value={code}
+              onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+              className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+              placeholder="请输入 6 位验证码"
+            />
+            <p className="mt-1 text-xs text-white/60">验证码已发送到您的邮箱，请查收</p>
+          </div>
+        )}
       </div>
 
       {/* 密码 */}
@@ -308,6 +297,25 @@ export default function SignupForm({ onLogin }: SignupFormProps) {
             </div>
           </div>
         )}
+      </div>
+
+      {/* 邀请码（可选） */}
+      <div>
+        <label htmlFor="invite_code" className="mb-1 block text-sm font-medium text-white/80">
+          邀请码 <span className="text-white/40">(可选)</span>
+        </label>
+        <input
+          id="invite_code"
+          name="invite_code"
+          type="text"
+          disabled={isPending}
+          value={inviteCode}
+          onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
+          maxLength={6}
+          className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+          placeholder="输入邀请码可获得额外奖励"
+        />
+        <p className="mt-1 text-xs text-white/60">使用邀请码注册，您和邀请人各获得 30 永久积分</p>
       </div>
 
       {/* 注册按钮 */}

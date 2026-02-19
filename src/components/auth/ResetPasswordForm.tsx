@@ -33,8 +33,10 @@ export default function ResetPasswordForm() {
 
       if (result?.error) {
         setError(result.error);
+      } else if (result?.success) {
+        // 重置成功，刷新页面
+        window.location.href = "/";
       }
-      // 成功时会自动重定向到首页
     });
   }
 

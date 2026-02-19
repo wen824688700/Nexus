@@ -65,7 +65,7 @@ export async function login(formData: FormData) {
 
         if (!retryError) {
           revalidatePath("/", "layout");
-          redirect("/");
+          return { success: true };
         }
       }
     }
@@ -74,7 +74,7 @@ export async function login(formData: FormData) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/");
+  return { success: true };
 }
 
 /**
@@ -580,7 +580,7 @@ export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
   revalidatePath("/", "layout");
-  redirect("/");
+  return { success: true };
 }
 
 /**
@@ -653,5 +653,5 @@ export async function resetPassword(formData: FormData) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/");
+  return { success: true };
 }
