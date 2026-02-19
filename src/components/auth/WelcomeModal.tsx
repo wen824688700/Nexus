@@ -1,7 +1,6 @@
 "use client";
 
 import { createPortal } from "react-dom";
-import { useState } from "react";
 import { Terminal, Cpu, Fingerprint, AlertCircle, Sparkles } from "lucide-react";
 
 interface WelcomeModalProps {
@@ -12,28 +11,18 @@ interface WelcomeModalProps {
 /**
  * 欢迎弹窗组件
  * 
- * 在用户登录后显示产品说明
- * 支持"不再显示"选项，状态存储在 localStorage
+ * 在用户每次登录后显示产品说明
  */
 export function WelcomeModal({ isOpen, onClose }: WelcomeModalProps) {
-  const [dontShowAgain, setDontShowAgain] = useState(false);
-
   if (!isOpen) return null;
   if (typeof document === "undefined") return null;
-
-  const handleClose = () => {
-    if (dontShowAgain) {
-      localStorage.setItem("apex_welcome_dismissed", "true");
-    }
-    onClose();
-  };
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* 背景遮罩 */}
       <div 
         className="absolute inset-0 bg-black/80 backdrop-blur-sm" 
-        onClick={handleClose}
+        onClick={onClose}
       />
 
       {/* 主体弹窗 */}
@@ -99,19 +88,7 @@ export function WelcomeModal({ isOpen, onClose }: WelcomeModalProps) {
             </div>
 
             {/* Footer / Action */}
-            <div className="mt-8 space-y-4 border-t border-white/10 pt-6">
-              
-              {/* 不再显示选项 */}
-              <label className="flex cursor-pointer items-center gap-2 text-sm text-gray-400 transition-colors hover:text-gray-300">
-                <input
-                  type="checkbox"
-                  checked={dontShowAgain}
-                  onChange={(e) => setDontShowAgain(e.target.checked)}
-                  className="h-4 w-4 cursor-pointer rounded border-white/20 bg-white/5 text-purple-500 focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-0"
-                />
-                <span>不再显示此消息</span>
-              </label>
-
+            <div className="mt-8 border-t border-white/10 pt-6">
               {/* 按钮和标识 */}
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div className="font-mono flex items-center gap-2 text-[10px] text-gray-500">
@@ -120,7 +97,7 @@ export function WelcomeModal({ isOpen, onClose }: WelcomeModalProps) {
                 </div>
 
                 <button
-                  onClick={handleClose}
+                  onClick={onClose}
                   className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2.5 font-bold text-white shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-all hover:from-purple-600 hover:to-pink-600 md:w-auto"
                 >
                   <Fingerprint size={18} className="transition-transform group-hover:scale-110" />

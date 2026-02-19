@@ -55,15 +55,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       setLoading(false);
-      
-      // 如果用户已登录且未禁用欢迎弹窗，显示欢迎消息
-      if (session?.user) {
-        const dismissed = localStorage.getItem("apex_welcome_dismissed");
-        if (!dismissed) {
-          // 延迟 1 秒显示，体验更好
-          setTimeout(() => setIsWelcomeModalOpen(true), 1000);
-        }
-      }
     });
 
     // 监听认证状态变化
@@ -74,12 +65,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(session?.user ?? null);
       setLoading(false);
       
-      // 当用户登录时（从无用户到有用户），显示欢迎弹窗
+      // 只在登录事件时显示欢迎弹窗（每次登录都显示）
       if (event === "SIGNED_IN" && session?.user && !previousUser) {
-        const dismissed = localStorage.getItem("apex_welcome_dismissed");
-        if (!dismissed) {
-          setTimeout(() => setIsWelcomeModalOpen(true), 1000);
-        }
+        setTimeout(() => setIsWelcomeModalOpen(true), 1000);
       }
     });
 
