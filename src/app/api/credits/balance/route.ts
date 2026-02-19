@@ -31,7 +31,9 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      balance,
+      total: balance.total,
+      permanent: balance.permanent,
+      daily: balance.daily,
     });
   } catch (error) {
     console.error("[Balance] Error:", error);

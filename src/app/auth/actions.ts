@@ -93,7 +93,7 @@ export async function sendVerificationCode(email: string) {
     return { error: "请输入有效的邮箱地址" };
   }
 
-  // 检查邮箱是否已注册
+  // 检查邮箱是否已在 profiles 表中注册
   const { data: existingUser } = await supabase
     .from("profiles")
     .select("email")
@@ -101,7 +101,7 @@ export async function sendVerificationCode(email: string) {
     .maybeSingle();
 
   if (existingUser) {
-    return { error: "该邮箱已被注册" };
+    return { error: "该邮箱已被注册，请直接登录" };
   }
 
   // 生成 6 位验证码
@@ -395,15 +395,16 @@ export async function signup(formData: FormData) {
     return { error: "验证码已过期，请重新获取" };
   }
 
+  // 使用 Admin API 检查邮箱是否已在 Auth 中存在
+  const adminClient = createAdminClient();
+
   // 标记验证码为已使用
   await // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (supabase.from("verification_codes") as any)
     .update({ used: true })
     .eq("id", verificationData.id);
 
-  // 使用 Admin API 创建用户（跳过邮箱确认）
-  const adminClient = createAdminClient();
-
+  // 创建用户
   const { data, error } = await adminClient.auth.admin.createUser({
     email,
     password,
@@ -414,14 +415,36 @@ export async function signup(formData: FormData) {
   });
 
   if (error) {
-    if (error.message.includes("already registered") || error.message.includes("already exists")) {
-      return { error: "该邮箱已被注册" };
-    }
     console.error("Signup error:", error);
-    return { error: "注册失败，请稍后重试" };
+    console.error("Error details:", {
+      message: error.message,
+      code: error.code,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      status: (error as any).status,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      __isAuthError: (error as any).__isAuthError,
+    });
+
+    // 处理各种错误情况
+    if (
+      error.message.includes("already registered") ||
+      error.message.includes("email_exists") ||
+      error.message.includes("User already registered") ||
+      error.code === "email_exists" ||
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (error as any).status === 422
+    ) {
+      return {
+        error: "该邮箱已被注册，请直接登录或使用其他邮箱",
+      };
+    }
+    if (error.message.includes("email")) {
+      return { error: "邮箱格式无效" };
+    }
+    return { error: `注册失败：${error.message}` };
   }
 
-  // 创建用户资料
+  // 创建用户资料（使用 Admin client 绕过 RLS）
   if (data.user) {
     // 生成用户的邀请码
     const userInviteCode = await generateInviteCode();
@@ -436,18 +459,21 @@ export async function signup(formData: FormData) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any;
 
-    const { error: insertError } = await supabase
+    // 使用 Admin client 插入 profile（绕过 RLS）
+    const { error: insertError } = await adminClient
       .from("profiles")
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .insert(profileData as any);
 
     if (insertError) {
       console.error("Failed to create profile:", insertError);
+      // 如果 profile 创建失败，删除已创建的用户
+      await adminClient.auth.admin.deleteUser(data.user.id);
       return { error: "创建用户资料失败" };
     }
 
-    // 记录 IP 注册
-    await supabase.from("ip_registrations").insert({
+    // 记录 IP 注册（使用 Admin client）
+    await adminClient.from("ip_registrations").insert({
       ip_address: ipAddress,
       user_id: data.user.id,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -456,7 +482,21 @@ export async function signup(formData: FormData) {
     // 发放注册奖励（50 永久积分）
     const { createCreditManager } = await import("@/lib/credits/manager");
     const creditManager = createCreditManager();
-    await creditManager.addPermanentCredits(data.user.id, 50, "registration", "注册奖励");
+    
+    console.log("[Signup] Granting registration reward to user:", data.user.id);
+    const creditResult = await creditManager.addPermanentCredits(
+      data.user.id,
+      50,
+      "registration",
+      "注册奖励",
+    );
+    
+    if (!creditResult) {
+      console.error("[Signup] Failed to grant registration credits");
+      // 不阻止注册，但记录错误
+    } else {
+      console.log("[Signup] Registration credits granted successfully");
+    }
 
     // 处理邀请奖励
     if (inviteCode && inviteCode.trim()) {

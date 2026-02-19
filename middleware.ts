@@ -23,9 +23,9 @@ const protectedRoutes = [
   "/profile",
   "/settings",
   "/admin", // 管理后台
-  "/agents", // 智能体中心
-  "/knowledge", // 知识库（Retro OS）
   "/vault", // 量子密匣
+  // 注意：/agents 和 /knowledge 已移除，允许公开访问
+  // 智能体功能内部会检查登录状态并提示登录
 ];
 
 export async function middleware(request: NextRequest) {

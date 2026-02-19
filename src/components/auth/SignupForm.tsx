@@ -45,27 +45,40 @@ export default function SignupForm({ onLogin }: SignupFormProps) {
 
     setIsSendingCode(true);
     setError(null);
+    setSuccess(null);
 
-    const result = await sendVerificationCode(email);
+    try {
+      const result = await sendVerificationCode(email);
 
-    setIsSendingCode(false);
+      console.log("[SignupForm] Send code result:", result);
 
-    if (result?.error) {
-      setError(result.error);
-    } else if (result?.success) {
-      setCodeSent(true);
-      setSuccess(result.message);
-      // 开始 60 秒倒计时
-      setCountdown(60);
-      const timer = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+      if (result?.error) {
+        console.error("[SignupForm] Send code error:", result.error);
+        setError(result.error);
+      } else if (result?.success) {
+        console.log("[SignupForm] Code sent successfully");
+        setCodeSent(true);
+        setSuccess(result.message);
+        // 开始 60 秒倒计时
+        setCountdown(60);
+        const timer = setInterval(() => {
+          setCountdown((prev) => {
+            if (prev <= 1) {
+              clearInterval(timer);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      } else {
+        console.error("[SignupForm] No result from sendVerificationCode");
+        setError("发送验证码失败，请稍后重试");
+      }
+    } catch (err) {
+      console.error("[SignupForm] Exception in handleSendCode:", err);
+      setError("发送验证码失败，请稍后重试");
+    } finally {
+      setIsSendingCode(false);
     }
   }
 
@@ -88,17 +101,25 @@ export default function SignupForm({ onLogin }: SignupFormProps) {
     startTransition(async () => {
       const result = await signup(formData);
 
+      console.log("[SignupForm] Signup result:", result);
+
       if (result?.error) {
+        console.error("[SignupForm] Signup error:", result.error);
         setError(result.error);
         if ("fieldErrors" in result && result.fieldErrors) {
           setFieldErrors(result.fieldErrors);
         }
       } else if (result?.success) {
+        console.log("[SignupForm] Signup success:", result.message);
         setSuccess(result.message);
         // 注册成功后刷新页面
         setTimeout(() => {
           window.location.href = "/";
         }, 1500);
+      } else {
+        // 处理没有返回任何结果的情况
+        console.error("[SignupForm] No result returned from signup");
+        setError("注册失败，请稍后重试");
       }
     });
   }
