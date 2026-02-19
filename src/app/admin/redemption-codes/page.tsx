@@ -27,8 +27,8 @@ export default async function AdminRedemptionCodesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-[#0a0a0a] pt-20 text-white">
+      <div className="container mx-auto max-w-7xl px-4 py-8">
         <h1 className="mb-8 text-3xl font-bold">兑换码管理</h1>
         <RedemptionCodesAdmin />
       </div>

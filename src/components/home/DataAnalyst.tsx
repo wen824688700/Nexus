@@ -12,6 +12,9 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { filterReportContent } from "@/utils/filterReport";
 import { Upload, Send, X, BarChart3, FileText, Zap, Database } from "lucide-react";
+import { LoginPromptModal } from "@/components/auth/LoginPromptModal";
+import { InsufficientCreditsModal } from "@/components/auth/InsufficientCreditsModal";
+import { handleAgentError } from "@/utils/agentErrorHandler";
 
 type ToolCall = {
   id: string;
@@ -193,6 +196,16 @@ export function DataAnalyst({ agentKey }: Props) {
   const [files, setFiles] = useState<File[]>([]);
   const [sessionId] = useState(() => `user_${Date.now()}`); // 保持会话 ID
 
+  // 身份验证模态框
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showCreditsModal, setShowCreditsModal] = useState(false);
+  const [creditsInfo, setCreditsInfo] = useState<{
+    required: number;
+    current: number;
+    permanent: number;
+    daily: number;
+  } | null>(null);
+
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -254,6 +267,26 @@ export function DataAnalyst({ agentKey }: Props) {
         body: fd,
         signal: controller.signal,
       });
+
+      // 处理身份验证错误
+      const handled = await handleAgentError(res, {
+        onLoginRequired: () => {
+          // 移除刚添加的用户消息
+          setMessages((prev) => prev.slice(0, -1));
+          setShowLoginModal(true);
+        },
+        onInsufficientCredits: (info) => {
+          // 移除刚添加的用户消息
+          setMessages((prev) => prev.slice(0, -1));
+          setCreditsInfo(info);
+          setShowCreditsModal(true);
+        },
+      });
+
+      if (handled) {
+        setLoading(false);
+        return;
+      }
 
       if (!res.ok) {
         const json = (await res.json().catch(() => ({}))) as { error?: { message?: string } };
@@ -800,6 +833,25 @@ export function DataAnalyst({ agentKey }: Props) {
         className="hidden"
         onChange={handleFileChange}
       />
+
+      {/* 登录提示模态框 */}
+      <LoginPromptModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        message="请先登录以使用数据分析功能"
+      />
+
+      {/* 积分不足模态框 */}
+      {creditsInfo && (
+        <InsufficientCreditsModal
+          isOpen={showCreditsModal}
+          onClose={() => setShowCreditsModal(false)}
+          required={creditsInfo.required}
+          current={creditsInfo.current}
+          permanent={creditsInfo.permanent}
+          daily={creditsInfo.daily}
+        />
+      )}
     </div>
   );
 }

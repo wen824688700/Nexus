@@ -15,6 +15,9 @@ import {
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { LoginPromptModal } from "@/components/auth/LoginPromptModal";
+import { InsufficientCreditsModal } from "@/components/auth/InsufficientCreditsModal";
+import { handleAgentError } from "@/utils/agentErrorHandler";
 
 export function SeedanceStoryboard() {
   const [showWelcome, setShowWelcome] = useState(true);
@@ -25,6 +28,16 @@ export function SeedanceStoryboard() {
   const [streamingContent, setStreamingContent] = useState("");
   const [showCopyToast, setShowCopyToast] = useState(false);
   const [sessionId] = useState(() => `user_${Date.now()}`);
+
+  // 身份验证模态框
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showCreditsModal, setShowCreditsModal] = useState(false);
+  const [creditsInfo, setCreditsInfo] = useState<{
+    required: number;
+    current: number;
+    permanent: number;
+    daily: number;
+  } | null>(null);
 
   // 图片上传相关
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -161,6 +174,20 @@ export function SeedanceStoryboard() {
         body: formData,
       });
 
+      // 处理身份验证错误
+      const handled = await handleAgentError(response, {
+        onLoginRequired: () => setShowLoginModal(true),
+        onInsufficientCredits: (info) => {
+          setCreditsInfo(info);
+          setShowCreditsModal(true);
+        },
+      });
+
+      if (handled) {
+        setLoading(false);
+        return;
+      }
+
       if (!response.ok) {
         throw new Error(`请求失败: ${response.status}`);
       }
@@ -241,35 +268,48 @@ export function SeedanceStoryboard() {
   };
 
   return (
-    <div className="h-full">
-      {showWelcome ? (
-        <WelcomeView onStart={handleStart} />
-      ) : (
-        <GeneratorView
-          prompt={prompt}
-          setPrompt={setPrompt}
-          loading={loading}
-          error={error}
-          result={result}
-          streamingContent={streamingContent}
-          showCopyToast={showCopyToast}
-          outputRef={outputRef}
-          uploadedFiles={uploadedFiles}
-          previewUrls={previewUrls}
-          isDragging={isDragging}
-          fileInputRef={fileInputRef}
-          handleGenerate={handleGenerate}
-          handleReset={handleReset}
-          handleCopy={handleCopy}
-          handleUploadClick={handleUploadClick}
-          handleFileInputChange={handleFileInputChange}
-          handleRemoveFile={handleRemoveFile}
-          handleDragOver={handleDragOver}
-          handleDragLeave={handleDragLeave}
-          handleDrop={handleDrop}
-        />
-      )}
-    </div>
+    <>
+      <div className="h-full">
+        {showWelcome ? (
+          <WelcomeView onStart={handleStart} />
+        ) : (
+          <GeneratorView
+            prompt={prompt}
+            setPrompt={setPrompt}
+            loading={loading}
+            error={error}
+            result={result}
+            streamingContent={streamingContent}
+            showCopyToast={showCopyToast}
+            outputRef={outputRef}
+            uploadedFiles={uploadedFiles}
+            previewUrls={previewUrls}
+            isDragging={isDragging}
+            fileInputRef={fileInputRef}
+            handleGenerate={handleGenerate}
+            handleReset={handleReset}
+            handleCopy={handleCopy}
+            handleUploadClick={handleUploadClick}
+            handleFileInputChange={handleFileInputChange}
+            handleRemoveFile={handleRemoveFile}
+            handleDragOver={handleDragOver}
+            handleDragLeave={handleDragLeave}
+            handleDrop={handleDrop}
+          />
+        )}
+      </div>
+
+      {/* 身份验证模态框 */}
+      <LoginPromptModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
+      <InsufficientCreditsModal
+        isOpen={showCreditsModal}
+        onClose={() => setShowCreditsModal(false)}
+        required={creditsInfo?.required ?? 0}
+        current={creditsInfo?.current ?? 0}
+        permanent={creditsInfo?.permanent ?? 0}
+        daily={creditsInfo?.daily ?? 0}
+      />
+    </>
   );
 }
 

@@ -264,7 +264,7 @@ export default function SignupForm({ onLogin }: SignupFormProps) {
           className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           placeholder="输入邀请码可获得额外奖励"
         />
-        <p className="mt-1 text-xs text-white/60">使用邀请码注册，您和邀请人各获得 50 永久积分</p>
+        <p className="mt-1 text-xs text-white/60">使用邀请码注册，您和邀请人各获得 30 永久积分</p>
       </div>
 
       {/* 密码 */}

@@ -479,14 +479,14 @@ export async function signup(formData: FormData) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any);
 
-    // 发放注册奖励（50 永久积分）
+    // 发放注册奖励（30 永久积分）
     const { createCreditManager } = await import("@/lib/credits/manager");
     const creditManager = createCreditManager();
     
     console.log("[Signup] Granting registration reward to user:", data.user.id);
     const creditResult = await creditManager.addPermanentCredits(
       data.user.id,
-      50,
+      30,
       "registration",
       "注册奖励",
     );
@@ -496,6 +496,17 @@ export async function signup(formData: FormData) {
       // 不阻止注册，但记录错误
     } else {
       console.log("[Signup] Registration credits granted successfully");
+    }
+
+    // 发放首次每日积分（20 每日积分）
+    console.log("[Signup] Granting initial daily credits to user:", data.user.id);
+    const dailyResult = await creditManager.grantDailyCredits(data.user.id);
+    
+    if (!dailyResult) {
+      console.error("[Signup] Failed to grant initial daily credits");
+      // 不阻止注册，但记录错误
+    } else {
+      console.log("[Signup] Initial daily credits granted successfully");
     }
 
     // 处理邀请奖励

@@ -13,6 +13,9 @@ import {
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { NeonBorder, CyberButton, GlitchText } from "@/components/cyber";
+import { LoginPromptModal } from "@/components/auth/LoginPromptModal";
+import { InsufficientCreditsModal } from "@/components/auth/InsufficientCreditsModal";
+import { handleAgentError } from "@/utils/agentErrorHandler";
 
 type ToolCall = {
   id: string;
@@ -39,6 +42,16 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
   const [toolCalls, setToolCalls] = useState<ToolCall[]>([]);
   const [showCopyToast, setShowCopyToast] = useState(false);
   const [hasAnalyzed, setHasAnalyzed] = useState(false);
+
+  // 身份验证模态框
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showCreditsModal, setShowCreditsModal] = useState(false);
+  const [creditsInfo, setCreditsInfo] = useState<{
+    required: number;
+    current: number;
+    permanent: number;
+    daily: number;
+  } | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
@@ -184,6 +197,20 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
           method: "POST",
           body: formData,
         });
+
+        // 处理身份验证错误
+        const handled = await handleAgentError(response, {
+          onLoginRequired: () => setShowLoginModal(true),
+          onInsufficientCredits: (info) => {
+            setCreditsInfo(info);
+            setShowCreditsModal(true);
+          },
+        });
+
+        if (handled) {
+          setLoading(false);
+          return;
+        }
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({ error: { message: "请求失败" } }));
@@ -594,6 +621,25 @@ export function AudioAnalyzer({ agentKey }: AudioAnalyzerProps) {
           </NeonBorder>
         </div>
       </div>
+
+      {/* 登录提示模态框 */}
+      <LoginPromptModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        message="请先登录以使用音频分析功能"
+      />
+
+      {/* 积分不足模态框 */}
+      {creditsInfo && (
+        <InsufficientCreditsModal
+          isOpen={showCreditsModal}
+          onClose={() => setShowCreditsModal(false)}
+          required={creditsInfo.required}
+          current={creditsInfo.current}
+          permanent={creditsInfo.permanent}
+          daily={creditsInfo.daily}
+        />
+      )}
     </div>
   );
 }

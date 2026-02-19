@@ -1894,6 +1894,8 @@ export async function POST(req: Request, ctx: { params: Promise<{ agentKey: stri
               code: "INSUFFICIENT_CREDITS",
               required: requiredCredits,
               current: balance.total,
+              permanent: balance.permanent,
+              daily: balance.daily,
             },
           },
           { status: 402 },

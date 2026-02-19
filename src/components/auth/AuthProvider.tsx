@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import AuthModal from "./AuthModal";
+import InviteFriendsModal from "./InviteFriendsModal";
 
 type AuthView = "login" | "signup" | "forgot-password";
 
@@ -12,6 +13,8 @@ interface AuthContextType {
   loading: boolean;
   openAuthModal: (view?: AuthView) => void;
   closeAuthModal: () => void;
+  openInviteFriendsModal: () => void;
+  closeInviteFriendsModal: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -39,6 +42,7 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [initialView, setInitialView] = useState<AuthView>("login");
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -71,10 +75,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setIsModalOpen(false);
   };
 
+  const openInviteFriendsModal = () => {
+    setIsInviteModalOpen(true);
+  };
+
+  const closeInviteFriendsModal = () => {
+    setIsInviteModalOpen(false);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, openAuthModal, closeAuthModal }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        openAuthModal,
+        closeAuthModal,
+        openInviteFriendsModal,
+        closeInviteFriendsModal,
+      }}
+    >
       {children}
       <AuthModal isOpen={isModalOpen} onClose={closeAuthModal} initialView={initialView} />
+      <InviteFriendsModal isOpen={isInviteModalOpen} onClose={closeInviteFriendsModal} />
     </AuthContext.Provider>
   );
 }

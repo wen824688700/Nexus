@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
+import { createClient } from "@/lib/supabase/server";
+import { CreditManager } from "@/lib/credits/manager";
+import { getAgentPrice } from "@/lib/credits/pricing";
 
 // 读取框架详细信息
 async function loadFrameworkDetails(frameworkId: string): Promise<string> {
@@ -153,25 +156,91 @@ ${userInput}
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { input, frameworkId, clarificationAnswers } = body;
+    // ============================================================================
+    // 身份验证和积分检查
+    // ============================================================================
+    const supabase = await createClient();
+    const creditManager = new CreditManager();
 
-    if (!input || !frameworkId || !clarificationAnswers) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    // 1. 验证用户登录
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "请先登录" }, { status: 401 });
     }
 
-    const frameworkContent = await loadFrameworkDetails(frameworkId);
-    const optimizedPrompt = await generateWithDeepSeek(
-      input,
-      frameworkId,
-      frameworkContent,
-      clarificationAnswers,
+    // 2. 计算所需积分
+    const requiredCredits = getAgentPrice("prompt-optimizer");
+
+    // 3. 检查余额并扣除积分
+    const hasSufficientBalance = await creditManager.checkSufficientBalance(
+      user.id,
+      requiredCredits,
     );
 
-    return NextResponse.json({
-      output: optimizedPrompt,
-      framework: frameworkId,
-    });
+    if (!hasSufficientBalance) {
+      const balance = await creditManager.getBalance(user.id);
+      return NextResponse.json(
+        {
+          error: {
+            message: `积分不足，需要 ${requiredCredits} 积分，当前余额 ${balance.total} 积分`,
+            code: "INSUFFICIENT_CREDITS",
+            required: requiredCredits,
+            current: balance.total,
+            permanent: balance.permanent,
+            daily: balance.daily,
+          },
+        },
+        { status: 402 },
+      );
+    }
+
+    // 扣除积分
+    const deductResult = await creditManager.deductCredits(
+      user.id,
+      requiredCredits,
+      "prompt-optimizer",
+    );
+
+    if (!deductResult.success) {
+      return NextResponse.json({ error: "积分扣除失败，请稍后重试" }, { status: 500 });
+    }
+
+    const transactionId = deductResult.transactionId;
+
+    // ============================================================================
+    // 智能体调用（包装在 try-catch 中，失败时退款）
+    // ============================================================================
+    try {
+      const body = await request.json();
+      const { input, frameworkId, clarificationAnswers } = body;
+
+      if (!input || !frameworkId || !clarificationAnswers) {
+        return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+      }
+
+      const frameworkContent = await loadFrameworkDetails(frameworkId);
+      const optimizedPrompt = await generateWithDeepSeek(
+        input,
+        frameworkId,
+        frameworkContent,
+        clarificationAnswers,
+      );
+
+      return NextResponse.json({
+        output: optimizedPrompt,
+        framework: frameworkId,
+      });
+    } catch (agentError) {
+      // 智能体调用失败，退还积分
+      if (transactionId) {
+        await creditManager.refundCredits(transactionId);
+      }
+      throw agentError;
+    }
   } catch (error) {
     console.error("❌ 生成 API 错误:", error);
     return NextResponse.json(

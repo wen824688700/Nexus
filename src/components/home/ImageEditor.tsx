@@ -4,6 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import { Upload, Send, X, Wand2, Sparkles, Image as ImageIcon } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { LoginPromptModal } from "@/components/auth/LoginPromptModal";
+import { InsufficientCreditsModal } from "@/components/auth/InsufficientCreditsModal";
+import { handleAgentError } from "@/utils/agentErrorHandler";
 
 type ToolCall = {
   id: string;
@@ -78,6 +81,16 @@ export function ImageEditor({ agentKey }: { agentKey: string }) {
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [sessionId] = useState(() => `user_${Date.now()}`);
   const [isDragging, setIsDragging] = useState(false);
+
+  // 身份验证模态框
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showCreditsModal, setShowCreditsModal] = useState(false);
+  const [creditsInfo, setCreditsInfo] = useState<{
+    required: number;
+    current: number;
+    permanent: number;
+    daily: number;
+  } | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -190,6 +203,20 @@ export function ImageEditor({ agentKey }: { agentKey: string }) {
         body: fd,
         signal: controller.signal,
       });
+
+      // 处理身份验证错误
+      const handled = await handleAgentError(res, {
+        onLoginRequired: () => setShowLoginModal(true),
+        onInsufficientCredits: (info) => {
+          setCreditsInfo(info);
+          setShowCreditsModal(true);
+        },
+      });
+
+      if (handled) {
+        setLoading(false);
+        return;
+      }
 
       if (!res.ok) {
         const json = (await res.json().catch(() => ({}))) as { error?: { message?: string } };
@@ -732,6 +759,25 @@ export function ImageEditor({ agentKey }: { agentKey: string }) {
         className="hidden"
         onChange={handleFileChange}
       />
+
+      {/* 登录提示模态框 */}
+      <LoginPromptModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        message="请先登录以使用图像编辑功能"
+      />
+
+      {/* 积分不足模态框 */}
+      {creditsInfo && (
+        <InsufficientCreditsModal
+          isOpen={showCreditsModal}
+          onClose={() => setShowCreditsModal(false)}
+          required={creditsInfo.required}
+          current={creditsInfo.current}
+          permanent={creditsInfo.permanent}
+          daily={creditsInfo.daily}
+        />
+      )}
     </div>
   );
 }

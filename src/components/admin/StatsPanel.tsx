@@ -59,7 +59,7 @@ export default function StatsPanel({ refreshTrigger }: StatsPanelProps) {
       <div className="rounded-lg border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
         <div className="mb-2 text-sm text-white/70">总用户数</div>
         <div className="text-3xl font-bold text-cyan-400">
-          {loading ? "..." : stats.totalUsers.toLocaleString()}
+          {loading ? "..." : (stats.totalUsers || 0).toLocaleString()}
         </div>
       </div>
 
@@ -67,7 +67,7 @@ export default function StatsPanel({ refreshTrigger }: StatsPanelProps) {
       <div className="rounded-lg border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
         <div className="mb-2 text-sm text-white/70">总发放积分</div>
         <div className="text-3xl font-bold text-green-400">
-          {loading ? "..." : stats.totalCreditsGranted.toLocaleString()}
+          {loading ? "..." : (stats.totalCreditsGranted || 0).toLocaleString()}
         </div>
       </div>
 
@@ -75,7 +75,7 @@ export default function StatsPanel({ refreshTrigger }: StatsPanelProps) {
       <div className="rounded-lg border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
         <div className="mb-2 text-sm text-white/70">总消耗积分</div>
         <div className="text-3xl font-bold text-orange-400">
-          {loading ? "..." : stats.totalCreditsConsumed.toLocaleString()}
+          {loading ? "..." : (stats.totalCreditsConsumed || 0).toLocaleString()}
         </div>
       </div>
     </div>

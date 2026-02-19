@@ -23,22 +23,42 @@ export const AGENT_PRICING: Record<string, AgentPricingConfig> = {
     agentKey: "prompt-optimizer",
     basePrice: 1,
   },
+  "audio_analyzer": {
+    agentKey: "audio_analyzer",
+    basePrice: 1,
+  },
   "audio-analyzer": {
     agentKey: "audio-analyzer",
     basePrice: 1,
   },
-  "seedance-assistant": {
-    agentKey: "seedance-assistant",
+  "seedance-storyboard": {
+    agentKey: "seedance-storyboard",
     basePrice: 1,
   },
 
   // 工具提效类智能体（5 积分）
+  "data_analyst": {
+    agentKey: "data_analyst",
+    basePrice: 5,
+  },
   "data-analyst": {
     agentKey: "data-analyst",
     basePrice: 5,
   },
+  "o2": {
+    agentKey: "o2",
+    basePrice: 5,
+  },
 
   // 图像编辑智能体（差异化定价）
+  "image_editor": {
+    agentKey: "image_editor",
+    basePrice: 2,
+    operations: {
+      flux_edit: 5, // Flux 生图：5 积分
+      default: 2, // 其他操作：2 积分
+    },
+  },
   "image-editor": {
     agentKey: "image-editor",
     basePrice: 2,
@@ -49,6 +69,10 @@ export const AGENT_PRICING: Record<string, AgentPricingConfig> = {
   },
 
   // 头像生成智能体（2 积分）
+  "portrait": {
+    agentKey: "portrait",
+    basePrice: 2,
+  },
   "portrait-studio": {
     agentKey: "portrait-studio",
     basePrice: 2,

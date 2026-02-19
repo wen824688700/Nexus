@@ -2,6 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Camera, Upload, X, Sparkles, Image as ImageIcon } from "lucide-react";
+import { useAgentAuth } from "@/hooks/useAgentAuth";
+import { LoginPromptModal } from "@/components/auth/LoginPromptModal";
+import { InsufficientCreditsModal } from "@/components/auth/InsufficientCreditsModal";
+import { handleAgentError } from "@/utils/agentErrorHandler";
 
 type Mode = "txt2img" | "img_edit";
 
@@ -57,6 +61,17 @@ export function PortraitStudio({ agentKey }: Props) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loadingStage, setLoadingStage] = useState(0);
 
+  // 身份验证和积分检查
+  const { checkAuth } = useAgentAuth(agentKey, 2);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showCreditsModal, setShowCreditsModal] = useState(false);
+  const [creditsInfo, setCreditsInfo] = useState<{
+    required: number;
+    current: number;
+    permanent: number;
+    daily: number;
+  } | null>(null);
+
   const inputRef = useRef<HTMLInputElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -106,6 +121,25 @@ export function PortraitStudio({ agentKey }: Props) {
   async function run() {
     if (!prompt.trim() || (mode === "img_edit" && !file)) return;
 
+    // 身份验证和积分检查
+    const authResult = await checkAuth();
+    if (!authResult.canProceed) {
+      if (authResult.reason === "not_logged_in") {
+        setShowLoginModal(true);
+        return;
+      }
+      if (authResult.reason === "insufficient_credits" && authResult.balance) {
+        setCreditsInfo({
+          required: authResult.required || 2,
+          current: authResult.balance.total,
+          permanent: authResult.balance.permanent,
+          daily: authResult.balance.daily,
+        });
+        setShowCreditsModal(true);
+        return;
+      }
+    }
+
     const userMessage: Message = {
       role: "user",
       content: prompt,
@@ -131,6 +165,26 @@ export function PortraitStudio({ agentKey }: Props) {
         body: fd,
         signal: controller.signal,
       });
+
+      // 处理身份验证错误
+      const handled = await handleAgentError(res, {
+        onLoginRequired: () => {
+          // 移除刚添加的用户消息
+          setMessages((prev) => prev.slice(0, -1));
+          setShowLoginModal(true);
+        },
+        onInsufficientCredits: (info) => {
+          // 移除刚添加的用户消息
+          setMessages((prev) => prev.slice(0, -1));
+          setCreditsInfo(info);
+          setShowCreditsModal(true);
+        },
+      });
+
+      if (handled) {
+        setLoading(false);
+        return;
+      }
 
       const json = (await res.json()) as
         | {
@@ -190,7 +244,8 @@ export function PortraitStudio({ agentKey }: Props) {
   }
 
   return (
-    <div className="flex h-full flex-col p-6">
+    <>
+      <div className="flex h-full flex-col p-6">
       {/* Header */}
       <div className="border-cyber-cyan/20 mb-4 flex items-center justify-between border-b pb-3">
         <div className="flex items-center gap-3">
@@ -534,6 +589,28 @@ export function PortraitStudio({ agentKey }: Props) {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+
+      {/* 登录提示模态框 */}
+      <LoginPromptModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        message="请先登录以使用肖像生成功能"
+      />
+
+      {/* 积分不足模态框 */}
+      {creditsInfo && (
+        <InsufficientCreditsModal
+          isOpen={showCreditsModal}
+          onClose={() => setShowCreditsModal(false)}
+          required={creditsInfo.required}
+          current={creditsInfo.current}
+          permanent={creditsInfo.permanent}
+          daily={creditsInfo.daily}
+        />
+      )}
+    </>
   );
 }
+
+

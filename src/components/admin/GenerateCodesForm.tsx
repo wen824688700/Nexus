@@ -42,7 +42,7 @@ export default function GenerateCodesForm({ onSuccess }: GenerateCodesFormProps)
       const response = await fetch("/api/admin/redemption/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ credits, quantity }),
+        body: JSON.stringify({ amount: credits, count: quantity }),
       });
 
       const data = await response.json();
@@ -51,8 +51,10 @@ export default function GenerateCodesForm({ onSuccess }: GenerateCodesFormProps)
         throw new Error(data.error?.message || "生成失败");
       }
 
-      setGeneratedCodes(data.codes);
-      setSuccess(`成功生成 ${data.codes.length} 个兑换码`);
+      // 提取 code 字段（后端返回的是对象数组）
+      const codeStrings = data.codes.map((item: { code: string }) => item.code);
+      setGeneratedCodes(codeStrings);
+      setSuccess(`成功生成 ${codeStrings.length} 个兑换码`);
       onSuccess();
     } catch (err) {
       setError(err instanceof Error ? err.message : "生成失败");

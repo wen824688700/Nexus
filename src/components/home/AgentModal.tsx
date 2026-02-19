@@ -160,13 +160,13 @@ export function AgentModal({ mounted, visible, agent, onClose }: Props) {
   const [isMinimized, setIsMinimized] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  // 当模态框打开时，重置全屏状态
+  // 当模态框首次打开时，重置全屏状态
   useEffect(() => {
-    if (visible && !isMinimized && isFullscreen) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (visible && !isMinimized) {
       setIsFullscreen(false);
     }
-  }, [visible, isMinimized, isFullscreen]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [size, setSize] = useState({ width: 0, height: 0 });

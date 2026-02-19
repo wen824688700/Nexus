@@ -1,5 +1,6 @@
 "use client";
 
+import { createPortal } from "react-dom";
 import { X, LogIn, UserPlus } from "lucide-react";
 import { useAuth } from "./AuthProvider";
 
@@ -24,6 +25,7 @@ export function LoginPromptModal({
   const { openAuthModal } = useAuth();
 
   if (!isOpen) return null;
+  if (typeof document === "undefined") return null;
 
   const handleLogin = () => {
     onClose();
@@ -35,14 +37,14 @@ export function LoginPromptModal({
     openAuthModal("signup");
   };
 
-  return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center">
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* 背景遮罩 */}
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
 
       {/* 模态框内容 */}
       <div className="relative z-10 mx-4 w-full max-w-md">
-        <div className="relative rounded-lg border border-cyan-500/50 bg-[#0a0a0a]/95 p-6 shadow-[0_0_50px_rgba(6,182,212,0.3)] backdrop-blur-xl">
+        <div className="relative rounded-lg border border-purple-500/50 bg-[#0a0a0a]/95 p-6 shadow-[0_0_50px_rgba(168,85,247,0.3)] backdrop-blur-xl">
           {/* 关闭按钮 */}
           <button
             onClick={onClose}
@@ -54,9 +56,9 @@ export function LoginPromptModal({
           {/* 图标 */}
           <div className="mb-4 flex justify-center">
             <div className="relative">
-              <div className="absolute inset-0 rounded-full bg-cyan-500/20 blur-xl" />
-              <div className="relative flex h-16 w-16 items-center justify-center rounded-full border border-cyan-500/30 bg-cyan-500/10">
-                <LogIn className="h-8 w-8 text-cyan-400" />
+              <div className="absolute inset-0 rounded-full bg-purple-500/20 blur-xl" />
+              <div className="relative flex h-16 w-16 items-center justify-center rounded-full border border-purple-500/30 bg-purple-500/10">
+                <LogIn className="h-8 w-8 text-purple-400" />
               </div>
             </div>
           </div>
@@ -71,7 +73,7 @@ export function LoginPromptModal({
           <div className="space-y-3">
             <button
               onClick={handleLogin}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-3 font-medium text-white shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all hover:from-cyan-600 hover:to-blue-600"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-3 font-medium text-white shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-all hover:from-purple-600 hover:to-pink-600"
             >
               <LogIn className="h-5 w-5" />
               <span>登录</span>
@@ -88,10 +90,11 @@ export function LoginPromptModal({
 
           {/* 提示信息 */}
           <p className="mt-4 text-center text-xs text-white/40">
-            注册即可获得 50 永久积分 + 20 每日积分
+            注册即可获得 30 永久积分 + 20 每日积分
           </p>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

@@ -217,9 +217,9 @@ export default function UserAvatar({
                     onMouseLeave={() => setShowTooltip(false)}
                   >
                     <HelpCircle className="h-4 w-4 cursor-help text-white/40 transition-colors hover:text-white/60" />
-                    {showTooltip && permanentCredits !== null && (
+                    {showTooltip && permanentCredits !== null && creditBalance !== null && (
                       <div className="absolute top-6 left-0 z-50 w-48 rounded-lg border border-white/20 bg-black/95 p-2 text-xs text-white/80 shadow-xl">
-                        包含 {permanentCredits} 永久积分
+                        包含 {permanentCredits} 永久积分 + {creditBalance - permanentCredits} 每日积分
                       </div>
                     )}
                   </div>

@@ -63,12 +63,30 @@ export class CreditManager {
   /**
    * 检查余额是否充足
    *
+   * 管理员拥有无限积分，自动通过检查
+   *
    * @param userId - 用户 ID
    * @param amount - 所需积分数量
    * @returns 是否充足
    */
   async checkSufficientBalance(userId: string, amount: number): Promise<boolean> {
     try {
+      const supabase = await createClient();
+      
+      // 检查用户是否是管理员
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", userId)
+        .single();
+      
+      // 管理员拥有无限积分
+      if (profile && (profile as { role?: string }).role === "admin") {
+        console.log("[Credit Manager] Admin user detected, bypassing credit check");
+        return true;
+      }
+      
+      // 普通用户检查余额
       const balance = await this.getBalance(userId);
       return balance.total >= amount;
     } catch (error) {
@@ -80,6 +98,7 @@ export class CreditManager {
   /**
    * 扣除积分（优先使用每日积分）
    *
+   * 管理员不扣除积分，直接返回成功
    * 使用数据库函数确保原子性和正确的扣除顺序
    *
    * @param userId - 用户 ID
@@ -97,6 +116,20 @@ export class CreditManager {
     const supabase = await createClient();
 
     try {
+      // 检查用户是否是管理员
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", userId)
+        .single();
+      
+      // 管理员不扣除积分
+      if (profile && (profile as { role?: string }).role === "admin") {
+        console.log("[Credit Manager] Admin user detected, skipping credit deduction");
+        return { success: true, transactionId: "admin-bypass" };
+      }
+
+      // 普通用户正常扣除
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await (supabase as any).rpc("deduct_credits", {
         p_user_id: userId,

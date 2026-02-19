@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
+import { createClient } from "@/lib/supabase/server";
 
 // 框架候选接口
 interface FrameworkCandidate {
@@ -269,6 +270,23 @@ ${userInput}
 
 export async function POST(request: NextRequest) {
   try {
+    // ============================================================================
+    // 身份验证（不扣费，只检查登录）
+    // ============================================================================
+    const supabase = await createClient();
+
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "请先登录" }, { status: 401 });
+    }
+
+    // ============================================================================
+    // 继续执行框架匹配
+    // ============================================================================
     const body = await request.json();
     const { input } = body;
 

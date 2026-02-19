@@ -15,6 +15,9 @@ import {
   Search,
   FileEdit,
 } from "lucide-react";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { LoginPromptModal } from "@/components/auth/LoginPromptModal";
+import { InsufficientCreditsModal } from "@/components/auth/InsufficientCreditsModal";
 
 // 优化器步骤类型
 type Step = "input" | "frameworks" | "dialogue" | "result";
@@ -52,6 +55,17 @@ export function PromptOptimizerContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [showCopyToast, setShowCopyToast] = useState(false);
 
+  // 身份验证和积分模态框
+  const { openAuthModal } = useAuth();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showCreditsModal, setShowCreditsModal] = useState(false);
+  const [creditsInfo, setCreditsInfo] = useState<{
+    required: number;
+    current: number;
+    permanent: number;
+    daily: number;
+  } | null>(null);
+
   // 右侧输出区域引用 (用于自动滚动)
   const outputRef = useRef<HTMLDivElement>(null);
 
@@ -66,9 +80,23 @@ export function PromptOptimizerContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ input: userInput }),
       });
+
+      if (response.status === 401) {
+        setShowLoginModal(true);
+        return;
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "分析失败");
+      }
+
       const data = await response.json();
       setFrameworks(data.frameworks);
       setCurrentStep("frameworks");
+    } catch (error) {
+      console.error("分析失败:", error);
+      alert(error instanceof Error ? error.message : "分析失败，请稍后重试");
     } finally {
       setIsLoading(false);
     }
@@ -95,10 +123,38 @@ export function PromptOptimizerContent() {
           clarificationAnswers: answers,
         }),
       });
+
+      if (response.status === 401) {
+        setShowLoginModal(true);
+        return;
+      }
+
+      if (response.status === 402) {
+        const errorData = await response.json();
+        if (errorData.error?.code === "INSUFFICIENT_CREDITS") {
+          setCreditsInfo({
+            required: errorData.error.required || 1,
+            current: errorData.error.current || 0,
+            permanent: errorData.error.permanent || 0,
+            daily: errorData.error.daily || 0,
+          });
+          setShowCreditsModal(true);
+          return;
+        }
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "生成失败");
+      }
+
       const data = await response.json();
       setResult(data.output);
       setEditedResult(data.output);
       setCurrentStep("result");
+    } catch (error) {
+      console.error("生成失败:", error);
+      alert(error instanceof Error ? error.message : "生成失败，请稍后重试");
     } finally {
       setIsLoading(false);
     }
@@ -178,6 +234,25 @@ export function PromptOptimizerContent() {
           handleReset={handleReset}
           handleCopy={handleCopy}
           handleSaveEdit={handleSaveEdit}
+        />
+      )}
+
+      {/* 登录提示模态框 */}
+      <LoginPromptModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        message="请先登录以使用提示词优化功能"
+      />
+
+      {/* 积分不足模态框 */}
+      {creditsInfo && (
+        <InsufficientCreditsModal
+          isOpen={showCreditsModal}
+          onClose={() => setShowCreditsModal(false)}
+          required={creditsInfo.required}
+          current={creditsInfo.current}
+          permanent={creditsInfo.permanent}
+          daily={creditsInfo.daily}
         />
       )}
     </div>

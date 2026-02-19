@@ -72,14 +72,19 @@ export default function CodesListTable({ refreshTrigger }: CodesListTableProps) 
     return "text-green-400";
   };
 
-  const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleString("zh-CN", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const formatDate = (dateString: string | null | undefined): string => {
+    if (!dateString) return "-";
+    try {
+      return new Date(dateString).toLocaleString("zh-CN", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch {
+      return "-";
+    }
   };
 
   const handleExport = async () => {
