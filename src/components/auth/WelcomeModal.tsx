@@ -63,26 +63,25 @@ export function WelcomeModal({ isOpen, onClose }: WelcomeModalProps) {
               </p>
               
               <p>
-                此刻呈现在你眼前的，不仅仅是一个网站，而是一场
+                Apex 谈不上是一个真正意义上的产品，它是我的
                 <span className="mx-1 font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(6,182,212,0.3)]">
-                  &ldquo;人机协作&rdquo;
+                  &ldquo;个人实验室&rdquo;
                 </span>
-                的实验。
               </p>
 
               <div className="my-4 border-l-2 border-white/10 pl-4 italic text-gray-400">
-                &ldquo;代码由 AI 编写，界面由 AI 渲染。而我，是那个创造想法和定义方向的领航员。&rdquo;
+                &ldquo;在这里我分享智能体也分享经验，我希望能以此影响更多的人拥抱AI，&rdquo;
               </div>
 
               <p>
-                这证明了在AI时代，<strong className="text-white">个体也能拥有一支数字化军队</strong>。
+                加入我们，<strong className="text-white">共同成长</strong>。
               </p>
 
               <div className="flex gap-2 items-start rounded-lg border border-yellow-500/10 bg-yellow-500/5 p-3 text-xs text-yellow-100/80">
                 <AlertCircle size={14} className="mt-0.5 shrink-0 text-yellow-500" />
                 <span>
                   当前系统处于 <strong className="text-yellow-400">内测阶段</strong>。
-                  Apex谈不上是一个产品，也可能存在Bug，我只是想做一个有点酷的主页，并且共享我做的智能体给大家使用，仅此而已，感谢你的每一次反馈，它会继续完善。
+                  可能存在Bug，感谢你的每一次反馈，它会继续完善。
                 </span>
               </div>
             </div>
