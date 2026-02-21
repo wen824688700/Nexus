@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useRef, useState } from "react";
 import { NeonBorder } from "@/components/cyber";
 import { Megaphone } from "lucide-react";
 
@@ -16,8 +16,26 @@ const announcements = [
 ];
 
 export const AnnouncementTicker = memo(function AnnouncementTicker() {
-  // 复制一份公告用于无缝循环
-  const doubledAnnouncements = [...announcements, ...announcements];
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    // 鼠标进入时，重置滚动位置到顶部
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  const handleWheel = (e: React.WheelEvent) => {
+    // 阻止事件冒泡，防止页面滚动
+    e.stopPropagation();
+  };
 
   return (
     <NeonBorder color="cyan" className="rounded-xl">
@@ -28,14 +46,23 @@ export const AnnouncementTicker = memo(function AnnouncementTicker() {
         </div>
 
         {/* 跑马灯容器 */}
-        <div className="relative h-[120px] overflow-hidden">
+        <div
+          ref={scrollRef}
+          className="relative h-[120px] overflow-y-auto overflow-x-hidden"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          onWheel={handleWheel}
+        >
           {/* 渐变遮罩 - 上下边缘 */}
           <div className="from-cyber-dark/80 pointer-events-none absolute top-0 right-0 left-0 z-10 h-8 bg-gradient-to-b to-transparent" />
           <div className="from-cyber-dark/80 pointer-events-none absolute right-0 bottom-0 left-0 z-10 h-8 bg-gradient-to-t to-transparent" />
 
-          {/* 滚动内容 */}
-          <div className="animate-marquee-vertical space-y-3">
-            {doubledAnnouncements.map((announcement, index) => (
+          {/* 滚动内容 - 鼠标悬停时停止动画并显示所有内容 */}
+          <div
+            ref={contentRef}
+            className={`space-y-3 ${isHovered ? "" : "animate-marquee-vertical"}`}
+          >
+            {(isHovered ? announcements : [...announcements, ...announcements]).map((announcement, index) => (
               <div
                 key={index}
                 className="hover:text-cyber-cyan cursor-default px-2 text-sm leading-relaxed whitespace-nowrap text-white/70 transition-colors"

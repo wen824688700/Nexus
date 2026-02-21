@@ -70,9 +70,10 @@ export function AIHotTopics() {
         </div>
 
         <div
-          className="relative h-[340px] overflow-hidden"
+          className="relative h-[340px] overflow-y-auto overflow-x-hidden"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
+          onWheel={(e) => e.stopPropagation()}
         >
           {/* Gradient Masks */}
           <div className="from-cyber-dark/80 pointer-events-none absolute top-0 right-0 left-0 z-10 h-12 bg-gradient-to-b to-transparent" />
@@ -107,7 +108,7 @@ export function AIHotTopics() {
               className={`space-y-4 ${isPaused ? "" : "animate-[news-scroll_18s_linear_infinite]"}`}
               style={{ willChange: "transform" }}
             >
-              {[...hotItems, ...hotItems].map((item, index) => (
+              {(isPaused ? hotItems : [...hotItems, ...hotItems]).map((item, index) => (
                 <div
                   key={index}
                   className="group border-cyber-magenta/30 hover:border-cyber-magenta border-l-2 pl-4 transition-all duration-300"

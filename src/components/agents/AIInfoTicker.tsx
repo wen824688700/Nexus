@@ -69,9 +69,10 @@ export function AIInfoTicker() {
         </div>
 
         <div
-          className="relative h-[340px] overflow-hidden"
+          className="relative h-[340px] overflow-y-auto overflow-x-hidden"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
+          onWheel={(e) => e.stopPropagation()}
         >
           {/* Gradient Masks */}
           <div className="from-cyber-dark/80 pointer-events-none absolute top-0 right-0 left-0 z-10 h-12 bg-gradient-to-b to-transparent" />
@@ -106,7 +107,7 @@ export function AIInfoTicker() {
               className={`space-y-4 ${isPaused ? "" : "animate-[news-scroll_25s_linear_infinite]"}`}
               style={{ willChange: "transform" }}
             >
-              {[...newsItems, ...newsItems].map((item, index) => (
+              {(isPaused ? newsItems : [...newsItems, ...newsItems]).map((item, index) => (
                 <div
                   key={index}
                   className="group border-cyber-cyan/30 hover:border-cyber-cyan border-l-2 pl-4 transition-all duration-300"
