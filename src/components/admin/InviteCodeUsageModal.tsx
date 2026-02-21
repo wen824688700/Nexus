@@ -3,6 +3,16 @@
 import { useState, useEffect } from "react";
 import { getInviteCodeUsage } from "@/app/admin/invite-codes/actions";
 
+interface UsageRecord {
+  id: string;
+  used_at: string;
+  ip_address: string | null;
+  profiles?: {
+    username?: string;
+    email?: string;
+  };
+}
+
 interface InviteCodeUsageModalProps {
   inviteCodeId: string;
   onClose: () => void;
@@ -12,21 +22,20 @@ export default function InviteCodeUsageModal({
   inviteCodeId,
   onClose,
 }: InviteCodeUsageModalProps) {
-  const [usage, setUsage] = useState<any[]>([]);
+  const [usage, setUsage] = useState<UsageRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    async function loadUsage() {
+      setLoading(true);
+      const result = await getInviteCodeUsage(inviteCodeId);
+      if (result.success) {
+        setUsage(result.usage || []);
+      }
+      setLoading(false);
+    }
     loadUsage();
   }, [inviteCodeId]);
-
-  async function loadUsage() {
-    setLoading(true);
-    const result = await getInviteCodeUsage(inviteCodeId);
-    if (result.success) {
-      setUsage(result.usage || []);
-    }
-    setLoading(false);
-  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">

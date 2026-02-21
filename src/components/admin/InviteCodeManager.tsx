@@ -9,30 +9,42 @@ import {
 import InviteCodeList from "./InviteCodeList";
 import InviteCodeGenerator from "./InviteCodeGenerator";
 
+interface InviteCode {
+  id: string;
+  code: string;
+  created_at: string;
+  expires_at: string;
+  use_count: number;
+}
+
 export default function InviteCodeManager() {
-  const [codes, setCodes] = useState<any[]>([]);
+  const [codes, setCodes] = useState<InviteCode[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
+    async function loadCodes() {
+      setLoading(true);
+      const result = await getInviteCodes(page, 20);
+      if (result.success) {
+        setCodes(result.codes || []);
+        setTotal(result.total || 0);
+      }
+      setLoading(false);
+    }
     loadCodes();
   }, [page]);
-
-  async function loadCodes() {
-    setLoading(true);
-    const result = await getInviteCodes(page, 20);
-    if (result.success) {
-      setCodes(result.codes || []);
-      setTotal(result.total || 0);
-    }
-    setLoading(false);
-  }
 
   async function handleGenerate(count: number) {
     const result = await generateInviteCodes(count);
     if (result.success) {
-      await loadCodes(); // 重新加载列表
+      // 重新加载列表
+      const refreshResult = await getInviteCodes(page, 20);
+      if (refreshResult.success) {
+        setCodes(refreshResult.codes || []);
+        setTotal(refreshResult.total || 0);
+      }
       return result.codes;
     }
     throw new Error(result.error);
