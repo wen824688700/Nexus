@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { signup, sendVerificationCode } from "@/app/auth/actions";
 import { calculatePasswordStrength } from "@/lib/auth/validation";
 
@@ -28,6 +29,7 @@ export default function SignupForm({ onLogin }: SignupFormProps) {
   const [isPending, startTransition] = useTransition();
   const [isSendingCode, setIsSendingCode] = useState(false);
   const [codeInputRef, setCodeInputRef] = useState<HTMLInputElement | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const passwordStrength = password ? calculatePasswordStrength(password) : null;
 
@@ -281,18 +283,29 @@ export default function SignupForm({ onLogin }: SignupFormProps) {
         <label htmlFor="password" className="mb-1 block text-sm font-medium text-white/80">
           密码
         </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          disabled={isPending}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          onBlur={(e) => handleBlur("password", e.target.value)}
-          className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-          placeholder="至少 8 个字符，包含大小写字母和数字"
-        />
+        <div className="relative">
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            required
+            disabled={isPending}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onBlur={(e) => handleBlur("password", e.target.value)}
+            className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 pr-10 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            placeholder="至少 8 个字符，包含大小写字母和数字"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            disabled={isPending}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 transition-colors hover:text-white/60 disabled:opacity-50"
+            aria-label={showPassword ? "隐藏密码" : "显示密码"}
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
         {fieldErrors.password && (
           <p className="mt-1 text-xs text-red-400">{fieldErrors.password[0]}</p>
         )}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { login, signInWithGoogle } from "@/app/auth/actions";
 
 interface LoginFormProps {
@@ -17,6 +18,7 @@ interface LoginFormProps {
 export default function LoginForm({ onForgotPassword, onSignup }: LoginFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [showPassword, setShowPassword] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault(); // 阻止表单默认提交行为
@@ -76,15 +78,26 @@ export default function LoginForm({ onForgotPassword, onSignup }: LoginFormProps
         <label htmlFor="password" className="mb-1 block text-sm font-medium text-white/80">
           密码
         </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          disabled={isPending}
-          className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-          placeholder="输入密码"
-        />
+        <div className="relative">
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            required
+            disabled={isPending}
+            className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 pr-10 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            placeholder="输入密码"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            disabled={isPending}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 transition-colors hover:text-white/60 disabled:opacity-50"
+            aria-label={showPassword ? "隐藏密码" : "显示密码"}
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
       </div>
 
       {/* 忘记密码 */}

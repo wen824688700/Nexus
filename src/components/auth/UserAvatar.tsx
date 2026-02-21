@@ -10,9 +10,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Users, Coins, Gift, LogOut, HelpCircle, Shield } from "lucide-react";
+import { Users, Coins, Gift, LogOut, HelpCircle, Shield, MessageSquare } from "lucide-react";
 import { signOut } from "@/app/auth/actions";
 import InviteFriendsModal from "./InviteFriendsModal";
+import FeedbackModal from "@/components/feedback/FeedbackModal";
 
 interface UserAvatarProps {
   user: {
@@ -38,6 +39,7 @@ export default function UserAvatar({
   const [permanentCredits, setPermanentCredits] = useState<number | null>(null);
   const [showTooltip, setShowTooltip] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // 获取显示名称（优先用户名，否则用邮箱）
@@ -99,6 +101,9 @@ export default function UserAvatar({
         break;
       case "vault":
         router.push("/vault");
+        break;
+      case "feedback":
+        setIsFeedbackModalOpen(true);
         break;
       case "admin":
         router.push("/admin");
@@ -259,6 +264,14 @@ export default function UserAvatar({
                 <span>兑换码</span>
               </button>
 
+              <button
+                onClick={() => handleMenuItemClick("feedback")}
+                className="flex w-full items-center gap-3 px-4 py-2 text-white/80 transition-colors duration-200 hover:bg-white/5 hover:text-white"
+              >
+                <MessageSquare className="h-4 w-4" />
+                <span>反馈</span>
+              </button>
+
               {/* 管理后台入口（仅管理员可见） */}
               {user.role === "admin" && (
                 <>
@@ -289,6 +302,9 @@ export default function UserAvatar({
 
       {/* 邀请好友模态框 */}
       <InviteFriendsModal isOpen={isInviteModalOpen} onClose={() => setIsInviteModalOpen(false)} />
+
+      {/* 反馈模态框 */}
+      <FeedbackModal isOpen={isFeedbackModalOpen} onClose={() => setIsFeedbackModalOpen(false)} />
     </>
   );
 }

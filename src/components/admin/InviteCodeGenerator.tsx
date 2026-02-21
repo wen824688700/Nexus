@@ -3,11 +3,12 @@
 import { useState } from "react";
 
 interface InviteCodeGeneratorProps {
-  onGenerate: (count: number) => Promise<any>;
+  onGenerate: (count: number, isPermanent: boolean) => Promise<any>;
 }
 
 export default function InviteCodeGenerator({ onGenerate }: InviteCodeGeneratorProps) {
   const [count, setCount] = useState(1);
+  const [isPermanent, setIsPermanent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [generatedCodes, setGeneratedCodes] = useState<string[]>([]);
@@ -23,7 +24,7 @@ export default function InviteCodeGenerator({ onGenerate }: InviteCodeGeneratorP
     setGeneratedCodes([]);
 
     try {
-      const codes = await onGenerate(count);
+      const codes = await onGenerate(count, isPermanent);
       setGeneratedCodes(codes.map((c: any) => c.code));
     } catch (err: any) {
       setError(err.message || "生成失败");
@@ -44,32 +45,46 @@ export default function InviteCodeGenerator({ onGenerate }: InviteCodeGeneratorP
     <div className="rounded border border-white/10 bg-white/5 p-6">
       <h2 className="mb-4 text-xl font-semibold text-white">生成邀请码</h2>
 
-      <div className="mb-4 flex gap-4">
-        <div className="flex-1">
-          <label htmlFor="count" className="mb-2 block text-sm text-white/80">
-            生成数量（1-50）
-          </label>
-          <input
-            id="count"
-            type="number"
-            min={1}
-            max={50}
-            value={count}
-            onChange={(e) => setCount(parseInt(e.target.value) || 1)}
-            disabled={loading}
-            className="w-full rounded border border-white/10 bg-white/5 px-4 py-2 text-white placeholder-white/40 focus:border-white/30 focus:outline-none disabled:opacity-50"
-          />
+      <div className="mb-4 space-y-4">
+        <div className="flex gap-4">
+          <div className="flex-1">
+            <label htmlFor="count" className="mb-2 block text-sm text-white/80">
+              生成数量（1-50）
+            </label>
+            <input
+              id="count"
+              type="number"
+              min={1}
+              max={50}
+              value={count}
+              onChange={(e) => setCount(parseInt(e.target.value) || 1)}
+              disabled={loading}
+              className="w-full rounded border border-white/10 bg-white/5 px-4 py-2 text-white placeholder-white/40 focus:border-white/30 focus:outline-none disabled:opacity-50"
+            />
+          </div>
+
+          <div className="flex items-end">
+            <button
+              onClick={handleGenerate}
+              disabled={loading}
+              className="rounded bg-white px-6 py-2 font-medium text-black transition-colors hover:bg-white/90 disabled:opacity-50"
+            >
+              {loading ? "生成中..." : "生成"}
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-end">
-          <button
-            onClick={handleGenerate}
+        {/* 永久有效选项 */}
+        <label className="flex items-center gap-2 text-sm text-white/80">
+          <input
+            type="checkbox"
+            checked={isPermanent}
+            onChange={(e) => setIsPermanent(e.target.checked)}
             disabled={loading}
-            className="rounded bg-white px-6 py-2 font-medium text-black transition-colors hover:bg-white/90 disabled:opacity-50"
-          >
-            {loading ? "生成中..." : "生成"}
-          </button>
-        </div>
+            className="h-4 w-4 rounded border-white/20 bg-white/5 text-white focus:ring-2 focus:ring-white/20 disabled:opacity-50"
+          />
+          <span>永久有效（无过期时间，无使用次数限制）</span>
+        </label>
       </div>
 
       {error && (

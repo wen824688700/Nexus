@@ -192,6 +192,81 @@ export interface Database {
           registered_at?: string;
         };
       };
+      invite_codes: {
+        Row: {
+          id: string;
+          code: string;
+          created_by: string;
+          created_at: string;
+          expires_at: string | null;
+          is_active: boolean;
+        };
+        Insert: {
+          id?: string;
+          code: string;
+          created_by: string;
+          created_at?: string;
+          expires_at?: string | null;
+          is_active?: boolean;
+        };
+        Update: {
+          id?: string;
+          code?: string;
+          created_by?: string;
+          created_at?: string;
+          expires_at?: string | null;
+          is_active?: boolean;
+        };
+      };
+      invite_code_uses: {
+        Row: {
+          id: string;
+          invite_code_id: string;
+          used_by: string;
+          used_at: string;
+        };
+        Insert: {
+          id?: string;
+          invite_code_id: string;
+          used_by: string;
+          used_at?: string;
+        };
+        Update: {
+          id?: string;
+          invite_code_id?: string;
+          used_by?: string;
+          used_at?: string;
+        };
+      };
+      feedbacks: {
+        Row: {
+          id: string;
+          user_id: string;
+          content: string;
+          screenshot_url: string | null;
+          created_at: string;
+          status: string;
+          admin_notes: string | null;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          content: string;
+          screenshot_url?: string | null;
+          created_at?: string;
+          status?: string;
+          admin_notes?: string | null;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          content?: string;
+          screenshot_url?: string | null;
+          created_at?: string;
+          status?: string;
+          admin_notes?: string | null;
+        };
+      };
     };
     Functions: {
       deduct_credits: {

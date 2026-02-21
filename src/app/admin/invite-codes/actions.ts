@@ -33,7 +33,7 @@ async function verifyAdmin() {
 /**
  * 生成邀请码
  */
-export async function generateInviteCodes(count: number = 1) {
+export async function generateInviteCodes(count: number = 1, isPermanent: boolean = false) {
   const { supabase, userId } = await verifyAdmin();
 
   if (count < 1 || count > 50) {
@@ -49,9 +49,12 @@ export async function generateInviteCodes(count: number = 1) {
     // 生成唯一邀请码
     const codes = generateUniqueCodes(count, existingCodes);
 
-    // 计算过期时间（7天后）
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7);
+    // 计算过期时间（永久邀请码为 null，否则 7 天后）
+    const expiresAt = isPermanent ? null : (() => {
+      const date = new Date();
+      date.setDate(date.getDate() + 7);
+      return date.toISOString();
+    })();
 
     // 批量插入
     const { data, error } = await (supabase.from("invite_codes") as any)
@@ -59,7 +62,7 @@ export async function generateInviteCodes(count: number = 1) {
         codes.map((code) => ({
           code,
           created_by: userId,
-          expires_at: expiresAt.toISOString(),
+          expires_at: expiresAt,
           is_active: true,
         }))
       )
@@ -159,4 +162,43 @@ export async function exportInviteCodes() {
   ];
 
   return { success: true, content: lines.join("\n") };
+}
+
+/**
+ * 失效邀请码（设置 is_active 为 false）
+ */
+export async function deactivateInviteCode(inviteCodeId: string) {
+  const { supabase } = await verifyAdmin();
+
+  const { error } = await (supabase
+    .from("invite_codes") as any)
+    .update({ is_active: false })
+    .eq("id", inviteCodeId);
+
+  if (error) {
+    console.error("失效邀请码失败:", error);
+    return { error: "失效邀请码失败" };
+  }
+
+  return { success: true };
+}
+
+/**
+ * 删除邀请码
+ */
+export async function deleteInviteCode(inviteCodeId: string) {
+  const { supabase } = await verifyAdmin();
+
+  // 删除邀请码（使用记录会因为外键约束被级联删除）
+  const { error } = await supabase
+    .from("invite_codes")
+    .delete()
+    .eq("id", inviteCodeId);
+
+  if (error) {
+    console.error("删除邀请码失败:", error);
+    return { error: "删除邀请码失败" };
+  }
+
+  return { success: true };
 }

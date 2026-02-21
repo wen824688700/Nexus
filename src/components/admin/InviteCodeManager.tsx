@@ -24,20 +24,21 @@ export default function InviteCodeManager() {
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    async function loadCodes() {
-      setLoading(true);
-      const result = await getInviteCodes(page, 20);
-      if (result.success) {
-        setCodes(result.codes || []);
-        setTotal(result.total || 0);
-      }
-      setLoading(false);
-    }
     loadCodes();
   }, [page]);
 
-  async function handleGenerate(count: number) {
-    const result = await generateInviteCodes(count);
+  async function loadCodes() {
+    setLoading(true);
+    const result = await getInviteCodes(page, 20);
+    if (result.success) {
+      setCodes(result.codes || []);
+      setTotal(result.total || 0);
+    }
+    setLoading(false);
+  }
+
+  async function handleGenerate(count: number, isPermanent: boolean) {
+    const result = await generateInviteCodes(count, isPermanent);
     if (result.success) {
       // 重新加载列表
       const refreshResult = await getInviteCodes(page, 20);
@@ -84,6 +85,7 @@ export default function InviteCodeManager() {
         page={page}
         total={total}
         onPageChange={setPage}
+        onRefresh={loadCodes}
       />
     </div>
   );

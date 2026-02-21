@@ -49,15 +49,22 @@ export function validateInviteCodeFormat(code: string): {
 
 /**
  * 检查邀请码是否过期
+ * @param expiresAt - 过期时间，null 表示永久有效
  */
-export function isInviteCodeExpired(expiresAt: string): boolean {
+export function isInviteCodeExpired(expiresAt: string | null): boolean {
+  // 永久邀请码（expires_at 为 null）永不过期
+  if (!expiresAt) return false
   return new Date(expiresAt) < new Date()
 }
 
 /**
  * 计算剩余有效时间
+ * @param expiresAt - 过期时间，null 表示永久有效
  */
-export function getRemainingTime(expiresAt: string): string {
+export function getRemainingTime(expiresAt: string | null): string {
+  // 永久邀请码
+  if (!expiresAt) return '∞'
+  
   const now = new Date()
   const expires = new Date(expiresAt)
   const diff = expires.getTime() - now.getTime()
