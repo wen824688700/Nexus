@@ -10,6 +10,7 @@ interface NavbarAuthProps {
     email: string;
     username?: string;
     avatar_url?: string;
+    role?: string;
   } | null;
 }
 

@@ -10,7 +10,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Users, Coins, Gift, LogOut, HelpCircle } from "lucide-react";
+import { Users, Coins, Gift, LogOut, HelpCircle, Shield } from "lucide-react";
 import { signOut } from "@/app/auth/actions";
 import InviteFriendsModal from "./InviteFriendsModal";
 
@@ -19,6 +19,7 @@ interface UserAvatarProps {
     username?: string;
     email: string;
     avatar_url?: string;
+    role?: string;
   };
   size?: "sm" | "md" | "lg";
   className?: string;
@@ -98,6 +99,9 @@ export default function UserAvatar({
         break;
       case "vault":
         router.push("/vault");
+        break;
+      case "admin":
+        router.push("/admin");
         break;
       case "signout":
         handleSignOut();
@@ -254,6 +258,20 @@ export default function UserAvatar({
                 <Gift className="h-4 w-4" />
                 <span>兑换码</span>
               </button>
+
+              {/* 管理后台入口（仅管理员可见） */}
+              {user.role === "admin" && (
+                <>
+                  <div className="my-2 border-t border-white/10"></div>
+                  <button
+                    onClick={() => handleMenuItemClick("admin")}
+                    className="flex w-full items-center gap-3 px-4 py-2 text-purple-400 transition-colors duration-200 hover:bg-purple-500/10 hover:text-purple-300"
+                  >
+                    <Shield className="h-4 w-4" />
+                    <span>管理后台</span>
+                  </button>
+                </>
+              )}
 
               <div className="my-2 border-t border-white/10"></div>
 

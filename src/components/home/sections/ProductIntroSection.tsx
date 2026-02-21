@@ -86,26 +86,22 @@ export function ProductIntroSection() {
       <div className="relative z-10 mx-auto max-w-7xl">
         <div className="intro-header mb-16 text-center">
           <h2 className="font-orbitron mb-6 text-3xl font-bold leading-tight text-white md:text-5xl">
-            这不是一个网站，也不是一个传统产品，
+            欢迎来到我的数字基站，
             <br />
-            它{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
-              无法被简单定义
+            一座持续进化的{" "}
+            <span className="bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+              个人 AI 实验室
             </span>
             。
           </h2>
 
           <p className="mx-auto max-w-3xl text-lg leading-relaxed text-white/60">
-            在信息爆炸与算力垄断的时代，个体如何突围？
+            在这里，我将自己打造的 AI 智能体、沉淀的实战 SOP，以及探索"AI"的经验与你分享。
             <br />
             APEX 将{" "}
             <span className="font-bold text-white">情报 (Intel)</span>、
             <span className="font-bold text-white">工具 (Tools)</span> 与{" "}
             <span className="font-bold text-white">知识 (Knowledge)</span> 封装为一体。
-            <br />
-            <span className="border-b border-cyan-500/30 pb-0.5 text-cyan-100/90">
-              将繁琐的劳作外包给AI，让你的想象力直接兑现为现实。
-            </span>
           </p>
         </div>
 

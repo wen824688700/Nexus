@@ -62,6 +62,12 @@ const envSchema = z.object({
 
   // Optional guardrails
   RATE_LIMIT_PER_MINUTE: z.coerce.number().int().positive().optional(),
+
+  // Developer Mode (本地开发免登录)
+  DEV_MODE_SKIP_AUTH: z
+    .string()
+    .optional()
+    .transform((val) => val === "true"),
 });
 
 export const env = envSchema.parse(process.env);

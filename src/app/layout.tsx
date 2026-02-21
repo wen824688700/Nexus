@@ -52,14 +52,15 @@ export default async function RootLayout({
     email: string;
     username?: string;
     avatar_url?: string;
+    role?: string;
   } | null = null;
 
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("username, avatar_url")
+      .select("username, avatar_url, role")
       .eq("id", user.id)
-      .single<{ username: string; avatar_url: string | null }>();
+      .single<{ username: string; avatar_url: string | null; role: string }>();
 
     if (profile) {
       userProfile = {
@@ -67,6 +68,7 @@ export default async function RootLayout({
         email: user.email!,
         username: profile.username || undefined,
         avatar_url: profile.avatar_url || undefined,
+        role: profile.role || undefined,
       };
     }
   }

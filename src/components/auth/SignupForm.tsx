@@ -101,9 +101,7 @@ export default function SignupForm({ onLogin }: SignupFormProps) {
     formData.append("email", email);
     formData.append("password", password);
     formData.append("code", code);
-    if (inviteCode) {
-      formData.append("invite_code", inviteCode);
-    }
+    formData.append("inviteCode", inviteCode);
 
     startTransition(async () => {
       const result = await signup(formData);
@@ -174,6 +172,28 @@ export default function SignupForm({ onLogin }: SignupFormProps) {
           {error}
         </div>
       )}
+
+      {/* 邀请码（必填，放在最前面） */}
+      <div>
+        <label htmlFor="inviteCode" className="mb-1 block text-sm font-medium text-white/80">
+          邀请码 <span className="text-red-400">*</span>
+        </label>
+        <input
+          id="inviteCode"
+          name="inviteCode"
+          type="text"
+          required
+          disabled={isPending}
+          value={inviteCode}
+          onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
+          maxLength={8}
+          className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 uppercase"
+          placeholder="输入8位邀请码"
+        />
+        {fieldErrors.inviteCode && (
+          <p className="mt-1 text-xs text-red-400">{fieldErrors.inviteCode[0]}</p>
+        )}
+      </div>
 
       {/* 用户名 */}
       <div>
@@ -300,23 +320,7 @@ export default function SignupForm({ onLogin }: SignupFormProps) {
       </div>
 
       {/* 邀请码（可选） */}
-      <div>
-        <label htmlFor="invite_code" className="mb-1 block text-sm font-medium text-white/80">
-          邀请码 <span className="text-white/40">(可选)</span>
-        </label>
-        <input
-          id="invite_code"
-          name="invite_code"
-          type="text"
-          disabled={isPending}
-          value={inviteCode}
-          onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
-          maxLength={6}
-          className="w-full rounded border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/30 focus:bg-white/10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-          placeholder="输入邀请码可获得额外奖励"
-        />
-        <p className="mt-1 text-xs text-white/60">使用邀请码注册，您和邀请人各获得 30 永久积分</p>
-      </div>
+      {/* 已移至表单顶部作为必填项 */}
 
       {/* 注册按钮 */}
       <button

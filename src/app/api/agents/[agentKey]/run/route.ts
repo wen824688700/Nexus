@@ -1837,6 +1837,29 @@ export async function POST(req: Request, ctx: { params: Promise<{ agentKey: stri
     // 积分检查和扣费
     // ============================================================================
 
+    // 开发者模式：跳过身份验证和积分检查
+    if (env.DEV_MODE_SKIP_AUTH) {
+      console.log(`[DEV MODE] Skipping authentication and credit check for ${agentKey}`);
+
+      // 直接调用智能体
+      if (agentKey === "data_analyst" || agentKey === "o2") {
+        return await handleDataAnalyst(req);
+      }
+      if (agentKey === "image_editor") {
+        return await handleImageEditor(req);
+      }
+      if (agentKey === "audio_analyzer") {
+        return await handleAudioAnalyzer(req);
+      }
+      if (agentKey === "seedance-storyboard") {
+        return await handleSeedanceStoryboard(req);
+      }
+      if (agentKey !== "portrait") {
+        return jsonError(404, `Unknown agentKey: ${agentKey}`);
+      }
+      // 继续处理 portrait agent...
+    }
+
     const supabase = await createClient();
     const creditManager = new CreditManager();
 

@@ -323,7 +323,7 @@ async function checkIPRegistrationLimit(ipAddress: string): Promise<boolean> {
 /**
  * 注册 Server Action（使用验证码验证）
  *
- * 创建新用户账户，需要验证邮箱验证码
+ * 创建新用户账户，需要验证邮箱验证码和邀请码
  * 支持邀请码、IP 限制、注册奖励
  * 验证需求：3.1, 3.2, 3.3, 3.6, 3.7, 5.1, 5.3, 6.1, 6.2
  *
@@ -337,6 +337,7 @@ export async function signup(formData: FormData) {
     username: formData.get("username"),
     email: formData.get("email"),
     password: formData.get("password"),
+    inviteCode: formData.get("inviteCode"),
   });
 
   if (!validatedFields.success) {
@@ -346,9 +347,8 @@ export async function signup(formData: FormData) {
     };
   }
 
-  const { username, email, password } = validatedFields.data;
+  const { username, email, password, inviteCode } = validatedFields.data;
   const code = formData.get("code") as string;
-  const inviteCode = formData.get("inviteCode") as string | null;
 
   // 验证验证码
   if (!code || code.length !== 6) {
@@ -357,6 +357,67 @@ export async function signup(formData: FormData) {
 
   // 获取客户端 IP 地址
   const ipAddress = await getClientIP();
+
+  // 验证邀请码
+  const { validateInviteCodeFormat, isInviteCodeExpired } = await import("@/lib/invite-codes/validation");
+  const { checkRateLimit, recordValidationFailure, isIPBanned } = await import("@/lib/rate-limit");
+  
+  // 0. 检查 IP 是否被封禁
+  const banStatus = isIPBanned(ipAddress);
+  if (banStatus.banned) {
+    const bannedUntil = banStatus.bannedUntil ? new Date(banStatus.bannedUntil) : new Date();
+    const remainingMinutes = Math.ceil((bannedUntil.getTime() - Date.now()) / (60 * 1000));
+    return { 
+      error: `您的 IP 已被临时封禁，请在 ${remainingMinutes} 分钟后重试` 
+    };
+  }
+
+  // 1. 速率限制检查
+  const rateLimit = checkRateLimit(ipAddress);
+  if (!rateLimit.allowed) {
+    if (rateLimit.banned) {
+      const bannedUntil = new Date(rateLimit.resetTime);
+      const remainingMinutes = Math.ceil((bannedUntil.getTime() - Date.now()) / (60 * 1000));
+      return { 
+        error: `请求过于频繁，您的 IP 已被临时封禁，请在 ${remainingMinutes} 分钟后重试` 
+      };
+    }
+    const resetTime = new Date(rateLimit.resetTime);
+    const remainingMinutes = Math.ceil((resetTime.getTime() - Date.now()) / (60 * 1000));
+    return { 
+      error: `请求过于频繁，请在 ${remainingMinutes} 分钟后重试` 
+    };
+  }
+
+  // 2. 验证邀请码格式
+  const formatValidation = validateInviteCodeFormat(inviteCode);
+  if (!formatValidation.valid) {
+    recordValidationFailure(ipAddress, inviteCode, "格式错误");
+    return { error: formatValidation.error };
+  }
+
+  // 3. 查询邀请码
+  const { data: inviteCodeData, error: codeError } = await supabase
+    .from("invite_codes")
+    .select("id, code, expires_at, is_active")
+    .eq("code", formatValidation.normalized!)
+    .single();
+
+  if (codeError || !inviteCodeData) {
+    recordValidationFailure(ipAddress, inviteCode, "邀请码不存在");
+    return { error: "邀请码不存在，请检查输入是否正确" };
+  }
+
+  // 4. 检查邀请码状态
+  if (!(inviteCodeData as any).is_active) {
+    recordValidationFailure(ipAddress, inviteCode, "邀请码已失效");
+    return { error: "邀请码已失效" };
+  }
+
+  if (isInviteCodeExpired((inviteCodeData as any).expires_at)) {
+    recordValidationFailure(ipAddress, inviteCode, "邀请码已过期");
+    return { error: "邀请码已过期（有效期7天），请联系管理员获取新的邀请码" };
+  }
 
   // 检查 IP 注册限制
   const canRegister = await checkIPRegistrationLimit(ipAddress);
@@ -454,6 +515,7 @@ export async function signup(formData: FormData) {
       username,
       email,
       invite_code: userInviteCode,
+      invited_by_code: (inviteCodeData as any).code, // 记录使用的邀请码
       permanent_credits: 0, // 初始积分为 0，后续通过奖励添加
       daily_credits: 0,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -471,6 +533,14 @@ export async function signup(formData: FormData) {
       await adminClient.auth.admin.deleteUser(data.user.id);
       return { error: "创建用户资料失败" };
     }
+
+    // 记录邀请码使用
+    await adminClient.from("invite_code_uses").insert({
+      invite_code_id: (inviteCodeData as any).id,
+      used_by: data.user.id,
+      ip_address: ipAddress,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
 
     // 记录 IP 注册（使用 Admin client）
     await adminClient.from("ip_registrations").insert({
@@ -509,11 +579,12 @@ export async function signup(formData: FormData) {
       console.log("[Signup] Initial daily credits granted successfully");
     }
 
-    // 处理邀请奖励
-    if (inviteCode && inviteCode.trim()) {
+    // 处理旧的邀请奖励系统（如果用户提供了旧的邀请码）
+    const oldInviteCode = formData.get("invite_code") as string | null;
+    if (oldInviteCode && oldInviteCode.trim()) {
       const invitationResult = await processInvitationReward(
         data.user.id,
-        inviteCode.trim().toUpperCase(),
+        oldInviteCode.trim().toUpperCase(),
       );
 
       if (!invitationResult.success) {

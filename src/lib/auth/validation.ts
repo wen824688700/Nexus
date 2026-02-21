@@ -48,6 +48,12 @@ export const signupSchema = z.object({
   username: usernameSchema,
   email: emailSchema,
   password: passwordSchema,
+  inviteCode: z
+    .string()
+    .min(1, "请输入邀请码")
+    .length(8, "邀请码必须是8位字符")
+    .regex(/^[A-Z0-9]+$/, "邀请码只能包含大写字母和数字")
+    .transform(str => str.toUpperCase().trim()),
 });
 
 /**
