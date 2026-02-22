@@ -7,6 +7,7 @@ export const AGENT_KEYS = {
   PROMPT_OPTIMIZER: "prompt-optimizer",
   AUTOMATION: "automation",
   COACHING: "coaching",
+  LYRICS_GENERATOR: "lyrics-generator",
 } as const;
 
 export const AGENT_NAMES = {
@@ -16,6 +17,7 @@ export const AGENT_NAMES = {
   [AGENT_KEYS.PROMPT_OPTIMIZER]: "Prompt 优化器",
   [AGENT_KEYS.AUTOMATION]: "工作流自动化",
   [AGENT_KEYS.COACHING]: "面试复盘",
+  [AGENT_KEYS.LYRICS_GENERATOR]: "音乐歌词生成器",
 } as const;
 
 export type AgentKey = (typeof AGENT_KEYS)[keyof typeof AGENT_KEYS];

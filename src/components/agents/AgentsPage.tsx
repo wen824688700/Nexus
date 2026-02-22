@@ -96,12 +96,21 @@ const agentCategories = [
     agents: [
       {
         id: "portrait",
-        name: "头像生成",
+        name: "专业肖像生成器",
         description: "生成专业级个人头像",
         icon: "User",
         status: "online" as const,
         category: "design" as const,
         kind: "portrait" as const,
+      },
+      {
+        id: "lyrics-generator",
+        name: "音乐歌词生成器",
+        description: "AI 作词助手，支持多风格歌词创作",
+        icon: "Music",
+        status: "online" as const,
+        category: "content" as const,
+        kind: "chat" as const,
       },
       {
         id: "springFestivalMeme",

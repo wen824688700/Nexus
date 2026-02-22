@@ -1556,6 +1556,215 @@ async function handleAudioAnalyzer(req: Request) {
   }
 }
 
+// Lyrics Generator Handler (音乐歌词生成器)
+async function handleLyricsGenerator(req: Request) {
+  const apiUrl = env.COZE_LYRICS_GENERATOR_API_URL;
+  const projectId = env.COZE_LYRICS_GENERATOR_PROJECT_ID;
+  const token = env.COZE_LYRICS_GENERATOR_TOKEN;
+
+  if (!apiUrl || !projectId || !token) {
+    return jsonError(500, "音乐歌词生成器配置缺失");
+  }
+
+  console.log(`[Lyrics Generator] API URL: ${apiUrl}, Project ID: ${projectId}`);
+
+  // 处理 FormData
+  let fd: FormData;
+  try {
+    fd = await req.formData();
+  } catch (err) {
+    console.error("[Lyrics Generator] Failed to parse FormData:", err);
+    return jsonError(400, "请求格式错误：需要 FormData 格式");
+  }
+
+  const query = asNonEmptyString(fd.get("query"));
+  const sessionId = asNonEmptyString(fd.get("sessionId")) || `user_${Date.now()}`;
+
+  if (!query) {
+    return jsonError(400, "请输入歌词创作需求");
+  }
+
+  console.log(`[Lyrics Generator] Query: ${query}`);
+  console.log(`[Lyrics Generator] Session ID: ${sessionId}`);
+
+  try {
+    // 构建请求体（OpenAI 兼容格式）
+    const requestBody = {
+      model: projectId, // 使用 Project ID
+      messages: [{ role: "user", content: query }],
+      stream: true,
+      session_id: sessionId,
+    };
+
+    console.log(`[Lyrics Generator] Request body:`, JSON.stringify(requestBody, null, 2));
+
+    // 调用 Coze API
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    console.log(`[Lyrics Generator] Response status: ${response.status} ${response.statusText}`);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[Lyrics Generator] API error:`, errorText);
+      return jsonError(response.status, `API 请求失败: ${errorText}`);
+    }
+
+    // 创建 SSE 流
+    const stream = new ReadableStream({
+      async start(controller) {
+        const encoder = new TextEncoder();
+
+        try {
+          const reader = response.body?.getReader();
+          if (!reader) {
+            throw new Error("无法读取响应流");
+          }
+
+          const decoder = new TextDecoder();
+          let buffer = "";
+          let fullContent = "";
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+              console.log(
+                `[Lyrics Generator] Stream ended naturally, content length: ${fullContent.length}`,
+              );
+              break;
+            }
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split(/\r?\n/);
+            buffer = lines.pop() || "";
+
+            for (const line of lines) {
+              if (!line.trim() || !line.startsWith("data: ")) continue;
+              const data = line.slice(6).trim();
+              if (data === "[DONE]") continue;
+
+              try {
+                const json = JSON.parse(data);
+
+                // 检测错误（支持多种错误格式）
+                if (json.error) {
+                  const errorMessage = 
+                    typeof json.error === "string" 
+                      ? json.error 
+                      : json.error.message || json.error.msg || "生成失败";
+                  
+                  console.error(`[Lyrics Generator] API error:`, json.error);
+                  controller.enqueue(
+                    encoder.encode(
+                      `data: ${JSON.stringify({ error: errorMessage })}\n\n`,
+                    ),
+                  );
+                  controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+                  reader.cancel();
+                  return;
+                }
+
+                // 检测 Coze 特定的错误格式
+                if (json.type === "error" || json.code) {
+                  const errorMessage = json.message || json.msg || "智能体执行失败";
+                  console.error(`[Lyrics Generator] Coze error:`, json);
+                  controller.enqueue(
+                    encoder.encode(
+                      `data: ${JSON.stringify({ 
+                        error: `${errorMessage}${json.code ? ` (错误码: ${json.code})` : ""}` 
+                      })}\n\n`,
+                    ),
+                  );
+                  controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+                  reader.cancel();
+                  return;
+                }
+
+                // 处理内容（Coze 格式）
+                if (json.type === "answer" && json.content) {
+                  const content =
+                    typeof json.content === "string" ? json.content : json.content.answer || "";
+                  if (content) {
+                    fullContent += content;
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content })}\n\n`));
+                  }
+                }
+
+                // 处理内容（OpenAI 格式）
+                const delta = json.choices?.[0]?.delta;
+                if (delta?.content && delta?.role !== "tool") {
+                  fullContent += delta.content;
+                  controller.enqueue(
+                    encoder.encode(`data: ${JSON.stringify({ content: delta.content })}\n\n`),
+                  );
+                }
+
+                // 检测结束（只检测 Coze 明确的终止事件）
+                const isTerminal =
+                  json.type === "done" ||
+                  json.type === "message_end" ||
+                  json.event === "done" ||
+                  json.finish === true;
+
+                if (isTerminal && delta?.role !== "tool") {
+                  console.log(
+                    `[Lyrics Generator] ✓ Stream completed, total content: ${fullContent.length} chars`,
+                  );
+                  controller.enqueue(
+                    encoder.encode(
+                      `data: ${JSON.stringify({ content: "", done: true, fullAnswer: fullContent })}\n\n`,
+                    ),
+                  );
+                  controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+                  reader.cancel();
+                  return;
+                }
+              } catch {
+                // 跳过解析错误
+                console.warn(`[Lyrics Generator] Failed to parse SSE event`);
+              }
+            }
+          }
+
+          // 流自然结束
+          if (fullContent) {
+            console.log(`[Lyrics Generator] ✓ Stream ended, sending final response`);
+            controller.enqueue(
+              encoder.encode(
+                `data: ${JSON.stringify({ content: "", done: true, fullAnswer: fullContent })}\n\n`,
+              ),
+            );
+            controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+          }
+        } catch (error) {
+          console.error("[Lyrics Generator Stream Error]", error);
+          controller.error(error);
+        } finally {
+          controller.close();
+        }
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      },
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "未知错误";
+    console.error(`[Lyrics Generator] Error:`, message);
+    return jsonError(500, message);
+  }
+}
+
 // Seedance 2.0 Storyboard Assistant Handler
 async function handleSeedanceStoryboard(req: Request) {
   const apiUrl = env.COZE_SEEDANCE_API_URL;
@@ -1851,6 +2060,9 @@ export async function POST(req: Request, ctx: { params: Promise<{ agentKey: stri
       if (agentKey === "audio_analyzer") {
         return await handleAudioAnalyzer(req);
       }
+      if (agentKey === "lyrics-generator") {
+        return await handleLyricsGenerator(req);
+      }
       if (agentKey === "seedance-storyboard") {
         return await handleSeedanceStoryboard(req);
       }
@@ -1960,6 +2172,11 @@ export async function POST(req: Request, ctx: { params: Promise<{ agentKey: stri
       // Handle audio analyzer agent
       if (agentKey === "audio_analyzer") {
         return await handleAudioAnalyzer(req);
+      }
+
+      // Handle lyrics generator
+      if (agentKey === "lyrics-generator") {
+        return await handleLyricsGenerator(req);
       }
 
       // Handle seedance storyboard assistant

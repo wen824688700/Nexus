@@ -42,6 +42,11 @@ const envSchema = z.object({
   COZE_SEEDANCE_PROJECT_ID: z.string().min(1).optional(),
   COZE_SEEDANCE_TOKEN: z.string().min(1).optional(),
 
+  // Lyrics Generator (音乐歌词生成器)
+  COZE_LYRICS_GENERATOR_API_URL: z.string().url().optional(),
+  COZE_LYRICS_GENERATOR_PROJECT_ID: z.string().min(1).optional(),
+  COZE_LYRICS_GENERATOR_TOKEN: z.string().min(1).optional(),
+
   // OpenRouter (used by your Coze portrait agent toolchain)
   OPENROUTER_API_KEY: z.string().min(1).optional(),
 

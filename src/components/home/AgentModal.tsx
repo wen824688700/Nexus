@@ -145,6 +145,26 @@ const SeedanceStoryboard = dynamic(
   },
 );
 
+const LyricsGenerator = dynamic(
+  () => import("./LyricsGenerator").then((mod) => ({ default: mod.LyricsGenerator })),
+  {
+    loading: () => (
+      <div className="flex h-full items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative flex h-12 w-12 items-center justify-center">
+            <div className="absolute h-12 w-12 animate-ping rounded-full bg-purple-500 opacity-75" />
+            <div className="relative h-8 w-8 rounded-full bg-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.8)]" />
+          </div>
+          <span className="animate-pulse font-mono text-sm text-purple-400">
+            [ LOADING LYRICS GENERATOR ]
+          </span>
+        </div>
+      </div>
+    ),
+    ssr: false,
+  },
+);
+
 type Props = {
   mounted: boolean;
   visible: boolean;
@@ -662,6 +682,8 @@ export function AgentModal({ mounted, visible, agent, onClose }: Props) {
               <ImageEditor agentKey={agent.botId} />
             ) : agent?.kind === "audioAnalyzer" ? (
               <AudioAnalyzer agentKey={agent.botId} />
+            ) : agent?.kind === "chat" ? (
+              <LyricsGenerator agentKey={agent.botId} />
             ) : agent?.kind === "springFestivalMeme" ? (
               <SpringFestivalMeme />
             ) : agent?.kind === "seedanceStoryboard" ? (

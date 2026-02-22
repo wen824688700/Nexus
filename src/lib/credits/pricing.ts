@@ -77,6 +77,12 @@ export const AGENT_PRICING: Record<string, AgentPricingConfig> = {
     agentKey: "portrait-studio",
     basePrice: 2,
   },
+
+  // 音乐歌词生成器（2 积分）
+  "lyrics-generator": {
+    agentKey: "lyrics-generator",
+    basePrice: 2,
+  },
 };
 
 /**
