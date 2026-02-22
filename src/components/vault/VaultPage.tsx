@@ -275,7 +275,7 @@ export function VaultPage() {
         </div>
       )}
 
-      {/* 微信公众号获取指引弹窗 */}
+      {/* 微信联系管理员弹窗 */}
       {showQR && (
         <div className="animate-in fade-in absolute inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-xl duration-500">
           <div className="relative flex w-80 flex-col items-center rounded-[2.5rem] border border-cyan-500/20 bg-[#080808] p-10 shadow-[0_0_80px_rgba(0,242,255,0.05)]">
@@ -287,15 +287,15 @@ export function VaultPage() {
             </button>
 
             <div className="mb-8 text-xs font-bold tracking-[0.2em] text-cyan-400/90">
-              关注公众号获取兑换码
+              请联系管理员获取
             </div>
 
-            {/* 二维码容器 */}
+            {/* 微信二维码容器 */}
             <div className="group relative h-40 w-40 overflow-hidden rounded-3xl bg-white/95 p-3 shadow-[0_0_30px_rgba(34,211,238,0.2)]">
-              {/* 真实二维码图片 */}
+              {/* 微信二维码图片 */}
               <img
-                src="/images/wechat-qrcode.jpg"
-                alt="微信公众号二维码"
+                src="/images/wechat.jpg"
+                alt="管理员微信二维码"
                 className="h-full w-full object-contain"
               />
               {/* 全息扫描动画 */}
@@ -303,12 +303,8 @@ export function VaultPage() {
             </div>
 
             <div className="mt-10 space-y-2 text-center text-xs text-cyan-700">
-              <p>1. 扫描上方二维码关注频道</p>
-              <p>
-                2. 回复关键词{" "}
-                <span className="text-cyan-400 underline decoration-cyan-400/40">兑换码</span>
-              </p>
-              <p>3. 系统将自动发送积分兑换码</p>
+              <p>扫描上方二维码添加管理员微信</p>
+              <p className="text-cyan-400">获取兑换码</p>
             </div>
           </div>
         </div>

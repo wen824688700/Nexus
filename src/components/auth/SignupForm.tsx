@@ -30,6 +30,7 @@ export default function SignupForm({ onLogin }: SignupFormProps) {
   const [isSendingCode, setIsSendingCode] = useState(false);
   const [codeInputRef, setCodeInputRef] = useState<HTMLInputElement | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [showInviteQR, setShowInviteQR] = useState(false);
 
   const passwordStrength = password ? calculatePasswordStrength(password) : null;
 
@@ -160,7 +161,45 @@ export default function SignupForm({ onLogin }: SignupFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <>
+      {/* 邀请码获取二维码弹窗 */}
+      {showInviteQR && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl">
+          <div className="relative flex w-80 flex-col items-center rounded-2xl border border-white/10 bg-[#0a0a0a] p-8 shadow-2xl">
+            <button
+              onClick={() => setShowInviteQR(false)}
+              className="absolute top-4 right-4 text-white/60 transition-colors hover:text-white"
+            >
+              ✕
+            </button>
+
+            <div className="mb-6 text-center">
+              <h3 className="text-lg font-bold text-white">获取邀请码</h3>
+              <p className="mt-2 text-sm text-white/60">扫描二维码关注公众号</p>
+            </div>
+
+            {/* 二维码容器 */}
+            <div className="relative mb-6 overflow-hidden rounded-2xl bg-white p-4">
+              <img
+                src="/images/wechat-qrcode.jpg"
+                alt="公众号二维码"
+                className="h-48 w-48 object-contain"
+              />
+            </div>
+
+            <div className="space-y-2 text-center text-xs text-white/60">
+              <p>1. 扫描上方二维码关注公众号</p>
+              <p>
+                2. 回复关键词{" "}
+                <span className="font-medium text-cyan-400">邀请码</span>
+              </p>
+              <p>3. 系统将自动发送邀请码</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-4">
       {/* 成功提示 */}
       {success && (
         <div className="rounded border border-green-500/50 bg-green-500/10 p-3 text-sm text-green-400">
@@ -177,9 +216,18 @@ export default function SignupForm({ onLogin }: SignupFormProps) {
 
       {/* 邀请码（必填，放在最前面） */}
       <div>
-        <label htmlFor="inviteCode" className="mb-1 block text-sm font-medium text-white/80">
-          邀请码 <span className="text-red-400">*</span>
-        </label>
+        <div className="mb-1 flex items-center justify-between">
+          <label htmlFor="inviteCode" className="block text-sm font-medium text-white/80">
+            邀请码 <span className="text-red-400">*</span>
+          </label>
+          <button
+            type="button"
+            onClick={() => setShowInviteQR(true)}
+            className="text-xs text-cyan-400 transition-colors hover:text-cyan-300 hover:underline"
+          >
+            如何获取邀请码？
+          </button>
+        </div>
         <input
           id="inviteCode"
           name="inviteCode"
@@ -363,5 +411,6 @@ export default function SignupForm({ onLogin }: SignupFormProps) {
         </button>
       </p>
     </form>
+    </>
   );
 }

@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Ticket, Gift } from "lucide-react";
+import { Ticket, Gift, MessageSquare } from "lucide-react";
 import InviteCodeManager from "./InviteCodeManager";
 import RedemptionCodesAdmin from "./RedemptionCodesAdmin";
+import FeedbackAdmin from "./FeedbackAdmin";
 
-type TabType = "invite-codes" | "redemption-codes";
+type TabType = "invite-codes" | "redemption-codes" | "feedbacks";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<TabType>("invite-codes");
@@ -22,6 +23,12 @@ export default function AdminDashboard() {
       label: "兑换码管理",
       icon: Gift,
       description: "管理积分兑换码",
+    },
+    {
+      id: "feedbacks" as TabType,
+      label: "用户反馈",
+      icon: MessageSquare,
+      description: "查看用户反馈和建议",
     },
   ];
 
@@ -62,6 +69,7 @@ export default function AdminDashboard() {
       <div className="rounded-lg border border-white/10 bg-black/40 p-6 backdrop-blur-xl">
         {activeTab === "invite-codes" && <InviteCodeManager />}
         {activeTab === "redemption-codes" && <RedemptionCodesAdmin />}
+        {activeTab === "feedbacks" && <FeedbackAdmin />}
       </div>
     </div>
   );

@@ -101,8 +101,8 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-      <div className="relative w-full max-w-lg rounded-lg border border-white/10 bg-[#0a0a0a] p-6 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+      <div className="relative w-full max-w-lg rounded-lg border border-white/10 bg-[#0a0a0a] p-6 shadow-2xl mx-auto my-auto">
         {/* 关闭按钮 */}
         <button
           onClick={handleClose}
