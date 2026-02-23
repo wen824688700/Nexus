@@ -53,7 +53,7 @@ export function AIHotTopics() {
 
   return (
     <NeonBorder color="magenta" className="rounded-xl">
-      <div className="bg-cyber-dark/80 relative h-full overflow-hidden rounded-xl p-6 backdrop-blur-xl">
+      <div className="bg-cyber-dark/80 relative h-full overflow-hidden rounded-xl p-4 md:p-6 backdrop-blur-xl">
         {/* Scan Line Effect */}
         <div className="pointer-events-none absolute inset-0">
           <div className="via-cyber-magenta/30 absolute h-[2px] w-full animate-[scan-line_3s_linear_infinite] bg-gradient-to-r from-transparent to-transparent" />
@@ -70,7 +70,7 @@ export function AIHotTopics() {
         </div>
 
         <div
-          className="relative h-[340px] overflow-y-auto overflow-x-hidden"
+          className="relative h-[240px] md:h-[340px] overflow-y-auto overflow-x-hidden"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
           onWheel={(e) => e.stopPropagation()}

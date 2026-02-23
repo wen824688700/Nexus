@@ -44,9 +44,9 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 mx-auto w-full max-w-7xl">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
+        <div className="flex flex-col items-center gap-8 md:gap-12 lg:grid lg:grid-cols-2">
           {/* Left: 产品介绍 */}
-          <div className="space-y-8">
+          <div className="space-y-6 md:space-y-8">
             <div className="hero-item">
               <TypewriterText
                 text="独立开发者的 AI 探索之旅|"
@@ -55,7 +55,7 @@ export function HeroSection() {
             </div>
 
             <div className="hero-item">
-              <h1 className="mb-6 text-5xl leading-tight font-black md:text-7xl">
+              <h1 className="mb-6 text-4xl leading-tight font-black md:text-6xl lg:text-7xl">
                 <span className="text-[#00a6ff]">A</span>
                 <span className="text-[#ff0066]">I</span>
                 <span className="text-white"> 赋能</span>
@@ -79,29 +79,29 @@ export function HeroSection() {
             </div>
 
             <div className="hero-item">
-              <p className="max-w-xl text-lg leading-relaxed text-white/60">
+              <p className="max-w-xl text-base md:text-lg leading-relaxed text-white/60">
                 从信息噪音中解脱，用 AI 工具箱加速你的工作流。探索实战 SOP，连接超级个体社群。
               </p>
             </div>
 
             {/* 快速入口 */}
-            <div className="hero-item flex flex-wrap gap-4">
-              <Link href="/agents">
-                <button className="group relative overflow-hidden rounded-xl px-8 py-4 font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-cyan-500/50">
+            <div className="hero-item flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4">
+              <Link href="/agents" className="w-full sm:w-auto">
+                <button className="group relative overflow-hidden rounded-xl px-6 py-3 md:px-8 md:py-4 font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-cyan-500/50 w-full sm:w-auto">
                   <div className="from-cyber-cyan absolute inset-0 bg-gradient-to-r via-blue-500 to-purple-500" />
-                  <div className="relative flex items-center gap-2">
-                    <Sparkles className="h-5 w-5" />
-                    <span>探索智能体</span>
-                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  <div className="relative flex items-center justify-center gap-2">
+                    <Sparkles className="h-4 w-4 md:h-5 md:w-5" />
+                    <span className="text-sm md:text-base">探索智能体</span>
+                    <ArrowRight className="h-4 w-4 md:h-5 md:w-5 transition-transform group-hover:translate-x-1" />
                   </div>
                 </button>
               </Link>
-              <Link href="/knowledge">
-                <button className="group border-cyber-cyan/50 hover:border-cyber-cyan hover:bg-cyber-cyan/10 rounded-xl border-2 px-8 py-4 font-bold text-white transition-all">
-                  <div className="flex items-center gap-2">
-                    <BookOpen className="h-5 w-5" />
-                    <span>阅读知识库</span>
-                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+              <Link href="/knowledge" className="w-full sm:w-auto">
+                <button className="group border-cyber-cyan/50 hover:border-cyber-cyan hover:bg-cyber-cyan/10 rounded-xl border-2 px-6 py-3 md:px-8 md:py-4 font-bold text-white transition-all w-full sm:w-auto">
+                  <div className="flex items-center justify-center gap-2">
+                    <BookOpen className="h-4 w-4 md:h-5 md:w-5" />
+                    <span className="text-sm md:text-base">阅读知识库</span>
+                    <ArrowRight className="h-4 w-4 md:h-5 md:w-5 transition-transform group-hover:translate-x-1" />
                   </div>
                 </button>
               </Link>
@@ -109,19 +109,19 @@ export function HeroSection() {
           </div>
 
           {/* Right: Cyberpunk ProfileCard */}
-          <div className="hero-item">
+          <div className="hero-item w-full">
             <div className="relative">
               {/* Main Card */}
-              <div className="border-cyber-cyan/30 relative rounded-2xl border bg-[#0a0f1a] p-8 backdrop-blur-xl">
+              <div className="border-cyber-cyan/30 relative rounded-2xl border bg-[#0a0f1a] p-6 md:p-8 backdrop-blur-xl">
                 {/* Avatar & Name */}
-                <div className="mb-6 flex items-start gap-6">
-                  <div className="relative h-24 w-24">
+                <div className="mb-6 flex flex-col sm:flex-row items-start gap-4 md:gap-6">
+                  <div className="relative h-20 w-20 md:h-24 md:w-24 mx-auto sm:mx-0">
                     {/* Outer Glow Effect - Multiple Layers */}
                     <div className="from-cyber-cyan absolute inset-0 animate-pulse rounded-full bg-gradient-to-br via-cyan-400 to-cyan-600 opacity-40 blur-2xl" />
                     <div className="to-cyber-cyan absolute inset-0 rounded-full bg-gradient-to-tr from-cyan-400 opacity-30 blur-xl" />
 
                     {/* Avatar Container */}
-                    <div className="border-cyber-cyan/60 relative h-24 w-24 overflow-hidden rounded-full border-2 shadow-[0_0_30px_rgba(6,182,212,0.5),0_0_60px_rgba(6,182,212,0.3)]">
+                    <div className="border-cyber-cyan/60 relative h-20 w-20 md:h-24 md:w-24 overflow-hidden rounded-full border-2 shadow-[0_0_30px_rgba(6,182,212,0.5),0_0_60px_rgba(6,182,212,0.3)]">
                       <div className="from-cyber-cyan/30 to-cyber-purple/30 absolute inset-0 bg-gradient-to-br" />
                       <img
                         src="/avatar.jpg"
@@ -132,16 +132,16 @@ export function HeroSection() {
                       <div className="absolute right-1 bottom-1 h-4 w-4 animate-pulse rounded-full border-2 border-[#0a0f1a] bg-green-400 shadow-[0_0_10px_rgba(74,222,128,0.8)]" />
                     </div>
                   </div>
-                  <div className="flex-1">
-                    <div className="mb-3 flex items-center gap-3">
-                      <span className="bg-cyber-cyan/20 text-cyber-cyan border-cyber-cyan/40 rounded-md border px-3 py-1 font-mono text-xs">
+                  <div className="flex-1 text-center sm:text-left">
+                    <div className="mb-3 flex flex-wrap items-center justify-center sm:justify-start gap-2 md:gap-3">
+                      <span className="bg-cyber-cyan/20 text-cyber-cyan border-cyber-cyan/40 rounded-md border px-2 md:px-3 py-1 font-mono text-xs">
                         独立开发者
                       </span>
-                      <span className="rounded-md border border-purple-500/40 bg-gradient-to-r from-purple-500/20 to-pink-500/20 bg-clip-text px-3 py-1 font-mono text-xs text-transparent">
+                      <span className="rounded-md border border-purple-500/40 bg-gradient-to-r from-purple-500/20 to-pink-500/20 bg-clip-text px-2 md:px-3 py-1 font-mono text-xs text-transparent">
                         <span className="text-purple-400">AI 探索者</span>
                       </span>
                     </div>
-                    <h3 className="font-orbitron mb-2 text-3xl font-bold text-white">
+                    <h3 className="font-orbitron mb-2 text-xl md:text-2xl lg:text-3xl font-bold text-white">
                       你好，我是{" "}
                       <span className="from-cyber-cyan to-cyber-purple bg-gradient-to-r bg-clip-text text-transparent">
                         Apex 小墨
@@ -151,22 +151,22 @@ export function HeroSection() {
                 </div>
 
                 {/* Description */}
-                <div className="mb-6 space-y-4 leading-relaxed text-white/70">
+                <div className="mb-6 space-y-3 md:space-y-4 text-sm md:text-base leading-relaxed text-white/70">
                   <p>👋 你好！我是一名独立开发者，喜欢捣鼓各种AI工具和工作流优化。</p>
                   <p>💡 我相信 AI 不应该是少数人的特权，而应该成为每个人提升效率的助手。</p>
                   <p>🎯 在这里，我分享我的 AI 探索之旅、实验经验和心得体会。</p>
                 </div>
 
                 {/* Social Icons */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center sm:justify-start gap-2 md:gap-3 flex-wrap">
                   {/* WeChat */}
                   <a
                     href="#"
-                    className="hover:border-cyber-cyan/50 hover:bg-cyber-cyan/10 group flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-all"
+                    className="hover:border-cyber-cyan/50 hover:bg-cyber-cyan/10 group flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-all"
                     title="微信"
                   >
                     <svg
-                      className="group-hover:text-cyber-cyan h-6 w-6 text-white/60 transition-colors"
+                      className="group-hover:text-cyber-cyan h-5 w-5 md:h-6 md:w-6 text-white/60 transition-colors"
                       viewBox="0 0 24 24"
                       fill="currentColor"
                     >
@@ -177,11 +177,11 @@ export function HeroSection() {
                   {/* Bilibili */}
                   <a
                     href="#"
-                    className="group flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-all hover:border-[#00a1d6]/50 hover:bg-[#00a1d6]/10"
+                    className="group flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-all hover:border-[#00a1d6]/50 hover:bg-[#00a1d6]/10"
                     title="B站"
                   >
                     <svg
-                      className="h-6 w-6 text-white/60 transition-colors group-hover:text-[#00a1d6]"
+                      className="h-5 w-5 md:h-6 md:w-6 text-white/60 transition-colors group-hover:text-[#00a1d6]"
                       viewBox="0 0 24 24"
                       fill="currentColor"
                     >
@@ -192,11 +192,11 @@ export function HeroSection() {
                   {/* Xiaohongshu (Little Red Book) */}
                   <a
                     href="#"
-                    className="group flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-all hover:border-[#ff2442]/50 hover:bg-[#ff2442]/10"
+                    className="group flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-all hover:border-[#ff2442]/50 hover:bg-[#ff2442]/10"
                     title="小红书"
                   >
                     <svg
-                      className="h-6 w-6 text-white/60 transition-colors group-hover:text-[#ff2442]"
+                      className="h-5 w-5 md:h-6 md:w-6 text-white/60 transition-colors group-hover:text-[#ff2442]"
                       viewBox="0 0 24 24"
                       fill="currentColor"
                     >
@@ -207,11 +207,11 @@ export function HeroSection() {
                   {/* Douyin (TikTok) */}
                   <a
                     href="#"
-                    className="group flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-all hover:border-white/50 hover:bg-white/10"
+                    className="group flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-all hover:border-white/50 hover:bg-white/10"
                     title="抖音"
                   >
                     <svg
-                      className="h-6 w-6 text-white/60 transition-colors group-hover:text-white"
+                      className="h-5 w-5 md:h-6 md:w-6 text-white/60 transition-colors group-hover:text-white"
                       viewBox="0 0 24 24"
                       fill="currentColor"
                     >
@@ -222,10 +222,10 @@ export function HeroSection() {
                   {/* Email */}
                   <a
                     href="mailto:your@email.com"
-                    className="hover:border-cyber-cyan/50 hover:bg-cyber-cyan/10 group flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-all"
+                    className="hover:border-cyber-cyan/50 hover:bg-cyber-cyan/10 group flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-all"
                     title="邮箱"
                   >
-                    <Mail className="group-hover:text-cyber-cyan h-5 w-5 text-white/60 transition-colors" />
+                    <Mail className="group-hover:text-cyber-cyan h-4 w-4 md:h-5 md:w-5 text-white/60 transition-colors" />
                   </a>
                 </div>
               </div>

@@ -39,7 +39,7 @@ export function MonitorShell() {
               e.stopPropagation();
               actions.togglePower();
             }}
-            className={`flex h-12 w-12 items-center justify-center rounded-full border-3 shadow-lg transition-all active:scale-95 md:h-14 md:w-14 md:border-4 ${
+            className={`flex h-11 w-11 items-center justify-center rounded-full border-3 shadow-lg transition-all active:scale-95 md:h-14 md:w-14 md:border-4 ${
               state.powerState !== "off"
                 ? "border-[#d4c4a8] bg-gradient-to-br from-[#5a5a5a] to-[#3a3a3a] shadow-[inset_0_2px_4px_rgba(255,255,255,0.2)]"
                 : "border-[#9d8f70] bg-gradient-to-br from-[#4a4a4a] to-[#2a2a2a]"

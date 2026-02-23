@@ -114,7 +114,7 @@ export function AgentMatrixSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex min-h-[800px] items-center justify-center overflow-hidden px-4 py-24"
+      className="relative flex min-h-[700px] md:min-h-[800px] items-center justify-center overflow-hidden px-4 py-20 md:py-24"
     >
       {/* Background Layer */}
       <div className="pointer-events-none absolute inset-0">
@@ -137,9 +137,9 @@ export function AgentMatrixSection() {
 
       <div className="relative z-10 mx-auto w-full max-w-6xl">
         {/* Header */}
-        <div className="matrix-header mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div className="matrix-header mb-8 md:mb-12 flex flex-col justify-between gap-4 md:gap-6 md:flex-row md:items-end">
           <div>
-            <h2 className="font-orbitron text-3xl font-bold tracking-tight text-white md:text-5xl">
+            <h2 className="font-orbitron text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white">
               智能体
               <span className="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
                 中心
@@ -148,29 +148,29 @@ export function AgentMatrixSection() {
           </div>
 
           {/* Status Bar */}
-          <div className="flex items-center gap-6 rounded-lg border border-white/5 bg-[#0a0a0a]/50 p-3 text-sm font-mono text-gray-500 backdrop-blur-sm">
+          <div className="flex items-center gap-3 md:gap-6 rounded-lg border border-white/5 bg-[#0a0a0a]/50 p-2.5 md:p-3 text-xs md:text-sm font-mono text-gray-500 backdrop-blur-sm">
             <div className="flex items-center gap-2">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-green-500 shadow-[0_0_5px_#22c55e]" />
+              <span className="h-1.5 w-1.5 md:h-2 md:w-2 animate-pulse rounded-full bg-green-500 shadow-[0_0_5px_#22c55e]" />
               <span className="text-green-400">SYSTEM ONLINE</span>
             </div>
-            <div className="hidden h-4 w-[1px] bg-white/10 md:block" />
-            <div className="hidden md:block">NODES: {agents.length} Active</div>
+            <div className="hidden h-3 md:h-4 w-[1px] bg-white/10 sm:block" />
+            <div className="hidden sm:block">NODES: {agents.length} Active</div>
           </div>
         </div>
 
         {/* Agent Grid */}
-        <div className="agent-grid mb-5 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="agent-grid mb-4 md:mb-5 grid grid-cols-1 gap-4 md:gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {agents.map((agent) => (
             <div key={agent.id} className="agent-card group">
               <HolographicCard intensity="medium">
-                <div className="relative flex h-[180px] cursor-pointer flex-col justify-between overflow-hidden p-6 transition-all duration-300 group-hover:-translate-y-1">
+                <div className="relative flex h-[160px] md:h-[180px] cursor-pointer flex-col justify-between overflow-hidden p-5 md:p-6 transition-all duration-300 group-hover:-translate-y-1">
                   {/* Card Shine Effect */}
                   <div className="pointer-events-none absolute left-[-150%] top-0 h-full w-1/2 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-20deg] transition-all duration-700 ease-in-out group-hover:left-[200%]" />
 
                   {/* Top: Icon & Status */}
                   <div className="flex items-start justify-between">
                     <div
-                      className={`flex h-12 w-12 items-center justify-center rounded-xl border border-white/5 bg-white/5 shadow-lg transition-transform duration-300 group-hover:scale-110 ${
+                      className={`flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl border border-white/5 bg-white/5 shadow-lg transition-transform duration-300 group-hover:scale-110 ${
                         agent.color === "cyan"
                           ? "text-cyan-400"
                           : agent.color === "blue"
@@ -184,28 +184,30 @@ export function AgentMatrixSection() {
                                   : "text-fuchsia-400"
                       }`}
                     >
-                      <agent.icon size={24} />
+                      <agent.icon size={20} className="md:hidden" />
+                      <agent.icon size={24} className="hidden md:block" />
                     </div>
-                    <div className="flex items-center gap-1.5 rounded-full border border-white/5 bg-black/40 px-2 py-1">
-                      <div className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-500 shadow-[0_0_5px_#22c55e]" />
-                      <span className="font-mono text-[10px] tracking-wider text-gray-400">ON</span>
+                    <div className="flex items-center gap-1 md:gap-1.5 rounded-full border border-white/5 bg-black/40 px-1.5 md:px-2 py-0.5 md:py-1">
+                      <div className="h-1 w-1 md:h-1.5 md:w-1.5 animate-pulse rounded-full bg-green-500 shadow-[0_0_5px_#22c55e]" />
+                      <span className="font-mono text-[9px] md:text-[10px] tracking-wider text-gray-400">ON</span>
                     </div>
                   </div>
 
                   {/* Bottom: Text & Action */}
                   <div className="flex items-end justify-between">
                     <div>
-                      <h3 className="mb-1 text-lg font-bold text-white transition-colors group-hover:text-cyan-100">
+                      <h3 className="mb-1 text-base md:text-lg font-bold text-white transition-colors group-hover:text-cyan-100">
                         {agent.title}
                       </h3>
-                      <p className="font-mono text-xs tracking-tight text-gray-500 transition-colors group-hover:text-gray-400">
+                      <p className="font-mono text-[10px] md:text-xs tracking-tight text-gray-500 transition-colors group-hover:text-gray-400">
                         {agent.desc}
                       </p>
                     </div>
 
                     {/* Arrow Icon */}
                     <div className="translate-x-[-10px] text-white opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
-                      <ArrowUpRight size={20} />
+                      <ArrowUpRight size={18} className="md:hidden" />
+                      <ArrowUpRight size={20} className="hidden md:block" />
                     </div>
                   </div>
                 </div>
@@ -215,12 +217,13 @@ export function AgentMatrixSection() {
         </div>
 
         {/* Loading Placeholder */}
-        <div className="loading-card relative mt-4 flex h-16 items-center justify-center overflow-hidden rounded-xl border border-dashed border-white/5 bg-[#0a0a0a]/30">
+        <div className="loading-card relative mt-3 md:mt-4 flex h-14 md:h-16 items-center justify-center overflow-hidden rounded-xl border border-dashed border-white/5 bg-[#0a0a0a]/30">
           <div className="absolute inset-0 animate-[shine_3s_linear_infinite] bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.02)_50%,transparent_75%)] bg-[length:250%_250%]" />
-          <div className="flex items-center gap-3 text-gray-500 transition-colors group-hover:text-cyan-400">
-            <Plus size={16} className="animate-spin-slow" />
-            <span className="text-sm font-mono tracking-widest">更多智能体节点正在接入中...</span>
-            <div className="ml-2 flex gap-1">
+          <div className="flex items-center gap-2 md:gap-3 text-gray-500 transition-colors group-hover:text-cyan-400">
+            <Plus size={14} className="animate-spin-slow md:hidden" />
+            <Plus size={16} className="animate-spin-slow hidden md:block" />
+            <span className="text-xs md:text-sm font-mono tracking-widest">更多智能体节点正在接入中...</span>
+            <div className="ml-1 md:ml-2 flex gap-1">
               <span
                 className="h-1 w-1 animate-bounce rounded-full bg-current"
                 style={{ animationDelay: "0s" }}

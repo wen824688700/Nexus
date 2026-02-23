@@ -54,7 +54,7 @@ export function EmailSubscribe() {
   return (
     <>
       <NeonBorder color="magenta" className="rounded-xl">
-        <div className="bg-cyber-dark/80 rounded-xl p-6 backdrop-blur-xl">
+        <div className="bg-cyber-dark/80 rounded-xl p-4 sm:p-6 backdrop-blur-xl">
           <div className="mb-4 flex items-center gap-3">
             <Users className="text-cyber-magenta h-5 w-5" />
             <h3 className="font-orbitron font-bold text-white">寻找 AI 探索者</h3>
@@ -316,11 +316,11 @@ export function EmailSubscribe() {
       {/* 公众号弹窗 - 赛博朋克风格 */}
       {showModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-md"
           onClick={() => setShowModal(false)}
         >
           <div
-            className="group relative h-[520px] w-full max-w-4xl overflow-hidden rounded-3xl shadow-[0_0_100px_rgba(0,255,255,0.3)]"
+            className="group relative h-auto max-h-[90vh] w-full max-w-4xl overflow-hidden rounded-3xl shadow-[0_0_100px_rgba(0,255,255,0.3)] sm:h-[520px]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* 背景图片层 */}
@@ -344,19 +344,19 @@ export function EmailSubscribe() {
             {/* 关闭按钮 */}
             <button
               onClick={() => setShowModal(false)}
-              className="group/close absolute top-6 right-6 z-20 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/40 backdrop-blur-xl transition-all duration-300 hover:border-cyan-400/60 hover:bg-black/60 hover:shadow-[0_0_20px_rgba(0,255,255,0.4)]"
+              className="group/close absolute top-4 right-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/40 backdrop-blur-xl transition-all duration-300 hover:border-cyan-400/60 hover:bg-black/60 hover:shadow-[0_0_20px_rgba(0,255,255,0.4)] sm:top-6 sm:right-6 sm:h-12 sm:w-12"
             >
-              <X className="h-5 w-5 text-white/60 transition-colors group-hover/close:text-cyan-400" />
+              <X className="h-4 w-4 text-white/60 transition-colors group-hover/close:text-cyan-400 sm:h-5 sm:w-5" />
             </button>
 
             {/* 内容容器 */}
-            <div className="relative z-10 flex h-full items-end p-10">
-              <div className="grid w-full grid-cols-[1.2fr_1fr] gap-12">
+            <div className="relative z-10 flex h-full items-end p-6 sm:p-10">
+              <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-[1.2fr_1fr] sm:gap-12">
                 {/* 左侧：文字内容 */}
-                <div className="flex flex-col justify-end space-y-5 pb-3">
+                <div className="flex flex-col justify-end space-y-4 pb-3 sm:space-y-5">
                   {/* 主标题 */}
                   <div className="space-y-2">
-                    <h2 className="font-orbitron text-4xl font-black leading-tight tracking-tight text-white">
+                    <h2 className="font-orbitron text-2xl font-black leading-tight tracking-tight text-white sm:text-4xl">
                       <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(0,255,255,0.5)]">
                         扫码关注
                       </span>
@@ -368,14 +368,14 @@ export function EmailSubscribe() {
                     
                     {/* 副标题 */}
                     <div className="inline-block rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 backdrop-blur-sm">
-                      <p className="font-mono text-base text-cyan-300">
+                      <p className="font-mono text-sm text-cyan-300 sm:text-base">
                         回复 <span className="font-bold text-cyan-100">"AI资料大礼包"</span>
                       </p>
                     </div>
                   </div>
 
                   {/* 福利列表 */}
-                  <div className="space-y-2.5">
+                  <div className="space-y-2 sm:space-y-2.5">
                     {[
                       { icon: "📦", text: "免费领取我的 AI 资料包" },
                       { icon: "🎯", text: "获取高阶提示词与构建指南" },
@@ -383,13 +383,13 @@ export function EmailSubscribe() {
                     ].map((item, idx) => (
                       <div
                         key={idx}
-                        className="group/item flex items-center gap-3 rounded-lg border border-white/10 bg-black/30 p-3 backdrop-blur-sm transition-all duration-300 hover:border-cyan-500/40 hover:bg-black/50 hover:shadow-[0_0_20px_rgba(0,255,255,0.2)]"
+                        className="group/item flex items-center gap-2.5 rounded-lg border border-white/10 bg-black/30 p-2.5 backdrop-blur-sm transition-all duration-300 hover:border-cyan-500/40 hover:bg-black/50 hover:shadow-[0_0_20px_rgba(0,255,255,0.2)] sm:gap-3 sm:p-3"
                         style={{ animationDelay: `${idx * 100}ms` }}
                       >
-                        <span className="text-xl transition-transform duration-300 group-hover/item:scale-110">
+                        <span className="text-lg transition-transform duration-300 group-hover/item:scale-110 sm:text-xl">
                           {item.icon}
                         </span>
-                        <span className="text-sm text-white/90 transition-colors group-hover/item:text-white">
+                        <span className="text-xs text-white/90 transition-colors group-hover/item:text-white sm:text-sm">
                           {item.text}
                         </span>
                       </div>
@@ -398,28 +398,28 @@ export function EmailSubscribe() {
                 </div>
 
                 {/* 右侧：二维码 */}
-                <div className="flex items-end justify-end pb-3">
+                <div className="flex items-center justify-center pb-3 sm:items-end sm:justify-end">
                   <div className="group/qr relative">
                     {/* 二维码外发光 */}
                     <div className="absolute -inset-3 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-purple-500/20 opacity-0 blur-2xl transition-opacity duration-500 group-hover/qr:opacity-100" />
                     
                     {/* 二维码容器 */}
-                    <div className="relative overflow-hidden rounded-2xl border-2 border-cyan-500/40 bg-white p-4 shadow-[0_0_40px_rgba(0,255,255,0.3)] transition-all duration-500 group-hover/qr:border-cyan-400/60 group-hover/qr:shadow-[0_0_60px_rgba(0,255,255,0.5)]">
+                    <div className="relative overflow-hidden rounded-2xl border-2 border-cyan-500/40 bg-white p-3 shadow-[0_0_40px_rgba(0,255,255,0.3)] transition-all duration-500 group-hover/qr:border-cyan-400/60 group-hover/qr:shadow-[0_0_60px_rgba(0,255,255,0.5)] sm:p-4">
                       {/* 角落装饰 */}
-                      <div className="absolute top-0 left-0 h-5 w-5 border-l-2 border-t-2 border-cyan-400" />
-                      <div className="absolute top-0 right-0 h-5 w-5 border-r-2 border-t-2 border-cyan-400" />
-                      <div className="absolute bottom-0 left-0 h-5 w-5 border-b-2 border-l-2 border-cyan-400" />
-                      <div className="absolute bottom-0 right-0 h-5 w-5 border-b-2 border-r-2 border-cyan-400" />
+                      <div className="absolute top-0 left-0 h-4 w-4 border-l-2 border-t-2 border-cyan-400 sm:h-5 sm:w-5" />
+                      <div className="absolute top-0 right-0 h-4 w-4 border-r-2 border-t-2 border-cyan-400 sm:h-5 sm:w-5" />
+                      <div className="absolute bottom-0 left-0 h-4 w-4 border-b-2 border-l-2 border-cyan-400 sm:h-5 sm:w-5" />
+                      <div className="absolute bottom-0 right-0 h-4 w-4 border-b-2 border-r-2 border-cyan-400 sm:h-5 sm:w-5" />
                       
                       <img
                         src="/images/wechat-qrcode.jpg"
                         alt="微信公众号二维码"
-                        className="relative h-40 w-40 transition-transform duration-500 group-hover/qr:scale-105"
+                        className="relative h-32 w-32 transition-transform duration-500 group-hover/qr:scale-105 sm:h-40 sm:w-40"
                       />
                     </div>
 
                     {/* 扫描提示 */}
-                    <div className="mt-3 text-center">
+                    <div className="mt-2 text-center sm:mt-3">
                       <p className="font-mono text-xs text-cyan-400/80">
                         [ SCAN TO JOIN ]
                       </p>

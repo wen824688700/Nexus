@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { GlitchText, AgentCard, HolographicCard, CyberButton } from "@/components/cyber";
 import { AnnouncementTicker } from "./AnnouncementTicker";
 import { EmailSubscribe } from "./EmailSubscribe";
@@ -215,33 +215,42 @@ export function AgentsPage() {
             <EmailSubscribe />
           </div>
 
-          {/* 右侧 */}
-          <div className="grid gap-4 sm:grid-cols-2 lg:col-span-2">
+          {/* 右侧 - 响应式网格：移动端单列，平板2列，桌面2列 */}
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:col-span-2">
             <AIInfoTicker />
             <AIHotTopics />
           </div>
         </div>
 
         {/* 分类标签栏 */}
-        <div className="mb-8 flex animate-[fade-in_1s_ease-out] flex-wrap justify-center gap-3">
-          {agentCategories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setActiveCategory(category.id)}
-              className={`rounded-lg px-6 py-3 font-medium transition-all ${
-                activeCategory === category.id
-                  ? "bg-cyber-cyan text-cyber-dark shadow-neon-cyan"
-                  : "border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              <category.icon className="mr-2 inline-block h-4 w-4" />
-              {category.name}
-            </button>
-          ))}
+        <div className="relative mb-8 animate-[fade-in_1s_ease-out]">
+          {/* 左侧渐变指示器 */}
+          <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-8 bg-gradient-to-r from-cyber-dark to-transparent md:hidden" />
+          
+          {/* 右侧渐变指示器 */}
+          <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-8 bg-gradient-to-l from-cyber-dark to-transparent md:hidden" />
+          
+          {/* 标签容器 - 移动端水平滚动，桌面端居中换行 */}
+          <div className="flex gap-3 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 scrollbar-hide md:flex-wrap md:justify-center md:overflow-visible md:pb-0">
+            {agentCategories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setActiveCategory(category.id)}
+                className={`shrink-0 snap-center rounded-lg px-6 py-3 font-medium transition-all min-h-[44px] min-w-[44px] ${
+                  activeCategory === category.id
+                    ? "bg-cyber-cyan text-cyber-dark shadow-neon-cyan"
+                    : "border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                <category.icon className="mr-2 inline-block h-4 w-4" />
+                {category.name}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* 当前分类的智能体 */}
-        <div className="mb-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mb-12 grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {currentCategory?.agents.map((agent, index) => (
             <div
               key={agent.id}
@@ -275,7 +284,7 @@ export function AgentsPage() {
               </div>
             </HolographicCard>
           ) : (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {customSkills.map((skill) => (
                 <AgentCard
                   key={skill.id}

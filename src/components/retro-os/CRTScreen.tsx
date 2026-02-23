@@ -8,13 +8,17 @@ export function CRTScreen() {
 
   return (
     <div
-      className={`relative h-[600px] w-[800px] overflow-hidden border-[16px] border-[#0a0a0a] bg-black transition-all duration-500 ${
+      className={`relative w-full overflow-hidden border-[16px] border-[#0a0a0a] bg-black transition-all duration-500 ${
         state.powerState === "booting"
           ? "animate-[crt-on_0.5s_forwards]"
           : state.powerState === "off"
             ? ""
             : "shadow-[inset_0_0_80px_rgba(0,0,0,0.5)]"
       }`}
+      style={{
+        height: "calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 200px)",
+        maxHeight: "600px",
+      }}
     >
       <VirtualDesktop />
 

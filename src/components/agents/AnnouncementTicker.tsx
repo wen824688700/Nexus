@@ -39,7 +39,7 @@ export const AnnouncementTicker = memo(function AnnouncementTicker() {
 
   return (
     <NeonBorder color="cyan" className="rounded-xl">
-      <div className="bg-cyber-dark/80 overflow-hidden rounded-xl p-6 backdrop-blur-xl">
+      <div className="bg-cyber-dark/80 overflow-hidden rounded-xl p-4 sm:p-6 backdrop-blur-xl">
         <div className="mb-4 flex items-center gap-3">
           <Megaphone className="text-cyber-cyan h-5 w-5 animate-pulse" />
           <h3 className="font-orbitron font-bold text-white">最新动态</h3>

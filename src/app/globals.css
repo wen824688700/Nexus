@@ -236,6 +236,16 @@ iframe {
   width: 0px;
 }
 
+/* Utility class to hide scrollbars while maintaining scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 /* ========================================
    Ocean Background - Deep Sea Bubble Effect
    ======================================== */

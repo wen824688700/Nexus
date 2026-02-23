@@ -67,7 +67,7 @@ export function ProductIntroSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative px-4 py-20 overflow-hidden">
+    <section ref={sectionRef} className="relative px-4 md:px-6 lg:px-8 py-16 md:py-20 overflow-hidden">
       <div className="pointer-events-none absolute inset-0 opacity-10">
         <div
           className="absolute inset-0"
@@ -84,8 +84,8 @@ export function ProductIntroSection() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] bg-purple-900/10 blur-[100px] rounded-full pointer-events-none" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        <div className="intro-header mb-16 text-center">
-          <h2 className="font-orbitron mb-6 text-3xl font-bold leading-tight text-white md:text-5xl">
+        <div className="intro-header mb-12 md:mb-16 text-center">
+          <h2 className="font-orbitron mb-4 md:mb-6 text-2xl md:text-4xl lg:text-5xl font-bold leading-tight text-white">
             欢迎来到我的数字基站，
             <br />
             一座持续进化的{" "}
@@ -95,7 +95,7 @@ export function ProductIntroSection() {
             。
           </h2>
 
-          <p className="mx-auto max-w-3xl text-lg leading-relaxed text-white/60">
+          <p className="mx-auto max-w-3xl text-base md:text-lg leading-relaxed text-white/60">
             在这里，我将自己打造的 AI 智能体、沉淀的实战 SOP，以及探索"AI"的经验与你分享。
             <br />
             APEX 将{" "}
@@ -105,13 +105,13 @@ export function ProductIntroSection() {
           </p>
         </div>
 
-        <div className="pillar-grid grid gap-6 md:grid-cols-3">
+        <div className="pillar-grid grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-3">
           {pillars.map((pillar, index) => (
             <div key={index} className="pillar-card group">
               <HolographicCard intensity="medium">
-                <div className="relative flex h-full flex-col p-8 transition-all duration-500 group-hover:-translate-y-2">
+                <div className="relative flex h-full flex-col p-6 md:p-8 transition-all duration-500 group-hover:-translate-y-2">
                   <div
-                    className={`mb-6 flex h-16 w-16 items-center justify-center rounded-xl border bg-white/5 transition-all duration-500 ${
+                    className={`mb-4 md:mb-6 flex h-12 w-12 md:h-16 md:w-16 items-center justify-center rounded-xl border bg-white/5 transition-all duration-500 ${
                       pillar.color === "cyan"
                         ? "border-cyan-500/30 group-hover:border-cyan-500/50 group-hover:shadow-[0_0_30px_rgba(6,182,212,0.15)]"
                         : pillar.color === "magenta"
@@ -120,7 +120,7 @@ export function ProductIntroSection() {
                     }`}
                   >
                     <pillar.icon
-                      className={`h-8 w-8 ${
+                      className={`h-6 w-6 md:h-8 md:w-8 ${
                         pillar.color === "cyan"
                           ? "text-cyan-400"
                           : pillar.color === "magenta"
@@ -130,10 +130,10 @@ export function ProductIntroSection() {
                     />
                   </div>
 
-                  <div className="mb-4">
+                  <div className="mb-3 md:mb-4">
                     <GlitchText
                       as="h3"
-                      className="font-orbitron mb-1 text-2xl font-bold text-white transition-transform group-hover:translate-x-1"
+                      className="font-orbitron mb-1 text-xl md:text-2xl font-bold text-white transition-transform group-hover:translate-x-1"
                       intensity="low"
                     >
                       {pillar.title}
@@ -151,7 +151,7 @@ export function ProductIntroSection() {
                     </p>
                   </div>
 
-                  <p className="mb-6 flex-1 text-sm leading-relaxed text-white/60">
+                  <p className="mb-4 md:mb-6 flex-1 text-sm leading-relaxed text-white/60">
                     {pillar.description}
                   </p>
 
@@ -170,7 +170,7 @@ export function ProductIntroSection() {
           ))}
         </div>
 
-        <div className="mt-16 mx-auto h-[1px] max-w-4xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50" />
+        <div className="mt-12 md:mt-16 mx-auto h-[1px] max-w-4xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50" />
       </div>
     </section>
   );

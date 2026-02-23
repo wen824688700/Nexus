@@ -49,12 +49,12 @@ export function RetroOSModal({ mounted, visible, onClose }: RetroOSModalProps) {
       }}
     >
       <RetroOSProvider>
-        <div className="relative max-h-full w-full max-w-[95vw] md:max-w-[1200px]">
-          {/* 关闭按钮 */}
+        <div className="relative max-h-full w-full max-w-full px-4 md:max-w-[1200px]">
+          {/* 关闭按钮 - 定位在安全区域内 */}
           <button
             type="button"
             onClick={onClose}
-            className="absolute -top-2 -right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white/20 bg-black/80 text-white/60 backdrop-blur-sm transition-all hover:border-white/40 hover:bg-black/90 hover:text-white md:-top-4 md:-right-4"
+            className="absolute top-2 right-2 z-10 flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/20 bg-black/80 text-white/60 backdrop-blur-sm transition-all hover:border-white/40 hover:bg-black/90 hover:text-white md:-top-4 md:-right-4 md:h-10 md:w-10"
             aria-label="关闭"
           >
             <svg
