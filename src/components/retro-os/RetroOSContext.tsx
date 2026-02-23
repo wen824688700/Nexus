@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import type { RetroOSState, RetroOSActions, PowerState, WindowType, Article } from "./types";
+import { loadArticleContent } from "./useArticles";
 
 interface RetroOSContextValue {
   state: RetroOSState;
@@ -14,6 +15,7 @@ export function RetroOSProvider({ children }: { children: ReactNode }) {
   const [powerState, setPowerState] = useState<PowerState>("off");
   const [openWindows, setOpenWindows] = useState<RetroOSState["openWindows"]>([]);
   const [nextZIndex, setNextZIndex] = useState(100);
+  const [loadingArticles, setLoadingArticles] = useState<Set<string>>(new Set());
 
   const togglePower = useCallback(() => {
     if (powerState === "off") {
@@ -28,8 +30,36 @@ export function RetroOSProvider({ children }: { children: ReactNode }) {
   }, [powerState]);
 
   const openWindow = useCallback(
-    (type: WindowType, data?: Article) => {
+    async (type: WindowType, data?: Article) => {
       const id = `${type}-${Date.now()}`;
+      
+      // 如果是文章窗口且内容为空，先加载内容
+      if (type === "article" && data && !data.content) {
+        const articleId = data.id;
+        
+        // 添加到加载中列表
+        setLoadingArticles((prev) => new Set(prev).add(articleId));
+        
+        try {
+          // 按需加载文章内容
+          const content = await loadArticleContent(articleId);
+          data = { ...data, content };
+        } catch (error) {
+          console.error("Failed to load article content:", error);
+          data = {
+            ...data,
+            content: "# 内容加载失败\n\n无法获取文章内容，请稍后重试。",
+          };
+        } finally {
+          // 从加载中列表移除
+          setLoadingArticles((prev) => {
+            const next = new Set(prev);
+            next.delete(articleId);
+            return next;
+          });
+        }
+      }
+      
       const newWindow = {
         id,
         type,

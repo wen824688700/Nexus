@@ -137,8 +137,8 @@ export function useArticles() {
   useEffect(() => {
     async function fetchArticles() {
       try {
-        // 尝试从 API 获取
-        const res = await fetch("/api/articles");
+        // 只获取元数据（快速）
+        const res = await fetch("/api/articles/metadata");
 
         if (!res.ok) {
           // API 失败，使用 Mock 数据
@@ -155,8 +155,18 @@ export function useArticles() {
           console.warn("API error, using mock data:", data.error);
           setArticles(MOCK_ARTICLES);
         } else {
-          // API 成功，使用真实数据
-          setArticles(data.articles || []);
+          // 将元数据转换为 Article 格式
+          const articlesWithPlaceholder = (data.articles || []).map((meta: any) => ({
+            id: meta.id,
+            title: meta.title,
+            icon: "📄",
+            date: new Date(meta.updatedAt).toISOString().split("T")[0],
+            category: meta.tags[0] || "未分类",
+            summary: meta.summary || meta.title,
+            content: "", // 内容将在打开文章时按需加载
+            tags: meta.tags,
+          }));
+          setArticles(articlesWithPlaceholder);
         }
       } catch (err) {
         // 网络错误，使用 Mock 数据
@@ -171,4 +181,23 @@ export function useArticles() {
   }, []);
 
   return { articles, loading };
+}
+
+/**
+ * 按需加载文章完整内容
+ */
+export async function loadArticleContent(articleId: string): Promise<string> {
+  try {
+    const res = await fetch(`/api/articles/${articleId}`);
+    
+    if (!res.ok) {
+      throw new Error("Failed to load article content");
+    }
+
+    const data = await res.json();
+    return data.content || "# 内容加载失败\n\n无法获取文章内容，请稍后重试。";
+  } catch (error) {
+    console.error("Failed to load article content:", error);
+    return "# 内容加载失败\n\n无法获取文章内容，请稍后重试。";
+  }
 }
