@@ -2,7 +2,7 @@ export type Agent = {
   title: string;
   botId: string;
   icon: string;
-  kind:
+  kind?:
     | "portrait"
     | "chat"
     | "analysis"
