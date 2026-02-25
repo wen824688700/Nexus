@@ -5,6 +5,7 @@ import { NeonBorder } from "@/components/cyber";
 import { Megaphone } from "lucide-react";
 
 const announcements = [
+  "🎶 新增音乐歌词生成智能体，AI 作词大师助你创作",
   "🎨 新增 AI 肖像生成器，生成专业级肖像",
   "🎵 新增音频分析智能体，一键分析音频风格",
   "📊 数据分析智能体集成，支持图表生成和数据洞察",

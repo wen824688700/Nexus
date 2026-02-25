@@ -328,7 +328,7 @@ export function AgentsPage() {
                     | "audioAnalyzer"
                     | "seedanceStoryboard";
                 }
-              ).kind || "chat",
+              ).kind,
             status: (selectedAgent.status === "busy" ? "online" : selectedAgent.status) as
               | "online"
               | "offline",
