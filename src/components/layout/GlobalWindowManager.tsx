@@ -3,7 +3,6 @@
 import { useAppStore } from "@/store/appStore";
 import { AgentModal } from "@/components/home/AgentModal";
 import { RetroOSModal } from "@/components/retro-os/RetroOSModal";
-import { useEffect } from "react";
 
 /**
  * 全局窗口管理器
@@ -16,13 +15,6 @@ import { useEffect } from "react";
 export function GlobalWindowManager() {
   const globalWindows = useAppStore((state) => state.globalWindows);
   const closeGlobalWindow = useAppStore((state) => state.closeGlobalWindow);
-
-  // 预加载优化：当组件挂载时，AgentModal 和 RetroOSModal 已经被导入
-  // 这样首次打开窗口时不需要等待代码加载
-  useEffect(() => {
-    // 组件已经在这里导入，浏览器会缓存它们
-    console.log("[GlobalWindowManager] Components preloaded");
-  }, []);
 
   return (
     <>

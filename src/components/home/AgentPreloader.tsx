@@ -22,9 +22,7 @@ export function AgentPreloader() {
           import("./SpringFestivalMeme"),
           import("./SeedanceStoryboard"),
           import("./LyricsGenerator"),
-        ]).then(() => {
-          console.log("[AgentPreloader] All agent components preloaded");
-        });
+        ]);
       });
 
       return () => {
@@ -42,9 +40,7 @@ export function AgentPreloader() {
           import("./SpringFestivalMeme"),
           import("./SeedanceStoryboard"),
           import("./LyricsGenerator"),
-        ]).then(() => {
-          console.log("[AgentPreloader] All agent components preloaded");
-        });
+        ]);
       }, 1000);
 
       return () => clearTimeout(timer);

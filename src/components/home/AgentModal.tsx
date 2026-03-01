@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { X, Minus, Maximize2, Minimize2 } from "lucide-react";
 import { GlitchText, ScanLine } from "@/components/cyber";
 import { useAppStore } from "@/store/appStore";
+import { getAgentPrice } from "@/lib/credits/pricing";
 import type { Agent } from "./types";
 
 // 懒加载大型组件，只在需要时才加载
@@ -179,6 +180,32 @@ export function AgentModal({ mounted, visible, agent, onClose }: Props) {
   const [showConfirm, setShowConfirm] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // 获取智能体的积分消耗
+  const getAgentCredits = (): number | null => {
+    if (!agent?.botId) return null;
+    
+    // 根据 botId 或 kind 映射到 agentKey
+    const agentKeyMap: Record<string, string> = {
+      "portrait": "portrait",
+      "p1": "prompt-optimizer",
+      "o2": "data_analyst",
+      "audio_analyzer": "audio_analyzer",
+      "image_editor": "image_editor",
+      "lyrics-generator": "lyrics-generator",
+      "seedance-storyboard": "seedance-storyboard",
+    };
+
+    const agentKey = agentKeyMap[agent.botId] || agent.botId;
+    
+    try {
+      return getAgentPrice(agentKey);
+    } catch {
+      return null;
+    }
+  };
+
+  const credits = getAgentCredits();
 
   // 当模态框首次打开时，重置全屏状态
   useEffect(() => {
@@ -571,8 +598,22 @@ export function AgentModal({ mounted, visible, agent, onClose }: Props) {
               !isFullscreen && !isMinimized ? "cursor-move select-none" : "",
             ].join(" ")}
           >
-            {/* 左侧：状态指示器 + 标题 */}
+            {/* 左侧：积分消耗 + 状态指示器 + 标题 */}
             <div className="flex items-center gap-4">
+              {/* 积分消耗显示 */}
+              {credits !== null && agent?.status === "online" && (
+                <>
+                  <div className="flex items-center gap-1.5 rounded-md border border-amber-500/30 bg-amber-500/10 px-2 py-1">
+                    <span className="font-mono text-[10px] font-bold text-amber-400">
+                      {credits}
+                    </span>
+                    <span className="font-mono text-[9px] text-amber-400/70">积分/次</span>
+                  </div>
+                  {/* 分隔线 */}
+                  <div className="h-6 w-px bg-white/10" />
+                </>
+              )}
+
               {/* 状态指示器 */}
               <div className="relative flex items-center gap-2">
                 <div className="relative flex h-3 w-3 items-center justify-center">
