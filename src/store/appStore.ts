@@ -2,6 +2,15 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Agent, CustomSkill, Article, FileNode, NewsItem, TabType, Track } from "@/types";
 
+// 全局窗口类型
+export interface GlobalWindow {
+  id: string;
+  type: "agent" | "retroos";
+  mounted: boolean;
+  visible: boolean;
+  agent?: Agent;
+}
+
 interface AppState {
   // Active Tab
   activeTab: TabType;
@@ -37,6 +46,12 @@ interface AppState {
   // Agent Modal Settings
   agentModalOpacity: number;
   setAgentModalOpacity: (opacity: number) => void;
+
+  // Global Windows (跨页面持久化)
+  globalWindows: GlobalWindow[];
+  openAgentWindow: (agent: Agent) => void;
+  openRetroOSWindow: () => void;
+  closeGlobalWindow: (id: string) => void;
 
   // News
   newsItems: NewsItem[];
@@ -292,6 +307,91 @@ export const useAppStore = create<AppState>()(
       // Agent Modal Settings
       agentModalOpacity: 95,
       setAgentModalOpacity: (opacity) => set({ agentModalOpacity: opacity }),
+
+      // Global Windows
+      globalWindows: [],
+      openAgentWindow: (agent) => {
+        set((state) => {
+          // 检查是否已经打开了这个智能体
+          const existingIndex = state.globalWindows.findIndex(
+            (w) => w.type === "agent" && w.agent?.id === agent.id,
+          );
+
+          if (existingIndex >= 0) {
+            // 如果已存在，立即更新为可见和已挂载
+            const updated = [...state.globalWindows];
+            updated[existingIndex] = {
+              ...updated[existingIndex],
+              mounted: true,
+              visible: true,
+            };
+            return { globalWindows: updated };
+          }
+
+          // 立即添加新窗口（mounted 和 visible 都为 true）
+          // 不使用 setTimeout，直接同步添加
+          const newWindow: GlobalWindow = {
+            id: `agent-${agent.id}-${Date.now()}`,
+            type: "agent",
+            mounted: true,
+            visible: true,
+            agent,
+          };
+          return { globalWindows: [...state.globalWindows, newWindow] };
+        });
+      },
+      openRetroOSWindow: () => {
+        set((state) => {
+          // 检查是否已经打开了 RetroOS
+          const existingIndex = state.globalWindows.findIndex((w) => w.type === "retroos");
+
+          if (existingIndex >= 0) {
+            // 如果已存在，立即更新为可见和已挂载
+            const updated = [...state.globalWindows];
+            updated[existingIndex] = {
+              ...updated[existingIndex],
+              mounted: true,
+              visible: true,
+            };
+            return { globalWindows: updated };
+          }
+
+          // 立即添加新窗口（mounted 和 visible 都为 true）
+          // 不使用 setTimeout，直接同步添加
+          const newWindow: GlobalWindow = {
+            id: `retroos-${Date.now()}`,
+            type: "retroos",
+            mounted: true,
+            visible: true,
+          };
+          return { globalWindows: [...state.globalWindows, newWindow] };
+        });
+      },
+      closeGlobalWindow: (id) => {
+        set((state) => {
+          // 先设置为不可见
+          const updated = state.globalWindows.map((w) =>
+            w.id === id ? { ...w, visible: false } : w,
+          );
+
+          // 500ms 后设置为未挂载，再 500ms 后从数组移除
+          setTimeout(() => {
+            set((state) => ({
+              globalWindows: state.globalWindows.map((w) =>
+                w.id === id ? { ...w, mounted: false } : w,
+              ),
+            }));
+
+            setTimeout(() => {
+              set((state) => ({
+                globalWindows: state.globalWindows.filter((w) => w.id !== id),
+              }));
+            }, 500);
+          }, 500);
+
+          return { globalWindows: updated };
+        });
+      },
 
       // News
       newsItems: defaultNews,

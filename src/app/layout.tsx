@@ -3,7 +3,8 @@ import { JetBrains_Mono, Noto_Sans_SC, ZCOOL_QingKe_HuangYou, Orbitron } from "n
 import "./globals.css";
 import { GridBackground, FloatingParticles } from "@/components/cyber";
 import { FloatingMusicPlayer, MusicLightEffect } from "@/components/music";
-import { Navbar, Footer, PageTransition } from "@/components/layout";
+import { Navbar, Footer, PageTransition, GlobalWindowManager } from "@/components/layout";
+import { AgentPreloader } from "@/components/home/AgentPreloader";
 import { QuotaProvider } from "@/contexts/QuotaContext";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { CreditsProvider } from "@/contexts/CreditsContext";
@@ -99,6 +100,12 @@ export default async function RootLayout({
               {/* Music Player and Effects */}
               <MusicLightEffect />
               <FloatingMusicPlayer />
+
+              {/* Global Window Manager - 跨页面持久化窗口 */}
+              <GlobalWindowManager />
+
+              {/* Agent Preloader - 预加载智能体组件 */}
+              <AgentPreloader />
 
               {/* Noise Texture */}
               <div className="noise" />

@@ -7,7 +7,6 @@ import { EmailSubscribe } from "./EmailSubscribe";
 import { AIInfoTicker } from "./AIInfoTicker";
 import { AIHotTopics } from "./AIHotTopics";
 import { CreateSkillModal } from "./CreateSkillModal";
-import { AgentModal } from "@/components/home/AgentModal";
 import { useAppStore } from "@/store/appStore";
 import { MessageSquare, Zap, Image, Search, Plus } from "lucide-react";
 import type { Agent } from "@/types";
@@ -166,26 +165,37 @@ const agentCategories = [
 
 export function AgentsPage() {
   const [activeCategory, setActiveCategory] = useState("prompts");
-  const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
-  const [agentModalMounted, setAgentModalMounted] = useState(false);
-  const [agentModalVisible, setAgentModalVisible] = useState(false);
 
-  const { customSkills, isCreateSkillOpen, setCreateSkillOpen } = useAppStore();
+  const { customSkills, isCreateSkillOpen, setCreateSkillOpen, openAgentWindow } = useAppStore();
 
   const currentCategory = agentCategories.find((cat) => cat.id === activeCategory);
 
-  const handleAgentClick = async (agent: Agent) => {
-    setSelectedAgent(agent);
-    setAgentModalMounted(true);
-    await new Promise((resolve) => setTimeout(resolve, 10));
-    setAgentModalVisible(true);
+  const handleAgentClick = (agent: Agent) => {
+    openAgentWindow(agent);
   };
 
-  const handleCloseAgentModal = async () => {
-    setAgentModalVisible(false);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    setAgentModalMounted(false);
-    setSelectedAgent(null);
+  // 悬停预加载：当用户鼠标悬停在智能体卡片上时，预加载对应的组件
+  const handleAgentHover = (agent: Agent) => {
+    // 根据智能体类型预加载对应的组件
+    const kind = (agent as { kind?: string }).kind;
+    
+    if (kind === "portrait") {
+      import("@/components/home/PortraitStudio");
+    } else if (kind === "analysis") {
+      import("@/components/home/DataAnalyst");
+    } else if (kind === "promptOptimizer") {
+      import("@/components/home/PromptOptimizerContent");
+    } else if (kind === "imageEditor") {
+      import("@/components/home/ImageEditor");
+    } else if (kind === "audioAnalyzer") {
+      import("@/components/home/AudioAnalyzer");
+    } else if (kind === "chat") {
+      import("@/components/home/LyricsGenerator");
+    } else if (kind === "springFestivalMeme") {
+      import("@/components/home/SpringFestivalMeme");
+    } else if (kind === "seedanceStoryboard") {
+      import("@/components/home/SeedanceStoryboard");
+    }
   };
 
   return (
@@ -256,6 +266,7 @@ export function AgentsPage() {
               key={agent.id}
               className="animate-[fade-in_0.6s_ease-out]"
               style={{ animationDelay: `${index * 0.1}s` }}
+              onMouseEnter={() => handleAgentHover(agent)}
             >
               <AgentCard {...agent} onClick={() => handleAgentClick(agent)} />
             </div>
@@ -305,37 +316,6 @@ export function AgentsPage() {
 
       {/* Modals */}
       <CreateSkillModal isOpen={isCreateSkillOpen} onClose={() => setCreateSkillOpen(false)} />
-
-      {selectedAgent && (
-        <AgentModal
-          mounted={agentModalMounted}
-          visible={agentModalVisible}
-          agent={{
-            title: selectedAgent.name,
-            botId: selectedAgent.id,
-            icon: "✦",
-            kind:
-              (
-                selectedAgent as {
-                  kind?:
-                    | "portrait"
-                    | "chat"
-                    | "analysis"
-                    | "workflow"
-                    | "promptOptimizer"
-                    | "imageEditor"
-                    | "springFestivalMeme"
-                    | "audioAnalyzer"
-                    | "seedanceStoryboard";
-                }
-              ).kind,
-            status: (selectedAgent.status === "busy" ? "online" : selectedAgent.status) as
-              | "online"
-              | "offline",
-          }}
-          onClose={handleCloseAgentModal}
-        />
-      )}
     </section>
   );
 }
