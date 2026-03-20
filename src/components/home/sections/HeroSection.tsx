@@ -9,6 +9,8 @@ import { ArrowRight, Sparkles, BookOpen, Mail, X } from "lucide-react";
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [showWechatQR, setShowWechatQR] = useState(false);
+  const [showBilibiliQR, setShowBilibiliQR] = useState(false);
+  const [showPublicAccountQR, setShowPublicAccountQR] = useState(false);
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -176,8 +178,8 @@ export function HeroSection() {
                   </button>
 
                   {/* Bilibili */}
-                  <a
-                    href="#"
+                  <button
+                    onClick={() => setShowBilibiliQR(true)}
                     className="group flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-all hover:border-[#00a1d6]/50 hover:bg-[#00a1d6]/10"
                     title="B站"
                   >
@@ -188,22 +190,22 @@ export function HeroSection() {
                     >
                       <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z" />
                     </svg>
-                  </a>
+                  </button>
 
-                  {/* Xiaohongshu (Little Red Book) */}
-                  <a
-                    href="#"
-                    className="group flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-all hover:border-[#ff2442]/50 hover:bg-[#ff2442]/10"
-                    title="小红书"
+                  {/* WeChat Official Account (公众号) */}
+                  <button
+                    onClick={() => setShowPublicAccountQR(true)}
+                    className="group flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5 transition-all hover:border-[#07c160]/50 hover:bg-[#07c160]/10"
+                    title="微信公众号"
                   >
                     <svg
-                      className="h-5 w-5 md:h-6 md:w-6 text-white/60 transition-colors group-hover:text-[#ff2442]"
+                      className="h-5 w-5 md:h-6 md:w-6 text-white/60 transition-colors group-hover:text-[#07c160]"
                       viewBox="0 0 24 24"
                       fill="currentColor"
                     >
-                      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.951 17.96a.844.844 0 0 1-.844.844H6.893a.844.844 0 0 1-.844-.844V6.04c0-.466.378-.844.844-.844h10.214c.466 0 .844.378.844.844v11.92zM9.6 8.4h1.2v7.2H9.6V8.4zm3.6 0h1.2v7.2h-1.2V8.4z" />
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5.5-9c.83 0 1.5-.67 1.5-1.5S7.33 8 6.5 8 5 8.67 5 9.5 5.67 11 6.5 11zm11 0c.83 0 1.5-.67 1.5-1.5S18.33 8 17.5 8 16 8.67 16 9.5s.67 1.5 1.5 1.5zM12 17.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
                     </svg>
-                  </a>
+                  </button>
 
                   {/* Douyin (TikTok) */}
                   <a
@@ -279,6 +281,108 @@ export function HeroSection() {
               <div className="mt-4 text-center">
                 <p className="text-xs text-cyber-cyan">
                   长按保存图片 · 微信扫一扫添加好友
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* B站二维码弹窗 */}
+      {showBilibiliQR && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          onClick={() => setShowBilibiliQR(false)}
+        >
+          <div 
+            className="relative max-w-sm w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* 关闭按钮 */}
+            <button
+              onClick={() => setShowBilibiliQR(false)}
+              className="absolute -top-12 right-0 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/80 transition-all hover:bg-white/20 hover:text-white"
+              aria-label="关闭"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            {/* 二维码卡片 */}
+            <div className="overflow-hidden rounded-2xl border border-[#00a1d6]/30 bg-cyber-dark/95 p-6 shadow-[0_0_50px_rgba(0,161,214,0.3)] backdrop-blur-xl">
+              {/* 标题 */}
+              <div className="mb-4 text-center">
+                <h3 className="font-orbitron text-xl font-bold text-white mb-2">
+                  关注我的B站
+                </h3>
+                <p className="text-sm text-white/60">
+                  扫描二维码，一起探索 AI 的无限可能
+                </p>
+              </div>
+
+              {/* 二维码图片 */}
+              <div className="relative overflow-hidden rounded-xl bg-white p-4">
+                <img
+                  src="/images/bilibili.jpg"
+                  alt="Apex 小墨的B站二维码"
+                  className="w-full h-auto"
+                />
+              </div>
+
+              {/* 底部提示 */}
+              <div className="mt-4 text-center">
+                <p className="text-xs text-[#00a1d6]">
+                  长按保存图片 · 哔哩哔哩扫一扫关注
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 微信公众号二维码弹窗 */}
+      {showPublicAccountQR && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          onClick={() => setShowPublicAccountQR(false)}
+        >
+          <div 
+            className="relative max-w-sm w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* 关闭按钮 */}
+            <button
+              onClick={() => setShowPublicAccountQR(false)}
+              className="absolute -top-12 right-0 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/80 transition-all hover:bg-white/20 hover:text-white"
+              aria-label="关闭"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            {/* 二维码卡片 */}
+            <div className="overflow-hidden rounded-2xl border border-[#07c160]/30 bg-cyber-dark/95 p-6 shadow-[0_0_50px_rgba(7,193,96,0.3)] backdrop-blur-xl">
+              {/* 标题 */}
+              <div className="mb-4 text-center">
+                <h3 className="font-orbitron text-xl font-bold text-white mb-2">
+                  关注我的公众号
+                </h3>
+                <p className="text-sm text-white/60">
+                  扫描二维码，获取更多 AI 资讯和干货
+                </p>
+              </div>
+
+              {/* 二维码图片 */}
+              <div className="relative overflow-hidden rounded-xl bg-white p-4">
+                <img
+                  src="/images/wechat-public.jpg"
+                  alt="Apex 小墨的微信公众号二维码"
+                  className="w-full h-auto"
+                />
+              </div>
+
+              {/* 底部提示 */}
+              <div className="mt-4 text-center">
+                <p className="text-xs text-[#07c160]">
+                  长按保存图片 · 微信扫一扫关注公众号
                 </p>
               </div>
             </div>
